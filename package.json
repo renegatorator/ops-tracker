@@ -1,6 +1,6 @@
 {
   "name": "ops-tracker",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,15 +10,19 @@
   },
   "dependencies": {
     "next": "16.1.6",
+    "next-i18next": "^15.4.2",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
+    "@types/react": "^19.2.3",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.3",
     "eslint-config-next": "16.1.6",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1"
   }
 }
