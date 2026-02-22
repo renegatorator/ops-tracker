@@ -1,0 +1,39 @@
+{
+  "common": {
+    "home": {
+      "heading": "Bearbeite die Datei page.tsx, um zu starten.",
+      "description": "Verwende dieses Starter-Setup als Grundlage für mehrsprachiges Routing.",
+      "deployNow": "Jetzt bereitstellen",
+      "documentation": "Dokumentation"
+    },
+    "buttons": {
+      "save": "Speichern",
+      "cancel": "Abbrechen"
+    }
+  },
+  "landing": {
+    "title": "Ops Tracker",
+    "description": "Eine leistungsstarke Plattform zur Problemverfolgung und Betriebsverwaltung, die Teams dabei hilft, Arbeiten effizient zu organisieren, zu priorisieren und zu verfolgen. Arbeiten Sie nahtlos zusammen, bleiben Sie bei Ihren Projekten auf dem Laufenden und erreichen Sie Ihre Ziele.",
+    "loginButton": "Anmelden"
+  },
+  "seo": {
+    "root": {
+      "title": "Ops Tracker",
+      "description": "Dashboard zur Betriebsverfolgung mit Mehrsprachigkeit."
+    },
+    "routes": {
+      "home": {
+        "title": "Startseite",
+        "description": "Überblick über deinen Ops Tracker."
+      },
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Wichtige Kennzahlen und aktuelle Aktivitäten."
+      },
+      "default": {
+        "title": "Ops Tracker",
+        "description": "Dashboard zur Betriebsverfolgung mit Mehrsprachigkeit."
+      }
+    }
+  }
+}
