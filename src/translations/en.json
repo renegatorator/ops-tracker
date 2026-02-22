@@ -11,6 +11,11 @@
       "cancel": "Cancel"
     }
   },
+  "landing": {
+    "title": "Ops Tracker",
+    "description": "A powerful issue tracking and operations management platform designed to help teams organize, prioritize, and track work efficiently. Collaborate seamlessly, stay on top of your projects, and achieve your goals.",
+    "loginButton": "Login"
+  },
   "seo": {
     "root": {
       "title": "Ops Tracker",

@@ -1,0 +1,79 @@
+// ==================== Colors (Sass Variables) ====================
+// Primary colors
+$color-primary: #667eea;
+$color-primary-dark: #764ba2;
+$color-primary-light: #8b9ef9;
+
+// Backgrounds
+$background-01: #ffffff;
+$background-02: #f8f9fa;
+$background-03: #e9ecef;
+
+// Text colors
+$text-primary: #212529;
+$text-secondary: #495057;
+$text-tertiary: #6c757d;
+$text-disabled: #adb5bd;
+
+// Border colors
+$border-01: #dee2e6;
+$border-02: #ced4da;
+
+// Status colors
+$status-success: #51cf66;
+$status-warning: #ffd43b;
+$status-danger: #ff6b6b;
+$status-info: #74c0fc;
+
+// Neutral
+$neutral-white: #ffffff;
+$neutral-black: #000000;
+$neutral-gray-100: #f8f9fa;
+$neutral-gray-200: #e9ecef;
+$neutral-gray-300: #dee2e6;
+$neutral-gray-400: #ced4da;
+$neutral-gray-500: #adb5bd;
+$neutral-gray-600: #6c757d;
+$neutral-gray-700: #495057;
+$neutral-gray-800: #212529;
+
+// ==================== Breakpoints ====================
+// Mobile-first breakpoints
+$breakpoints: (
+  "xs": 480px,
+  "sm": 600px,
+  "md": 768px,
+  "lg": 960px,
+  "xl": 1200px,
+  "2xl": 1400px,
+);
+
+// ==================== CSS Custom Properties (For Runtime Use) ====================
+:root {
+  --color-primary: #{$color-primary};
+  --color-primary-dark: #{$color-primary-dark};
+  --color-primary-light: #{$color-primary-light};
+  --background-01: #{$background-01};
+  --background-02: #{$background-02};
+  --background-03: #{$background-03};
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --text-tertiary: #{$text-tertiary};
+  --text-disabled: #{$text-disabled};
+  --border-01: #{$border-01};
+  --border-02: #{$border-02};
+  --status-success: #{$status-success};
+  --status-warning: #{$status-warning};
+  --status-danger: #{$status-danger};
+  --status-info: #{$status-info};
+  --neutral-white: #{$neutral-white};
+  --neutral-black: #{$neutral-black};
+  --neutral-gray-100: #{$neutral-gray-100};
+  --neutral-gray-200: #{$neutral-gray-200};
+  --neutral-gray-300: #{$neutral-gray-300};
+  --neutral-gray-400: #{$neutral-gray-400};
+  --neutral-gray-500: #{$neutral-gray-500};
+  --neutral-gray-600: #{$neutral-gray-600};
+  --neutral-gray-700: #{$neutral-gray-700};
+  --neutral-gray-800: #{$neutral-gray-800};
+}
