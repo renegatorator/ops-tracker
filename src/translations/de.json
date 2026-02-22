@@ -11,6 +11,11 @@
       "cancel": "Abbrechen"
     }
   },
+  "landing": {
+    "title": "Ops Tracker",
+    "description": "Eine leistungsstarke Plattform zur Problemverfolgung und Betriebsverwaltung, die Teams dabei hilft, Arbeiten effizient zu organisieren, zu priorisieren und zu verfolgen. Arbeiten Sie nahtlos zusammen, bleiben Sie bei Ihren Projekten auf dem Laufenden und erreichen Sie Ihre Ziele.",
+    "loginButton": "Anmelden"
+  },
   "seo": {
     "root": {
       "title": "Ops Tracker",

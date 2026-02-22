@@ -11,6 +11,11 @@
       "cancel": "Prekliči"
     }
   },
+  "landing": {
+    "title": "Ops Tracker",
+    "description": "Zmogljiva platforma za sledenje probleme in upravljanje operacij, zasnovana za pomoč ekipam pri organizaciji, vrednostenju in sledenju dela. Sodelujte brez težav, ostanite sproti z vašimi projekti in dosežite svoje cilje.",
+    "loginButton": "Prijava"
+  },
   "seo": {
     "root": {
       "title": "Ops Tracker",
