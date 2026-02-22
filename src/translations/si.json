@@ -16,6 +16,25 @@
     "description": "Zmogljiva platforma za sledenje probleme in upravljanje operacij, zasnovana za pomoč ekipam pri organizaciji, vrednostenju in sledenju dela. Sodelujte brez težav, ostanite sproti z vašimi projekti in dosežite svoje cilje.",
     "loginButton": "Prijava"
   },
+  "ui": {
+    "themeToggle": {
+      "toLight": "Preklopi na svetli način",
+      "toDark": "Preklopi na temni način",
+      "aria": "Preklopi barvno shemo"
+    },
+    "language": {
+      "label": "Jezik",
+      "en": "Angleščina",
+      "si": "Slovenščina",
+      "de": "Nemščina",
+      "enFlag": "🇬🇧",
+      "siFlag": "🇸🇮",
+      "deFlag": "🇩🇪"
+    }
+  },
+  "layout": {
+    "footer": "© 2026 Rene Krajnc. Vse pravice pridržane."
+  },
   "seo": {
     "root": {
       "title": "Ops Tracker",
