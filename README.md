@@ -74,24 +74,6 @@ The app demonstrates role-based access:
 
 ---
 
-<!-- ## 🧪 Demo Access
-
-Demo accounts are provided to explore functionality:
-
-**User Demo**
-```
-user@demo.com
-password: demo123
-```
-
-**Admin Demo**
-```
-admin@demo.com
-password: demo123
-```
-
---- -->
-
 ## ✨ Core Features
 
 - Authentication & protected routes
@@ -139,18 +121,6 @@ http://localhost:3000
 ```
 
 ---
-
-<!-- ## 🌐 Deployment
-
-The app is deployed on Vercel.
-
-Production URL:
-
-```
-https://ops.renekrajnc.com
-```
-
---- -->
 
 ## 👨‍💻 Author
 
