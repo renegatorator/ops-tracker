@@ -1,0 +1,34 @@
+{
+  "common": {
+    "home": {
+      "heading": "To get started, edit the page.tsx file.",
+      "description": "Use this starter as a base for your multilingual App Router setup.",
+      "deployNow": "Deploy Now",
+      "documentation": "Documentation"
+    },
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "seo": {
+    "root": {
+      "title": "Ops Tracker",
+      "description": "Operations tracking dashboard with multilingual support."
+    },
+    "routes": {
+      "home": {
+        "title": "Home",
+        "description": "Overview of your operations tracker."
+      },
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Key metrics and recent activity."
+      },
+      "default": {
+        "title": "Ops Tracker",
+        "description": "Operations tracking dashboard with multilingual support."
+      }
+    }
+  }
+}

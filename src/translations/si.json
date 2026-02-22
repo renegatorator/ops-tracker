@@ -1,0 +1,34 @@
+{
+  "common": {
+    "home": {
+      "heading": "Za začetek uredi datoteko page.tsx.",
+      "description": "To začetno predlogo uporabi kot osnovo za večjezični App Router.",
+      "deployNow": "Objavi zdaj",
+      "documentation": "Dokumentacija"
+    },
+    "buttons": {
+      "save": "Shrani",
+      "cancel": "Prekliči"
+    }
+  },
+  "seo": {
+    "root": {
+      "title": "Ops Tracker",
+      "description": "Nadzorna plošča za operativno spremljanje z večjezično podporo."
+    },
+    "routes": {
+      "home": {
+        "title": "Domov",
+        "description": "Pregled tvojega ops trackerja."
+      },
+      "dashboard": {
+        "title": "Nadzorna plošča",
+        "description": "Ključne metrike in nedavna aktivnost."
+      },
+      "default": {
+        "title": "Ops Tracker",
+        "description": "Nadzorna plošča za operativno spremljanje z večjezično podporo."
+      }
+    }
+  }
+}

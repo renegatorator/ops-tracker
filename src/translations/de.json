@@ -1,0 +1,34 @@
+{
+  "common": {
+    "home": {
+      "heading": "Bearbeite die Datei page.tsx, um zu starten.",
+      "description": "Verwende dieses Starter-Setup als Grundlage für mehrsprachiges Routing.",
+      "deployNow": "Jetzt bereitstellen",
+      "documentation": "Dokumentation"
+    },
+    "buttons": {
+      "save": "Speichern",
+      "cancel": "Abbrechen"
+    }
+  },
+  "seo": {
+    "root": {
+      "title": "Ops Tracker",
+      "description": "Dashboard zur Betriebsverfolgung mit Mehrsprachigkeit."
+    },
+    "routes": {
+      "home": {
+        "title": "Startseite",
+        "description": "Überblick über deinen Ops Tracker."
+      },
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Wichtige Kennzahlen und aktuelle Aktivitäten."
+      },
+      "default": {
+        "title": "Ops Tracker",
+        "description": "Dashboard zur Betriebsverfolgung mit Mehrsprachigkeit."
+      }
+    }
+  }
+}
