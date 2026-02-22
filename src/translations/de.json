@@ -16,6 +16,25 @@
     "description": "Eine leistungsstarke Plattform zur Problemverfolgung und Betriebsverwaltung, die Teams dabei hilft, Arbeiten effizient zu organisieren, zu priorisieren und zu verfolgen. Arbeiten Sie nahtlos zusammen, bleiben Sie bei Ihren Projekten auf dem Laufenden und erreichen Sie Ihre Ziele.",
     "loginButton": "Anmelden"
   },
+  "ui": {
+    "themeToggle": {
+      "toLight": "Zum hellen Modus wechseln",
+      "toDark": "Zum dunklen Modus wechseln",
+      "aria": "Farbschema umschalten"
+    },
+    "language": {
+      "label": "Sprache",
+      "en": "Englisch",
+      "si": "Slowenisch",
+      "de": "Deutsch",
+      "enFlag": "🇬🇧",
+      "siFlag": "🇸🇮",
+      "deFlag": "🇩🇪"
+    }
+  },
+  "layout": {
+    "footer": "\u00a9 2026 Rene Krajnc. Alle Rechte vorbehalten."
+  },
   "seo": {
     "root": {
       "title": "Ops Tracker",

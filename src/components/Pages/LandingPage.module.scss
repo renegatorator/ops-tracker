@@ -1,13 +1,5 @@
 @use "../../styles/mixins" as *;
 
-.container {
-  margin: auto;
-
-  @include mq("md") {
-    padding: 48px 16px;
-  }
-}
-
 .content {
   text-align: center;
 }
@@ -34,22 +26,8 @@
   }
 }
 
-.textWrapper {
-  max-width: 600px;
-}
-
 .title {
   @include gradient-text();
-  margin-bottom: 16px;
-
-  @include mq("sm") {
-    margin-bottom: 12px;
-  }
-}
-
-.description {
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 @keyframes fadeInScale {

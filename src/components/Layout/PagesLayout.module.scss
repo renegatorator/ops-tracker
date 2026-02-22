@@ -1,6 +1,31 @@
-.pagesLayout {
+.layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+
+  > div {
+    width: 100%;
+  }
+}
+
+.header {
+  padding: 16px 0 0;
+}
+
+.controls {
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.body {
+  padding: 60px 0;
+}
+
+.footer {
+  padding: 16px 0 24px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
 }

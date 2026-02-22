@@ -7,7 +7,6 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import {
@@ -17,16 +16,6 @@ import {
 } from "next-intl/server";
 
 import { routing } from "@/i18n/routing";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 type Props = {
   children: React.ReactNode;
@@ -69,8 +58,8 @@ export default async function LocaleLayout({ children, params }: Props) {
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MantineProvider>
+      <body>
+        <MantineProvider defaultColorScheme="auto">
           <NextIntlClientProvider messages={messages}>
             {children}
           </NextIntlClientProvider>

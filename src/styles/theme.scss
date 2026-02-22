@@ -4,6 +4,9 @@ $color-primary: #667eea;
 $color-primary-dark: #764ba2;
 $color-primary-light: #8b9ef9;
 
+// Mantine colors
+$color-mantine-primary: #228be6;
+
 // Backgrounds
 $background-01: #ffffff;
 $background-02: #f8f9fa;
@@ -53,6 +56,7 @@ $breakpoints: (
   --color-primary: #{$color-primary};
   --color-primary-dark: #{$color-primary-dark};
   --color-primary-light: #{$color-primary-light};
+  --color-mantine-primary: #{$color-mantine-primary};
   --background-01: #{$background-01};
   --background-02: #{$background-02};
   --background-03: #{$background-03};
