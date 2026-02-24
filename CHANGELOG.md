@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-02-24
+
 ### Added
 
 - Install and integrate Supabase backend,
