@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Install and integrate Supabase backend,
 - Theme toggle with system preference detection and manual override
 - Language switcher with flag icons and accessible labels
 - Professional copyright footer with translations
