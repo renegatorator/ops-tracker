@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Install and integrate Supabase backend,
+- Login page route and reusable login component with Supabase email/password sign-in
+- Protected dashboard route that redirects unauthenticated users to login
+- Localized login and dashboard translations (en, si, de), including localized auth error messages
 - Theme toggle with system preference detection and manual override
 - Language switcher with flag icons and accessible labels
 - Professional copyright footer with translations
@@ -24,6 +27,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Redirect login CTA on landing page to the login route
+- Redirect successful sign-in to dashboard
+- Converted landing page translations from client-side hook usage to server-side translations
 - Integrated theme toggle and language switcher into PagesLayout header
 - Migrated from CSS to SCSS for styling
 - Integrated Mantine UI with root layout (MantineProvider, ColorSchemeScript)
