@@ -16,6 +16,46 @@
     "description": "A powerful issue tracking and operations management platform designed to help teams organize, prioritize, and track work efficiently. Collaborate seamlessly, stay on top of your projects, and achieve your goals.",
     "loginButton": "Login"
   },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "emailDescription": "Use your email address (must include @).",
+      "emailTitle": "Email must include @ (for example: you@example.com).",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Your password",
+      "submit": "Sign in",
+      "errors": {
+        "invalidCredentials": "Invalid email or password.",
+        "generic": "Unable to sign in. Please try again."
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "You are successfully signed in.",
+    "signedInAs": "Signed in as: {email}"
+  },
+  "ui": {
+    "themeToggle": {
+      "toLight": "Switch to light mode",
+      "toDark": "Switch to dark mode",
+      "aria": "Toggle color scheme"
+    },
+    "language": {
+      "label": "Language",
+      "en": "English",
+      "si": "Slovenian",
+      "de": "German",
+      "enFlag": "🇬🇧",
+      "siFlag": "🇸🇮",
+      "deFlag": "🇩🇪"
+    }
+  },
+  "layout": {
+    "footer": "\u00a9 2026 Rene Krajnc. All rights reserved."
+  },
   "seo": {
     "root": {
       "title": "Ops Tracker",

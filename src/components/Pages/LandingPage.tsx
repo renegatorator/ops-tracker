@@ -1,18 +1,17 @@
-"use client";
-
 import { Button, Container, Group, Stack } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 import Typography from "@/components/Typography/Typography";
+import { Link } from "@/i18n/navigation";
 
 import classes from "./LandingPage.module.scss";
 
-export default function LandingPage() {
-  const t = useTranslations("landing");
+export default async function LandingPage() {
+  const t = await getTranslations("landing");
 
   return (
-    <Container size="md" className={classes.container}>
+    <Container size="md">
       <Stack
         gap="xl"
         align="center"
@@ -23,17 +22,15 @@ export default function LandingPage() {
           <IconCircleCheck size={80} stroke={1.5} />
         </div>
 
-        <div className={classes.textWrapper}>
+        <Stack maw={600}>
           <Typography type="heading-01" className={classes.title}>
             {t("title")}
           </Typography>
-          <Typography type="body-01" className={classes.description}>
-            {t("description")}
-          </Typography>
-        </div>
+          <Typography type="body-01">{t("description")}</Typography>
+        </Stack>
 
-        <Group justify="center" mt="xl">
-          <Button size="lg" variant="filled">
+        <Group justify="center">
+          <Button size="lg" variant="filled" component={Link} href="/login">
             {t("loginButton")}
           </Button>
         </Group>

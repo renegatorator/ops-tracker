@@ -16,6 +16,46 @@
     "description": "Eine leistungsstarke Plattform zur Problemverfolgung und Betriebsverwaltung, die Teams dabei hilft, Arbeiten effizient zu organisieren, zu priorisieren und zu verfolgen. Arbeiten Sie nahtlos zusammen, bleiben Sie bei Ihren Projekten auf dem Laufenden und erreichen Sie Ihre Ziele.",
     "loginButton": "Anmelden"
   },
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "emailLabel": "E-Mail",
+      "emailPlaceholder": "du@beispiel.de",
+      "emailDescription": "Verwende deine E-Mail-Adresse (muss ein @ enthalten).",
+      "emailTitle": "Die E-Mail muss ein @ enthalten (z. B. du@beispiel.de).",
+      "passwordLabel": "Passwort",
+      "passwordPlaceholder": "Dein Passwort",
+      "submit": "Anmelden",
+      "errors": {
+        "invalidCredentials": "Ungültige E-Mail oder ungültiges Passwort.",
+        "generic": "Anmeldung nicht möglich. Bitte versuche es erneut."
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Du bist erfolgreich angemeldet.",
+    "signedInAs": "Angemeldet als: {email}"
+  },
+  "ui": {
+    "themeToggle": {
+      "toLight": "Zum hellen Modus wechseln",
+      "toDark": "Zum dunklen Modus wechseln",
+      "aria": "Farbschema umschalten"
+    },
+    "language": {
+      "label": "Sprache",
+      "en": "Englisch",
+      "si": "Slowenisch",
+      "de": "Deutsch",
+      "enFlag": "🇬🇧",
+      "siFlag": "🇸🇮",
+      "deFlag": "🇩🇪"
+    }
+  },
+  "layout": {
+    "footer": "\u00a9 2026 Rene Krajnc. Alle Rechte vorbehalten."
+  },
   "seo": {
     "root": {
       "title": "Ops Tracker",
