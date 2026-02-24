@@ -16,6 +16,27 @@
     "description": "Zmogljiva platforma za sledenje probleme in upravljanje operacij, zasnovana za pomoč ekipam pri organizaciji, vrednostenju in sledenju dela. Sodelujte brez težav, ostanite sproti z vašimi projekti in dosežite svoje cilje.",
     "loginButton": "Prijava"
   },
+  "auth": {
+    "login": {
+      "title": "Prijava",
+      "emailLabel": "E-pošta",
+      "emailPlaceholder": "ti@primer.si",
+      "emailDescription": "Uporabi svoj e-poštni naslov (vsebovati mora @).",
+      "emailTitle": "E-poštni naslov mora vsebovati @ (npr. ti@primer.si).",
+      "passwordLabel": "Geslo",
+      "passwordPlaceholder": "Tvoje geslo",
+      "submit": "Prijava",
+      "errors": {
+        "invalidCredentials": "Napačen e-poštni naslov ali geslo.",
+        "generic": "Prijava ni uspela. Poskusi znova."
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Nadzorna plošča",
+    "description": "Uspešno si prijavljen.",
+    "signedInAs": "Prijavljen kot: {email}"
+  },
   "ui": {
     "themeToggle": {
       "toLight": "Preklopi na svetli način",
