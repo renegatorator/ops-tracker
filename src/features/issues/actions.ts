@@ -27,8 +27,11 @@ import type {
   UserProfileBrief,
 } from "./types";
 
-const revalidateIssuesSegment = (locale: string) => {
+const revalidateIssuesSegment = (locale: string, issueId?: string) => {
   revalidatePath(`/${locale}/issues`, "page");
+  if (issueId) {
+    revalidatePath(`/${locale}/issues/${issueId}`, "page");
+  }
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
 
@@ -124,7 +127,9 @@ export const transitionIssueStatus = async (
   const parsed = transitionIssueStatusSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.transitionIssueStatus(parsed.data);
-  if (result.ok) revalidateIssuesSegment(locale);
+  if (result.ok) {
+    revalidateIssuesSegment(locale, parsed.data.issueId);
+  }
   return result;
 };
 

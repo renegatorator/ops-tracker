@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Phase 7 issue detail: RSC `QueryClient` prefetch of issue + statuses with `HydrationBoundary`/`dehydrate` on `src/app/[locale]/issues/[id]/page.tsx`, `prefetch-issue-queries.ts` (`server-only`), `canUserTransitionIssueStatus` in `permissions.ts` (aligned with RLS: admin/super_admin or reporter/assignee for `user` role), `useTransitionIssueStatus` with optimistic cache update, rollback on error, Mantine `notifications` for failed transitions, success invalidates detail and list queries; `AppNotifications` + `@mantine/notifications/styles.css` in locale layout; `issues.detail` i18n (en/si/de); Phase 7 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 - Phase 6 issues list UI: `@tanstack/react-table` and `@tanstack/react-virtual`, `IssuesListPageClient` and `IssuesVirtualizedTable` with server-backed sort, column visibility (localStorage), pagination, debounced search, status/assignee filters, row virtualization when the current page has at least 40 rows, shareable URL query params via `src/features/issues/list-url-params.ts`, `listIssueStatuses` and `listUserProfilesForIssueFilters` actions plus `useIssueStatuses` and `useAssigneeFilterOptions`, assignee embed on issue list/detail select in `service.ts`, optional `sortBy`/`sortDir` on `listIssues` schema and service, `issues.table` and related i18n (en/si/de); Phase 6 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 - Phase 4 issues domain: `src/features/issues/` with Zod schemas, Supabase service layer, server actions (`listIssues`, `createIssue`, `updateIssue`, `transitionIssueStatus`, `assignIssue`, `softDeleteIssue`), i18n error keys (`issues` namespace, en/si/de), `revalidatePath`/`revalidateTag` after mutations, opaque offset-based list cursor helpers colocated in `service.ts`
 - Protected route `src/app/[locale]/issues/page.tsx` (signed-in issue list placeholder)
@@ -21,6 +22,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- `transitionIssueStatus` revalidates the specific issue detail path in addition to the issues list when a transition succeeds
+- Issue detail page uses `getUserAuthContext` and login redirect consistent with the issues list; `IssueDetailPanel` accepts `canTransitionStatus` and shows a status `Select` or read-only status copy
 - Component and route props: replace generic `Props` / `type …Props` object types with `interface` names matching the component (e.g. `IssuesListPageClient` props, `LocaleLayoutProps`, `QueryProviderProps`, `HomeProps`, `LoginProps`)
 - Issues index page uses `IssuesListPageClient` with React Query, URL-driven list params, and `getUserAuthContext` for assignee filter options instead of the removed `IssuesListPanel` placeholder list
 - Supabase server and browser clients and root layout `metadataBase` now read public env vars through `env()`

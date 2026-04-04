@@ -42,6 +42,12 @@
     "detailTitle": "Zadeva",
     "loading": "Nalaganje…",
     "backToList": "Nazaj na zadeve",
+    "detail": {
+      "statusLabel": "Status",
+      "statusPlaceholder": "Izberi status",
+      "statusReadOnlyHint": "Statusa te zadeve ne moreš spremeniti.",
+      "statusUpdateFailedTitle": "Posodobitev statusa ni uspela"
+    },
     "empty": "Ni še zadev.",
     "unassigned": "Nedodeljeno",
     "table": {

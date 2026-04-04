@@ -42,6 +42,12 @@
     "detailTitle": "Issue",
     "loading": "Loading…",
     "backToList": "Back to issues",
+    "detail": {
+      "statusLabel": "Status",
+      "statusPlaceholder": "Choose status",
+      "statusReadOnlyHint": "You cannot change status for this issue.",
+      "statusUpdateFailedTitle": "Status update failed"
+    },
     "empty": "No issues yet.",
     "unassigned": "Unassigned",
     "table": {

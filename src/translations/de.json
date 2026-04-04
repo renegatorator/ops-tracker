@@ -42,6 +42,12 @@
     "detailTitle": "Ticket",
     "loading": "Wird geladen…",
     "backToList": "Zurück zur Liste",
+    "detail": {
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status wählen",
+      "statusReadOnlyHint": "Du kannst den Status dieses Tickets nicht ändern.",
+      "statusUpdateFailedTitle": "Status konnte nicht aktualisiert werden"
+    },
     "empty": "Noch keine Tickets.",
     "unassigned": "Nicht zugewiesen",
     "table": {

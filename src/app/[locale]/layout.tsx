@@ -1,5 +1,6 @@
 import "../globals.scss";
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 import {
   ColorSchemeScript,
@@ -15,6 +16,7 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 
+import { AppNotifications } from "@/components/Providers/AppNotifications";
 import { QueryProvider } from "@/components/Providers/QueryProvider";
 import { routing } from "@/i18n/routing";
 import { env } from "@/lib/env";
@@ -66,7 +68,10 @@ export default async function LocaleLayout({
       <body>
         <MantineProvider defaultColorScheme="auto">
           <NextIntlClientProvider messages={messages}>
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <AppNotifications />
+              {children}
+            </QueryProvider>
           </NextIntlClientProvider>
         </MantineProvider>
       </body>
