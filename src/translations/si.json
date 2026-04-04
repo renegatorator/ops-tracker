@@ -54,7 +54,8 @@
     }
   },
   "layout": {
-    "footer": "© 2026 Rene Krajnc. Vse pravice pridržane."
+    "footer": "© 2026 Rene Krajnc. Vse pravice pridržane.",
+    "logout": "Odjava"
   },
   "seo": {
     "root": {

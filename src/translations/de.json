@@ -54,7 +54,8 @@
     }
   },
   "layout": {
-    "footer": "\u00a9 2026 Rene Krajnc. Alle Rechte vorbehalten."
+    "footer": "\u00a9 2026 Rene Krajnc. Alle Rechte vorbehalten.",
+    "logout": "Abmelden"
   },
   "seo": {
     "root": {

@@ -9,11 +9,15 @@ All notable changes to this project will be documented in this file.
 - Supabase CLI project layout: `supabase init` (`config.toml`, `.gitignore`); npm scripts `db:link`, `db:push`, `db:pull`, `db:diff`, `db:start`, `db:stop`, `db:reset` (CLI via `npx supabase@latest`)
 - Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_PHASE1.md`
 - Typed `env()` helper in `src/lib/env.ts` for known `NEXT_PUBLIC_*` variables (autocomplete and missing-value errors)
+- Phase 2 auth: refresh Supabase session in `src/proxy.ts` after next-intl (and on `/` → `/{locale}` redirect) via `src/lib/supabase/proxy.ts`
+- Shared auth helpers in `src/lib/auth/session.ts` (`getSession`, `requireUser`, `requireRole`) and `signOutAction` in `src/lib/auth/actions.ts`
+- Localized header **Log out** when signed in; dashboard protection uses `requireUser`
 
 ### Changed
 
 - Supabase server and browser clients and root layout `metadataBase` now read public env vars through `env()`
 - Documented optional `NEXT_PUBLIC_SITE_URL` in `.env.example`
+- Phase 2 modules and related layout/dashboard components use const arrow exports where applicable
 
 ### Fixed
 
