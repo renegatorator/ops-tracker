@@ -54,7 +54,8 @@
     }
   },
   "layout": {
-    "footer": "\u00a9 2026 Rene Krajnc. All rights reserved."
+    "footer": "\u00a9 2026 Rene Krajnc. All rights reserved.",
+    "logout": "Log out"
   },
   "seo": {
     "root": {
