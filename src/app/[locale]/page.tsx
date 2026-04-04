@@ -2,11 +2,11 @@ import PagesLayout from "@/components/Layout/PagesLayout";
 import LandingPage from "@/components/Pages/LandingPage";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
-type Props = {
+interface HomeProps {
   params: Promise<{ locale: string }>;
-};
+}
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: HomeProps) {
   const { locale } = await params;
   return getLocalizedSeoMetadata(locale, "/");
 }

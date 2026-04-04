@@ -1,14 +1,15 @@
 import { Container, Flex, Stack } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 
 import LanguageSwitcher from "../Language/LanguageSwitcher";
 import ThemeToggle from "../Theme/ThemeToggle";
 import LogoutSection from "./LogoutSection";
 import classes from "./PagesLayout.module.scss";
 
-type PagesLayoutProps = {
-  children: React.ReactNode;
-};
+interface PagesLayoutProps {
+  children: ReactNode;
+}
 
 const PagesLayout = async ({ children }: PagesLayoutProps) => {
   const t = await getTranslations("layout");

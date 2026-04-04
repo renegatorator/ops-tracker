@@ -39,6 +39,9 @@
   },
   "issues": {
     "pageTitle": "Issues",
+    "detailTitle": "Issue",
+    "loading": "Loading…",
+    "backToList": "Back to issues",
     "empty": "No issues yet.",
     "errors": {
       "unauthorized": "You must be signed in.",

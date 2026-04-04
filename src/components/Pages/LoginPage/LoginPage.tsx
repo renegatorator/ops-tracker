@@ -16,10 +16,10 @@ import { createClient } from "@/lib/supabase/server";
 
 export type LoginError = "invalid_credentials" | "generic";
 
-type LoginPageProps = {
+interface LoginPageProps {
   locale: string;
   error?: LoginError;
-};
+}
 
 async function signInAction(locale: string, formData: FormData) {
   "use server";

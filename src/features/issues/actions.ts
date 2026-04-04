@@ -11,6 +11,7 @@ import { zodToFieldErrors } from "./map-errors";
 import {
   assignIssueSchema,
   createIssueSchema,
+  getIssueSchema,
   listIssuesSchema,
   softDeleteIssueSchema,
   transitionIssueStatusSchema,
@@ -20,6 +21,7 @@ import * as issueService from "./service";
 import type {
   IssuesActionFailure,
   IssuesActionResult,
+  IssueWithStatus,
   ListIssuesSuccess,
 } from "./types";
 
@@ -48,6 +50,17 @@ export const listIssues = async (
   const parsed = listIssuesSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   return issueService.listIssues(parsed.data);
+};
+
+export const getIssue = async (
+  _locale: string,
+  raw: unknown,
+): Promise<IssuesActionResult<IssueWithStatus>> => {
+  const ctx = await getUserAuthContext();
+  if (!ctx) return unauthorized();
+  const parsed = getIssueSchema.safeParse(raw);
+  if (!parsed.success) return validationFailure(parsed.error);
+  return issueService.getIssueById(parsed.data.issueId);
 };
 
 export const createIssue = async (

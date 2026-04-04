@@ -149,6 +149,28 @@ export const listIssues = async (
   };
 };
 
+export const getIssueById = async (
+  issueId: string,
+): Promise<IssuesActionResult<IssueWithStatus>> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("issues")
+    .select(issueSelect)
+    .eq("id", issueId)
+    .maybeSingle();
+
+  if (error) {
+    return {
+      ok: false,
+      errorKey: supabaseErrorKey(error, "errors.readFailed"),
+    };
+  }
+  if (!data) {
+    return { ok: false, errorKey: "errors.notFound" };
+  }
+  return { ok: true, data: data as IssueWithStatus };
+};
+
 export const createIssue = async (
   userId: string,
   input: CreateIssueInput,

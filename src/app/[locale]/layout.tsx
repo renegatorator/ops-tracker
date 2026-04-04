@@ -15,13 +15,14 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 
+import { QueryProvider } from "@/components/Providers/QueryProvider";
 import { routing } from "@/i18n/routing";
 import { env } from "@/lib/env";
 
-type Props = {
+interface LocaleLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
-};
+}
 
 export const generateStaticParams = () => {
   return routing.locales.map((locale) => ({ locale }));
@@ -29,7 +30,7 @@ export const generateStaticParams = () => {
 
 export const generateMetadata = async ({
   params,
-}: Props): Promise<Metadata> => {
+}: LocaleLayoutProps): Promise<Metadata> => {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.root" });
 
@@ -43,7 +44,10 @@ export const generateMetadata = async ({
   };
 };
 
-export default async function LocaleLayout({ children, params }: Props) {
+export default async function LocaleLayout({
+  children,
+  params,
+}: LocaleLayoutProps) {
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) {
@@ -62,7 +66,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body>
         <MantineProvider defaultColorScheme="auto">
           <NextIntlClientProvider messages={messages}>
-            {children}
+            <QueryProvider>{children}</QueryProvider>
           </NextIntlClientProvider>
         </MantineProvider>
       </body>

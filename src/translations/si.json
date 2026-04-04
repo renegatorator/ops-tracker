@@ -39,6 +39,9 @@
   },
   "issues": {
     "pageTitle": "Zadeve",
+    "detailTitle": "Zadeva",
+    "loading": "Nalaganje…",
+    "backToList": "Nazaj na zadeve",
     "empty": "Ni še zadev.",
     "errors": {
       "unauthorized": "Moraš biti prijavljen.",

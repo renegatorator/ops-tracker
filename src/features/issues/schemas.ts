@@ -50,6 +50,10 @@ export const softDeleteIssueSchema = z.object({
   issueId: z.uuid({ message: "validation.issueIdInvalid" }),
 });
 
+export const getIssueSchema = z.object({
+  issueId: z.uuid({ message: "validation.issueIdInvalid" }),
+});
+
 const filterFields = {
   statusId: z.uuid({ message: "validation.statusInvalid" }).optional(),
   assigneeId: z
@@ -84,3 +88,4 @@ export type TransitionIssueStatusInput = z.infer<
 export type AssignIssueInput = z.infer<typeof assignIssueSchema>;
 export type SoftDeleteIssueInput = z.infer<typeof softDeleteIssueSchema>;
 export type ListIssuesSchemaInput = z.infer<typeof listIssuesSchema>;
+export type GetIssueInput = z.infer<typeof getIssueSchema>;

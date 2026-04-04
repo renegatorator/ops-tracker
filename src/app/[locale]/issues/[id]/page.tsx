@@ -2,27 +2,23 @@ import { Container, Paper, Stack, Title } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
-import { IssuesListPanel } from "@/features/issues/components/IssuesListPanel";
+import { IssueDetailPanel } from "@/features/issues/components/IssueDetailPanel";
 import { requireUser } from "@/lib/auth/session";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
-interface IssuesPageProps {
-  params: Promise<{ locale: string }>;
+interface IssueDetailPageProps {
+  params: Promise<{ locale: string; id: string }>;
 }
 
-const defaultListParams = {
-  mode: "offset" as const,
-  offset: 0,
-  limit: 20,
-};
-
-export const generateMetadata = async ({ params }: IssuesPageProps) => {
+export const generateMetadata = async ({
+  params,
+}: IssueDetailPageProps) => {
   const { locale } = await params;
   return getLocalizedSeoMetadata(locale, "/issues");
 };
 
-const IssuesPage = async ({ params }: IssuesPageProps) => {
-  const { locale } = await params;
+const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
+  const { locale, id } = await params;
   await requireUser(locale);
   const t = await getTranslations({ locale, namespace: "issues" });
 
@@ -31,8 +27,8 @@ const IssuesPage = async ({ params }: IssuesPageProps) => {
       <Container size="md" py="xl">
         <Paper withBorder p="lg" radius="md">
           <Stack gap="md">
-            <Title order={2}>{t("pageTitle")}</Title>
-            <IssuesListPanel locale={locale} listParams={defaultListParams} />
+            <Title order={2}>{t("detailTitle")}</Title>
+            <IssueDetailPanel locale={locale} issueId={id} />
           </Stack>
         </Paper>
       </Container>
@@ -40,4 +36,4 @@ const IssuesPage = async ({ params }: IssuesPageProps) => {
   );
 };
 
-export default IssuesPage;
+export default IssueDetailPage;

@@ -5,16 +5,16 @@ import PagesLayout from "@/components/Layout/PagesLayout";
 import { requireUser } from "@/lib/auth/session";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
-type Props = {
+interface DashboardPageProps {
   params: Promise<{ locale: string }>;
-};
+}
 
-export const generateMetadata = async ({ params }: Props) => {
+export const generateMetadata = async ({ params }: DashboardPageProps) => {
   const { locale } = await params;
   return getLocalizedSeoMetadata(locale, "/dashboard");
 };
 
-const DashboardPage = async ({ params }: Props) => {
+const DashboardPage = async ({ params }: DashboardPageProps) => {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "dashboard" });
   const user = await requireUser(locale);

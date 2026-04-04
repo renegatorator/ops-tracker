@@ -39,6 +39,9 @@
   },
   "issues": {
     "pageTitle": "Tickets",
+    "detailTitle": "Ticket",
+    "loading": "Wird geladen…",
+    "backToList": "Zurück zur Liste",
     "empty": "Noch keine Tickets.",
     "errors": {
       "unauthorized": "Du musst angemeldet sein.",
