@@ -38,6 +38,7 @@ This project exists as a technical showcase to demonstrate:
 
 - TanStack Table
 - TanStack Query (React Query)
+- Zod (server-side validation for domain actions)
 
 ### UI
 
@@ -78,6 +79,7 @@ The app demonstrates role-based access:
 
 - Authentication & protected routes
 - Role-based authorization
+- Issues domain (server actions + RLS-backed CRUD, status transitions, admin assign/soft-delete; list at `/[locale]/issues`)
 - Issue lifecycle workflow
 - Large dataset filtering & sorting
 - Activity & audit trail

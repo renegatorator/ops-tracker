@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Phase 4 issues domain: `src/features/issues/` with Zod schemas, Supabase service layer, server actions (`listIssues`, `createIssue`, `updateIssue`, `transitionIssueStatus`, `assignIssue`, `softDeleteIssue`), i18n error keys (`issues` namespace, en/si/de), `revalidatePath`/`revalidateTag` after mutations, opaque offset-based list cursor helpers colocated in `service.ts`
+- Protected route `src/app/[locale]/issues/page.tsx` (signed-in issue list placeholder)
+- `zod` dependency for issue input validation
+- SEO metadata wiring for `/issues` in `src/utils/seoUtils.ts`
 - Supabase CLI project layout: `supabase init` (`config.toml`, `.gitignore`); npm scripts `db:link`, `db:push`, `db:pull`, `db:diff`, `db:start`, `db:stop`, `db:reset` (CLI via `npx supabase@latest`)
 - Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_PHASE1.md`
 - Typed `env()` helper in `src/lib/env.ts` for known `NEXT_PUBLIC_*` variables (autocomplete and missing-value errors)

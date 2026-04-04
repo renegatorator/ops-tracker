@@ -37,6 +37,38 @@
     "description": "Uspešno si prijavljen.",
     "signedInAs": "Prijavljen kot: {email}"
   },
+  "issues": {
+    "pageTitle": "Zadeve",
+    "empty": "Ni še zadev.",
+    "errors": {
+      "unauthorized": "Moraš biti prijavljen.",
+      "validation": "Popravi označena polja.",
+      "forbidden": "Nimaš dovoljenja za to dejanje.",
+      "listFailed": "Zadev ni bilo mogoče naložiti.",
+      "invalidCursor": "Neveljaven kurzor strani.",
+      "readFailed": "Podatkov ni bilo mogoče prebrati.",
+      "statusNotFound": "Ta status ne obstaja.",
+      "createFailed": "Zadve ni bilo mogoče ustvariti.",
+      "updateFailed": "Zadve ni bilo mogoče posodobiti.",
+      "notFound": "Zadeva ni najdena.",
+      "transitionFailed": "Statusa ni bilo mogoče spremeniti.",
+      "assignFailed": "Dodelitve ni bilo mogoče posodobiti.",
+      "assigneeNotFound": "Uporabnik ni najden.",
+      "deleteFailed": "Zadve ni bilo mogoče arhivirati.",
+      "referenceInvalid": "Povezan zapis je neveljaven ali manjka."
+    },
+    "validation": {
+      "titleRequired": "Naslov je obvezen.",
+      "titleTooLong": "Naslov je predolg.",
+      "descriptionTooLong": "Opis je predolg.",
+      "statusInvalid": "Izberi veljaven status.",
+      "issueIdInvalid": "Neveljavna referenca zadeve.",
+      "noChanges": "Vnesi vsaj eno polje za posodobitev.",
+      "assigneeInvalid": "Neveljaven prevzemnik.",
+      "searchTooLong": "Iskalno besedilo je predolgo.",
+      "cursorInvalid": "Neveljaven kurzor."
+    }
+  },
   "ui": {
     "themeToggle": {
       "toLight": "Preklopi na svetli način",
@@ -70,6 +102,10 @@
       "dashboard": {
         "title": "Nadzorna plošča",
         "description": "Ključne metrike in nedavna aktivnost."
+      },
+      "issues": {
+        "title": "Zadeve",
+        "description": "Spremljanje in upravljanje operativnih zadev."
       },
       "default": {
         "title": "Ops Tracker",
