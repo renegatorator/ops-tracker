@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Supabase CLI project layout: `supabase init` (`config.toml`, `.gitignore`); npm scripts `db:link`, `db:push`, `db:pull`, `db:diff`, `db:start`, `db:stop`, `db:reset` (CLI via `npx supabase@latest`)
+- Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_PHASE1.md`
+- Typed `env()` helper in `src/lib/env.ts` for known `NEXT_PUBLIC_*` variables (autocomplete and missing-value errors)
+
+### Changed
+
+- Supabase server and browser clients and root layout `metadataBase` now read public env vars through `env()`
+- Documented optional `NEXT_PUBLIC_SITE_URL` in `.env.example`
+
+### Fixed
+
+- Landing page login CTA: avoid passing `Link` as a Mantine `Button` `component` prop from a Server Component (Next.js client component prop serialization)
+
 ## [1.0.2] - 2026-02-24
 
 ### Added

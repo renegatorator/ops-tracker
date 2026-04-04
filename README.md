@@ -98,6 +98,10 @@ src/
   hooks/          # custom React hooks
 ```
 
+### Database (Supabase)
+
+Auth-linked profiles use the **`user_profiles`** table and Postgres enum **`app_role`**. The rest of the schema (issues, audit, etc.) is defined in migrations as the app grows. Canonical details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); implementation order: [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). **Apply migrations:** from the repo root, `npm run db:link` (once), then `npm run db:push` ([Supabase CLI](https://supabase.com/docs/guides/cli) via `npx`), or paste `supabase/migrations/*.sql` into the dashboard SQL Editor.
+
 ---
 
 ## 🛠 Development
