@@ -11,8 +11,10 @@ import type {
 } from "./schemas";
 import type {
   IssuesActionResult,
+  IssueStatusRow,
   IssueWithStatus,
   ListIssuesSuccess,
+  UserProfileBrief,
 } from "./types";
 
 const issueSelect = `
@@ -24,6 +26,11 @@ const issueSelect = `
     sort_order,
     is_terminal,
     created_at
+  ),
+  assignee:user_profiles!issues_assignee_id_fkey (
+    id,
+    email,
+    full_name
   )
 `;
 
@@ -85,12 +92,21 @@ export const listIssues = async (
     offset = decoded;
   }
 
-  let q = supabase
-    .from("issues")
-    .select(issueSelect)
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false })
-    .order("id", { ascending: false });
+  const sortBy = input.sortBy ?? "created_at";
+  const sortDir = input.sortDir ?? "desc";
+  const ascending = sortDir === "asc";
+
+  let q = supabase.from("issues").select(issueSelect).is("deleted_at", null);
+
+  if (sortBy === "status") {
+    q = q.order("sort_order", {
+      ascending,
+      referencedTable: "issue_statuses",
+    });
+  } else {
+    q = q.order(sortBy, { ascending });
+  }
+  q = q.order("id", { ascending });
 
   if (input.statusId) {
     q = q.eq("status_id", input.statusId);
@@ -315,4 +331,40 @@ export const softDeleteIssue = async (
     return { ok: false, errorKey: "errors.notFound" };
   }
   return { ok: true, data: { id: data.id } };
+};
+
+export const listIssueStatuses = async (): Promise<
+  IssuesActionResult<IssueStatusRow[]>
+> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("issue_statuses")
+    .select("id, name, slug, sort_order, is_terminal, created_at")
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    return {
+      ok: false,
+      errorKey: supabaseErrorKey(error, "errors.readFailed"),
+    };
+  }
+  return { ok: true, data: (data ?? []) as IssueStatusRow[] };
+};
+
+export const listUserProfilesBrief = async (): Promise<
+  IssuesActionResult<UserProfileBrief[]>
+> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("user_profiles")
+    .select("id, email, full_name")
+    .order("email", { ascending: true });
+
+  if (error) {
+    return {
+      ok: false,
+      errorKey: supabaseErrorKey(error, "errors.readFailed"),
+    };
+  }
+  return { ok: true, data: (data ?? []) as UserProfileBrief[] };
 };

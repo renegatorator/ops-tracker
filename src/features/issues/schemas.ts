@@ -63,6 +63,14 @@ const filterFields = {
     .string()
     .max(200, { message: "validation.searchTooLong" })
     .optional(),
+  sortBy: z
+    .enum(["created_at", "title", "updated_at", "status"], {
+      message: "validation.sortInvalid",
+    })
+    .optional(),
+  sortDir: z
+    .enum(["asc", "desc"], { message: "validation.sortDirInvalid" })
+    .optional(),
 };
 
 export const listIssuesSchema = z.discriminatedUnion("mode", [

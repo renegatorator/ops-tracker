@@ -43,6 +43,35 @@
     "loading": "Wird geladen…",
     "backToList": "Zurück zur Liste",
     "empty": "Noch keine Tickets.",
+    "unassigned": "Nicht zugewiesen",
+    "table": {
+      "title": "Titel",
+      "status": "Status",
+      "createdAt": "Erstellt",
+      "updatedAt": "Aktualisiert",
+      "assignee": "Bearbeiter",
+      "searchLabel": "Suche",
+      "searchPlaceholder": "Titel durchsuchen…",
+      "filterStatus": "Status",
+      "filterStatusAll": "Alle Status",
+      "filterAssignee": "Bearbeiter",
+      "filterAssigneeAll": "Alle",
+      "filterAssigneeMe": "Mir zugewiesen",
+      "rowsPerPage": "Zeilen pro Seite",
+      "perPage": "{count} Zeilen",
+      "columnsMenu": "Spalten",
+      "columns": {
+        "title": "Titel",
+        "status": "Status",
+        "created_at": "Erstellt",
+        "updated_at": "Aktualisiert",
+        "assignee": "Bearbeiter"
+      },
+      "refreshing": "Aktualisiere…",
+      "pageSummary": "Seite {page} · {count} Tickets",
+      "prevPage": "Zurück",
+      "nextPage": "Weiter"
+    },
     "errors": {
       "unauthorized": "Du musst angemeldet sein.",
       "validation": "Bitte korrigiere die markierten Felder.",
@@ -69,7 +98,9 @@
       "noChanges": "Mindestens ein Feld zum Aktualisieren angeben.",
       "assigneeInvalid": "Ungültiger Bearbeiter.",
       "searchTooLong": "Suchtext ist zu lang.",
-      "cursorInvalid": "Ungültiger Cursor."
+      "cursorInvalid": "Ungültiger Cursor.",
+      "sortInvalid": "Ungültige Sortierspalte.",
+      "sortDirInvalid": "Ungültige Sortierrichtung."
     }
   },
   "ui": {

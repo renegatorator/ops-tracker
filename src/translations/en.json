@@ -43,6 +43,35 @@
     "loading": "Loading…",
     "backToList": "Back to issues",
     "empty": "No issues yet.",
+    "unassigned": "Unassigned",
+    "table": {
+      "title": "Title",
+      "status": "Status",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "assignee": "Assignee",
+      "searchLabel": "Search",
+      "searchPlaceholder": "Search titles…",
+      "filterStatus": "Status",
+      "filterStatusAll": "All statuses",
+      "filterAssignee": "Assignee",
+      "filterAssigneeAll": "Anyone",
+      "filterAssigneeMe": "Assigned to me",
+      "rowsPerPage": "Rows per page",
+      "perPage": "{count} rows",
+      "columnsMenu": "Columns",
+      "columns": {
+        "title": "Title",
+        "status": "Status",
+        "created_at": "Created",
+        "updated_at": "Updated",
+        "assignee": "Assignee"
+      },
+      "refreshing": "Updating…",
+      "pageSummary": "Page {page} · showing {count} issues",
+      "prevPage": "Previous",
+      "nextPage": "Next"
+    },
     "errors": {
       "unauthorized": "You must be signed in.",
       "validation": "Please fix the highlighted fields.",
@@ -69,7 +98,9 @@
       "noChanges": "Provide at least one field to update.",
       "assigneeInvalid": "Invalid assignee.",
       "searchTooLong": "Search text is too long.",
-      "cursorInvalid": "Invalid cursor."
+      "cursorInvalid": "Invalid cursor.",
+      "sortInvalid": "Invalid sort column.",
+      "sortDirInvalid": "Invalid sort direction."
     }
   },
   "ui": {

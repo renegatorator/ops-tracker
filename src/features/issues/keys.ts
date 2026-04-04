@@ -8,4 +8,8 @@ export const issueQueryKeys = {
   details: () => [...issueQueryKeys.all, "detail"] as const,
   detail: (locale: string, issueId: string) =>
     [...issueQueryKeys.details(), locale, issueId] as const,
+  statuses: (locale: string) =>
+    [...issueQueryKeys.all, "statuses", locale] as const,
+  assigneeOptions: (locale: string) =>
+    [...issueQueryKeys.all, "assigneeOptions", locale] as const,
 };

@@ -6,11 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Phase 6 issues list UI: `@tanstack/react-table` and `@tanstack/react-virtual`, `IssuesListPageClient` and `IssuesVirtualizedTable` with server-backed sort, column visibility (localStorage), pagination, debounced search, status/assignee filters, row virtualization when the current page has at least 40 rows, shareable URL query params via `src/features/issues/list-url-params.ts`, `listIssueStatuses` and `listUserProfilesForIssueFilters` actions plus `useIssueStatuses` and `useAssigneeFilterOptions`, assignee embed on issue list/detail select in `service.ts`, optional `sortBy`/`sortDir` on `listIssues` schema and service, `issues.table` and related i18n (en/si/de); Phase 6 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 - Phase 4 issues domain: `src/features/issues/` with Zod schemas, Supabase service layer, server actions (`listIssues`, `createIssue`, `updateIssue`, `transitionIssueStatus`, `assignIssue`, `softDeleteIssue`), i18n error keys (`issues` namespace, en/si/de), `revalidatePath`/`revalidateTag` after mutations, opaque offset-based list cursor helpers colocated in `service.ts`
 - Protected route `src/app/[locale]/issues/page.tsx` (signed-in issue list placeholder)
 - `zod` dependency for issue input validation
 - SEO metadata wiring for `/issues` in `src/utils/seoUtils.ts`
-- Phase 5 TanStack Query: `@tanstack/react-query` and devtools (development only), `QueryProvider` in `src/app/[locale]/layout.tsx`, query key factory `src/features/issues/keys.ts`, hooks `useIssuesList` and `useIssueDetail`, read action `getIssue` / `getIssueById`, `IssuesQueryError` for failed queries, client `IssuesListPanel` and `IssueDetailPanel`, route `src/app/[locale]/issues/[id]/page.tsx`, extra `issues` strings (`loading`, `backToList`, `detailTitle`); Phase 5 marked complete in `docs/IMPLEMENTATION_PLAN.md`
+- Phase 5 TanStack Query: `@tanstack/react-query` and devtools (development only), `QueryProvider` in `src/app/[locale]/layout.tsx`, query key factory `src/features/issues/keys.ts`, hooks `useIssuesList` and `useIssueDetail`, read action `getIssue` / `getIssueById`, `IssuesQueryError` for failed queries, client list/detail panels for issues, route `src/app/[locale]/issues/[id]/page.tsx`, extra `issues` strings (`loading`, `backToList`, `detailTitle`); Phase 5 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 - Supabase CLI project layout: `supabase init` (`config.toml`, `.gitignore`); npm scripts `db:link`, `db:push`, `db:pull`, `db:diff`, `db:start`, `db:stop`, `db:reset` (CLI via `npx supabase@latest`)
 - Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_PHASE1.md`
 - Typed `env()` helper in `src/lib/env.ts` for known `NEXT_PUBLIC_*` variables (autocomplete and missing-value errors)
@@ -20,11 +21,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Component and route props: replace generic `Props` / `type …Props` object types with `interface` names matching the component (e.g. `IssuesListPanelProps`, `LocaleLayoutProps`, `QueryProviderProps`, `HomeProps`, `LoginProps`)
-- Issues index page loads the list through React Query (`IssuesListPanel`) instead of fetching only in the server component
+- Component and route props: replace generic `Props` / `type …Props` object types with `interface` names matching the component (e.g. `IssuesListPageClient` props, `LocaleLayoutProps`, `QueryProviderProps`, `HomeProps`, `LoginProps`)
+- Issues index page uses `IssuesListPageClient` with React Query, URL-driven list params, and `getUserAuthContext` for assignee filter options instead of the removed `IssuesListPanel` placeholder list
 - Supabase server and browser clients and root layout `metadataBase` now read public env vars through `env()`
 - Documented optional `NEXT_PUBLIC_SITE_URL` in `.env.example`
 - Phase 2 modules and related layout/dashboard components use const arrow exports where applicable
+
+### Removed
+
+- `src/features/issues/components/IssuesListPanel.tsx` (superseded by Phase 6 table UI)
 
 ### Fixed
 

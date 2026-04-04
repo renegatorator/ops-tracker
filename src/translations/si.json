@@ -43,6 +43,35 @@
     "loading": "Nalaganje…",
     "backToList": "Nazaj na zadeve",
     "empty": "Ni še zadev.",
+    "unassigned": "Nedodeljeno",
+    "table": {
+      "title": "Naslov",
+      "status": "Status",
+      "createdAt": "Ustvarjeno",
+      "updatedAt": "Posodobljeno",
+      "assignee": "Prevzemnik",
+      "searchLabel": "Iskanje",
+      "searchPlaceholder": "Išči po naslovih…",
+      "filterStatus": "Status",
+      "filterStatusAll": "Vsi statusi",
+      "filterAssignee": "Prevzemnik",
+      "filterAssigneeAll": "Kdorkoli",
+      "filterAssigneeMe": "Dodeljeno meni",
+      "rowsPerPage": "Vrstic na stran",
+      "perPage": "{count} vrstic",
+      "columnsMenu": "Stolpci",
+      "columns": {
+        "title": "Naslov",
+        "status": "Status",
+        "created_at": "Ustvarjeno",
+        "updated_at": "Posodobljeno",
+        "assignee": "Prevzemnik"
+      },
+      "refreshing": "Posodabljanje…",
+      "pageSummary": "Stran {page} · prikazanih {count} zadev",
+      "prevPage": "Prejšnja",
+      "nextPage": "Naslednja"
+    },
     "errors": {
       "unauthorized": "Moraš biti prijavljen.",
       "validation": "Popravi označena polja.",
@@ -69,7 +98,9 @@
       "noChanges": "Vnesi vsaj eno polje za posodobitev.",
       "assigneeInvalid": "Neveljaven prevzemnik.",
       "searchTooLong": "Iskalno besedilo je predolgo.",
-      "cursorInvalid": "Neveljaven kurzor."
+      "cursorInvalid": "Neveljaven kurzor.",
+      "sortInvalid": "Neveljaven stolpec razvrščanja.",
+      "sortDirInvalid": "Neveljavna smer razvrščanja."
     }
   },
   "ui": {

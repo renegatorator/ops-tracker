@@ -1,20 +1,15 @@
 import { Container, Paper, Stack, Title } from "@mantine/core";
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
-import { IssuesListPanel } from "@/features/issues/components/IssuesListPanel";
-import { requireUser } from "@/lib/auth/session";
+import { IssuesListPageClient } from "@/features/issues/components/IssuesListPageClient";
+import { getUserAuthContext } from "@/lib/auth/session";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface IssuesPageProps {
   params: Promise<{ locale: string }>;
 }
-
-const defaultListParams = {
-  mode: "offset" as const,
-  offset: 0,
-  limit: 20,
-};
 
 export const generateMetadata = async ({ params }: IssuesPageProps) => {
   const { locale } = await params;
@@ -23,16 +18,25 @@ export const generateMetadata = async ({ params }: IssuesPageProps) => {
 
 const IssuesPage = async ({ params }: IssuesPageProps) => {
   const { locale } = await params;
-  await requireUser(locale);
+  const ctx = await getUserAuthContext();
+  if (!ctx) {
+    redirect(`/${locale}/login`);
+  }
   const t = await getTranslations({ locale, namespace: "issues" });
+  const canListAllAssignees =
+    ctx.role === "admin" || ctx.role === "super_admin";
 
   return (
     <PagesLayout>
-      <Container size="md" py="xl">
-        <Paper withBorder p="lg" radius="md">
+      <Container size="xl" px={{ base: "xs", sm: "md" }} py="xl">
+        <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
           <Stack gap="md">
             <Title order={2}>{t("pageTitle")}</Title>
-            <IssuesListPanel locale={locale} listParams={defaultListParams} />
+            <IssuesListPageClient
+              locale={locale}
+              currentUserId={ctx.user.id}
+              canListAllAssignees={canListAllAssignees}
+            />
           </Stack>
         </Paper>
       </Container>

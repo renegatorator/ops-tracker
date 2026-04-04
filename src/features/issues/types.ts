@@ -19,9 +19,16 @@ export type IssueStatusRow = {
   created_at: string;
 };
 
+export type UserProfileBrief = {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+};
+
 /** Row shape from `issues` list/detail select with embedded status. */
 export type IssueWithStatus = Issue & {
   issue_statuses: IssueStatusRow | null;
+  assignee: UserProfileBrief | null;
 };
 
 export type IssueListFilters = {

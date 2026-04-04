@@ -21,8 +21,10 @@ import * as issueService from "./service";
 import type {
   IssuesActionFailure,
   IssuesActionResult,
+  IssueStatusRow,
   IssueWithStatus,
   ListIssuesSuccess,
+  UserProfileBrief,
 } from "./types";
 
 const revalidateIssuesSegment = (locale: string) => {
@@ -50,6 +52,30 @@ export const listIssues = async (
   const parsed = listIssuesSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   return issueService.listIssues(parsed.data);
+};
+
+export const listIssueStatuses = async (
+  _locale: string,
+): Promise<IssuesActionResult<IssueStatusRow[]>> => {
+  const ctx = await getUserAuthContext();
+  if (!ctx) return unauthorized();
+  return issueService.listIssueStatuses();
+};
+
+export const listUserProfilesForIssueFilters = async (
+  _locale: string,
+): Promise<IssuesActionResult<UserProfileBrief[]>> => {
+  const ctx = await getUserAuthContext();
+  if (!ctx) return unauthorized();
+  try {
+    assertRole(ctx, ["admin", "super_admin"]);
+  } catch (e) {
+    if (e instanceof ForbiddenError) {
+      return { ok: false, errorKey: "errors.forbidden" };
+    }
+    throw e;
+  }
+  return issueService.listUserProfilesBrief();
 };
 
 export const getIssue = async (
