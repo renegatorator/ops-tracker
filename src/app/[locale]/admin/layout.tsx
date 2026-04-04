@@ -14,8 +14,9 @@ const AdminLayout = async ({
   params: Promise<unknown>;
 }) => {
   const { locale } = (await params) as { locale: string };
-  await requireRole(locale, ["admin", "super_admin"]);
+  const { role } = await requireRole(locale, ["admin", "super_admin"]);
   const t = await getTranslations({ locale, namespace: "admin" });
+  const showSuperSettings = role === "super_admin";
 
   return (
     <PagesLayout>
@@ -32,6 +33,11 @@ const AdminLayout = async ({
             <Anchor component={Link} href="/admin/statuses" size="sm">
               {t("nav.statuses")}
             </Anchor>
+            {showSuperSettings ? (
+              <Anchor component={Link} href="/admin/settings" size="sm">
+                {t("nav.settings")}
+              </Anchor>
+            ) : null}
           </Group>
           {children}
         </Stack>

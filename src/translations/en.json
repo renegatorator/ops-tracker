@@ -125,7 +125,8 @@
       "link": "Admin",
       "overview": "Overview",
       "users": "Users",
-      "statuses": "Statuses"
+      "statuses": "Statuses",
+      "settings": "Super admin"
     },
     "overview": {
       "title": "Overview",
@@ -149,6 +150,35 @@
       "updateRoleFailed": "Could not update role.",
       "cannotAssignSuperAdmin": "Only a super admin can assign that role.",
       "cannotEditRole": "You cannot change this user’s role."
+    },
+    "settings": {
+      "title": "Super admin settings",
+      "flags": {
+        "title": "Environment & feature flags",
+        "demoReset": "Demo data reset",
+        "demoResetEnv": "OPS_DEMO_RESET_ENABLED",
+        "experimentalUi": "Experimental UI (OPS_EXPERIMENTAL_UI)",
+        "publicSiteUrl": "Public site URL",
+        "nodeEnv": "Node environment",
+        "on": "On",
+        "off": "Off",
+        "unset": "(unset)"
+      },
+      "demoReset": {
+        "title": "Demo data",
+        "description": "Permanently deletes every row in the issues table. User profiles and issue statuses are not changed. The action is written to the audit log.",
+        "button": "Reset demo data",
+        "confirmTitle": "Reset all issues?",
+        "confirmBody": "This removes all issues from the database. You cannot undo this.",
+        "confirmButton": "Yes, reset demo data",
+        "cancel": "Cancel",
+        "success": "Demo reset complete. Removed {count} issues."
+      },
+      "errors": {
+        "demoResetDisabled": "Demo reset is turned off for this deployment (see OPS_DEMO_RESET_ENABLED).",
+        "resetFailed": "Could not delete issues. Nothing was changed.",
+        "auditFailed": "Issues were removed but the audit log entry could not be saved. Check server logs."
+      }
     },
     "statuses": {
       "pageTitle": "Issue statuses",
@@ -225,6 +255,10 @@
       "adminStatuses": {
         "title": "Issue statuses",
         "description": "Configure workflow statuses."
+      },
+      "adminSettings": {
+        "title": "Super admin settings",
+        "description": "System flags and demo data controls."
       },
       "default": {
         "title": "Ops Tracker",

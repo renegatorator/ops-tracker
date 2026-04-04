@@ -125,7 +125,8 @@
       "link": "Skrbnik",
       "overview": "Pregled",
       "users": "Uporabniki",
-      "statuses": "Statusi"
+      "statuses": "Statusi",
+      "settings": "Najskrbnik"
     },
     "overview": {
       "title": "Pregled",
@@ -149,6 +150,35 @@
       "updateRoleFailed": "Vloge ni bilo mogoče posodobiti.",
       "cannotAssignSuperAdmin": "Samo najskrbnik lahko dodeli to vlogo.",
       "cannotEditRole": "Tej uporabnikovi vloge ne moreš spremeniti."
+    },
+    "settings": {
+      "title": "Nastavitve najskrbnika",
+      "flags": {
+        "title": "Okolje in zastavice funkcij",
+        "demoReset": "Ponastavitev demo podatkov",
+        "demoResetEnv": "OPS_DEMO_RESET_ENABLED",
+        "experimentalUi": "Preizkusni vmesnik (OPS_EXPERIMENTAL_UI)",
+        "publicSiteUrl": "Javni URL strani",
+        "nodeEnv": "Node okolje",
+        "on": "Vklopljeno",
+        "off": "Izklopljeno",
+        "unset": "(ni nastavljeno)"
+      },
+      "demoReset": {
+        "title": "Demo podatki",
+        "description": "Tračno izbriše vse vrstice v tabeli zadev. Uporabniški profili in statusi zadev ostanejo. Dejanje se zabeleži v revizijski dnevnik.",
+        "button": "Ponastavi demo podatke",
+        "confirmTitle": "Izbrisati vse zadeve?",
+        "confirmBody": "To odstrani vse zadeve iz baze. Tega ni mogoče razveljaviti.",
+        "confirmButton": "Da, ponastavi demo",
+        "cancel": "Prekliči",
+        "success": "Demo ponastavljen. Odstranjenih zadev: {count}."
+      },
+      "errors": {
+        "demoResetDisabled": "Ponastavitev dema je za to namestitev izklopljena (glej OPS_DEMO_RESET_ENABLED).",
+        "resetFailed": "Zadev ni bilo mogoče izbrisati. Ni sprememb.",
+        "auditFailed": "Zadeve so bile odstranjene, vnos v revizijski dnevnik pa ni uspel. Preveri dnevnike strežnika."
+      }
     },
     "statuses": {
       "pageTitle": "Statusi zadev",
@@ -225,6 +255,10 @@
       "adminStatuses": {
         "title": "Statusi zadev",
         "description": "Nastavitve statusov delovnega toka."
+      },
+      "adminSettings": {
+        "title": "Nastavitve najskrbnika",
+        "description": "Sistemske zastavice in demo podatki."
       },
       "default": {
         "title": "Ops Tracker",

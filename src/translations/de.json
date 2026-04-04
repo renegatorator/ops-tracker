@@ -125,7 +125,8 @@
       "link": "Admin",
       "overview": "Übersicht",
       "users": "Benutzer",
-      "statuses": "Status"
+      "statuses": "Status",
+      "settings": "Super-Admin"
     },
     "overview": {
       "title": "Übersicht",
@@ -149,6 +150,35 @@
       "updateRoleFailed": "Rolle konnte nicht aktualisiert werden.",
       "cannotAssignSuperAdmin": "Nur ein Super-Admin kann diese Rolle vergeben.",
       "cannotEditRole": "Du kannst die Rolle dieses Benutzers nicht ändern."
+    },
+    "settings": {
+      "title": "Super-Admin-Einstellungen",
+      "flags": {
+        "title": "Umgebung & Feature-Flags",
+        "demoReset": "Demo-Daten zurücksetzen",
+        "demoResetEnv": "OPS_DEMO_RESET_ENABLED",
+        "experimentalUi": "Experimentelle Oberfläche (OPS_EXPERIMENTAL_UI)",
+        "publicSiteUrl": "Öffentliche Site-URL",
+        "nodeEnv": "Node-Umgebung",
+        "on": "An",
+        "off": "Aus",
+        "unset": "(nicht gesetzt)"
+      },
+      "demoReset": {
+        "title": "Demo-Daten",
+        "description": "Löscht dauerhaft alle Zeilen in der Tabelle „issues“. Benutzerprofile und Ticket-Status bleiben unverändert. Die Aktion wird im Audit-Log protokolliert.",
+        "button": "Demo-Daten zurücksetzen",
+        "confirmTitle": "Alle Tickets löschen?",
+        "confirmBody": "Damit werden alle Tickets aus der Datenbank entfernt. Das kann nicht rückgängig gemacht werden.",
+        "confirmButton": "Ja, Demo-Daten zurücksetzen",
+        "cancel": "Abbrechen",
+        "success": "Demo zurückgesetzt. {count} Tickets entfernt."
+      },
+      "errors": {
+        "demoResetDisabled": "Demo-Reset ist für dieses Deployment deaktiviert (siehe OPS_DEMO_RESET_ENABLED).",
+        "resetFailed": "Tickets konnten nicht gelöscht werden. Es wurde nichts geändert.",
+        "auditFailed": "Tickets wurden entfernt, aber der Audit-Log-Eintrag konnte nicht gespeichert werden. Server-Logs prüfen."
+      }
     },
     "statuses": {
       "pageTitle": "Ticket-Status",
@@ -225,6 +255,10 @@
       "adminStatuses": {
         "title": "Ticket-Status",
         "description": "Workflow-Status konfigurieren."
+      },
+      "adminSettings": {
+        "title": "Super-Admin-Einstellungen",
+        "description": "System-Flags und Demo-Daten."
       },
       "default": {
         "title": "Ops Tracker",
