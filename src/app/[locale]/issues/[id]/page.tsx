@@ -49,6 +49,8 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
   );
   const canTransitionStatus =
     issue != null ? canUserTransitionIssueStatus(ctx, issue) : false;
+  const canAssignIssue =
+    ctx.role === "admin" || ctx.role === "super_admin";
 
   const t = await getTranslations({ locale, namespace: "issues" });
 
@@ -63,6 +65,7 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
                 locale={locale}
                 issueId={id}
                 canTransitionStatus={canTransitionStatus}
+                canAssignIssue={canAssignIssue}
               />
             </HydrationBoundary>
           </Stack>

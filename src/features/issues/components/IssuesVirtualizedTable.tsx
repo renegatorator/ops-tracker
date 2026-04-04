@@ -4,6 +4,7 @@ import {
   Anchor,
   Box,
   Group,
+  Select,
   Table,
   Text,
   UnstyledButton,
@@ -41,6 +42,8 @@ const SORT_ID_SET = new Set<IssuesListSortField>([
   "status",
 ]);
 
+const UNASSIGNED_VALUE = "__unassigned__";
+
 interface IssuesVirtualizedTableProps {
   locale: string;
   data: IssueWithStatus[];
@@ -51,6 +54,10 @@ interface IssuesVirtualizedTableProps {
   onColumnVisibilityChange: (
     updater: VisibilityState | ((old: VisibilityState) => VisibilityState),
   ) => void;
+  canAssignIssues?: boolean;
+  assigneeSelectOptions?: { value: string; label: string }[];
+  onAssignIssue?: (issueId: string, assigneeId: string | null) => void;
+  assignPendingIssueId?: string | null;
 }
 
 function formatDate(iso: string, locale: string) {
@@ -114,6 +121,10 @@ export const IssuesVirtualizedTable = ({
   onSortChange,
   columnVisibility,
   onColumnVisibilityChange,
+  canAssignIssues = false,
+  assigneeSelectOptions = [],
+  onAssignIssue,
+  assignPendingIssueId = null,
 }: IssuesVirtualizedTableProps) => {
   const t = useTranslations("issues.table");
   const tCommon = useTranslations("issues");
@@ -180,6 +191,26 @@ export const IssuesVirtualizedTable = ({
         header: t("assignee"),
         enableSorting: false,
         cell: ({ row }) => {
+          if (canAssignIssues && onAssignIssue) {
+            return (
+              <Select
+                size="xs"
+                comboboxProps={{ withinPortal: true }}
+                data={[
+                  { value: UNASSIGNED_VALUE, label: tCommon("unassigned") },
+                  ...assigneeSelectOptions,
+                ]}
+                value={row.original.assignee_id ?? UNASSIGNED_VALUE}
+                onChange={(v) => {
+                  const next =
+                    v === UNASSIGNED_VALUE || !v ? null : v;
+                  onAssignIssue(row.original.id, next);
+                }}
+                disabled={assignPendingIssueId === row.original.id}
+                aria-label={t("assignee")}
+              />
+            );
+          }
           const a = row.original.assignee;
           const label =
             a?.full_name?.trim() || a?.email?.trim() || tCommon("unassigned");
@@ -187,7 +218,18 @@ export const IssuesVirtualizedTable = ({
         },
       },
     ],
-    [locale, onSortChange, sortBy, sortDir, t, tCommon],
+    [
+      assignPendingIssueId,
+      assigneeSelectOptions,
+      canAssignIssues,
+      locale,
+      onAssignIssue,
+      onSortChange,
+      sortBy,
+      sortDir,
+      t,
+      tCommon,
+    ],
   );
 
   const sorting: SortingState = useMemo(

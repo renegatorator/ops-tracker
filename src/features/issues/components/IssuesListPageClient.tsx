@@ -17,9 +17,10 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { usePathname,useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
+import { useAssignIssue } from "../hooks/useAssignIssue";
 import { useIssuesList } from "../hooks/useIssuesList";
 import { useIssueStatuses } from "../hooks/useIssueStatuses";
 import { isIssuesQueryError } from "../issues-query-error";
@@ -95,6 +96,21 @@ export const IssuesListPageClient = ({
     locale,
     canListAllAssignees,
   );
+  const assignIssue = useAssignIssue(locale);
+
+  const assignColumnOptions = useMemo(
+    () =>
+      adminUsers.map((u) => ({
+        value: u.id,
+        label: u.full_name?.trim() || u.email?.trim() || u.id,
+      })),
+    [adminUsers],
+  );
+
+  const assignPendingIssueId =
+    assignIssue.isPending && assignIssue.variables
+      ? assignIssue.variables.issueId
+      : null;
 
   const qFromUrl = searchParams.get("q") ?? "";
   const [searchDraft, setSearchDraft] = useState(qFromUrl);
@@ -292,6 +308,12 @@ export const IssuesListPageClient = ({
             onSortChange={onSortChange}
             columnVisibility={columnVisibility}
             onColumnVisibilityChange={setColumnVisibility}
+            canAssignIssues={canListAllAssignees}
+            assigneeSelectOptions={assignColumnOptions}
+            onAssignIssue={(issueId, assigneeId) =>
+              assignIssue.mutate({ issueId, assigneeId })
+            }
+            assignPendingIssueId={assignPendingIssueId}
           />
           {pagination ? (
             <Group justify="space-between" wrap="wrap">

@@ -46,7 +46,11 @@
       "statusLabel": "Status",
       "statusPlaceholder": "Status wählen",
       "statusReadOnlyHint": "Du kannst den Status dieses Tickets nicht ändern.",
-      "statusUpdateFailedTitle": "Status konnte nicht aktualisiert werden"
+      "statusUpdateFailedTitle": "Status konnte nicht aktualisiert werden",
+      "assigneeLabel": "Bearbeiter",
+      "assignPlaceholder": "Zuweisen…",
+      "assignReadOnlyHint": "Nur Administratoren können die Zuweisung ändern.",
+      "assignUpdateFailedTitle": "Zuweisung konnte nicht aktualisiert werden"
     },
     "empty": "Noch keine Tickets.",
     "unassigned": "Nicht zugewiesen",
@@ -106,7 +110,70 @@
       "searchTooLong": "Suchtext ist zu lang.",
       "cursorInvalid": "Ungültiger Cursor.",
       "sortInvalid": "Ungültige Sortierspalte.",
-      "sortDirInvalid": "Ungültige Sortierrichtung."
+      "sortDirInvalid": "Ungültige Sortierrichtung.",
+      "slugInvalid": "Kleinbuchstaben, beginnend mit einem Buchstaben (Buchstaben, Zahlen, Unterstriche).",
+      "slugTooLong": "Der Slug ist zu lang.",
+      "statusNameRequired": "Der Statusname ist erforderlich.",
+      "statusNameTooLong": "Der Statusname ist zu lang.",
+      "userIdInvalid": "Ungültiger Benutzer.",
+      "roleInvalid": "Ungültige Rolle."
+    }
+  },
+  "admin": {
+    "title": "Administration",
+    "nav": {
+      "link": "Admin",
+      "overview": "Übersicht",
+      "users": "Benutzer",
+      "statuses": "Status"
+    },
+    "overview": {
+      "title": "Übersicht",
+      "description": "Benutzer, Workflow-Status und Zuweisungen für Tickets verwalten."
+    },
+    "users": {
+      "title": "Benutzer",
+      "loading": "Benutzer werden geladen…",
+      "email": "E-Mail",
+      "name": "Name",
+      "role": "Rolle"
+    },
+    "roles": {
+      "user": "Benutzer",
+      "admin": "Admin",
+      "super_admin": "Super-Admin"
+    },
+    "errors": {
+      "listUsersFailed": "Benutzer konnten nicht geladen werden.",
+      "readUserFailed": "Benutzer konnte nicht gelesen werden.",
+      "updateRoleFailed": "Rolle konnte nicht aktualisiert werden.",
+      "cannotAssignSuperAdmin": "Nur ein Super-Admin kann diese Rolle vergeben.",
+      "cannotEditRole": "Du kannst die Rolle dieses Benutzers nicht ändern."
+    },
+    "statuses": {
+      "pageTitle": "Ticket-Status",
+      "loading": "Status werden geladen…",
+      "add": "Status hinzufügen",
+      "name": "Name",
+      "slug": "Slug",
+      "slugHint": "Kleinbuchstaben, mit Buchstabe beginnen.",
+      "sortOrder": "Sortierung",
+      "terminal": "Abschluss",
+      "yes": "Ja",
+      "no": "Nein",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "createTitle": "Neuer Status",
+      "editTitle": "Status bearbeiten",
+      "deleteTitle": "Status löschen",
+      "deleteConfirm": "Status {name} löschen? Solange Tickets ihn nutzen, ist Löschen nicht möglich.",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "createFailed": "Status konnte nicht erstellt werden.",
+      "updateFailed": "Status konnte nicht aktualisiert werden.",
+      "deleteFailed": "Status konnte nicht gelöscht werden.",
+      "slugTaken": "Dieser Slug ist bereits vergeben.",
+      "deleteInUse": "Dieser Status wird noch von Tickets verwendet."
     }
   },
   "ui": {
@@ -146,6 +213,18 @@
       "issues": {
         "title": "Tickets",
         "description": "Operative Tickets verfolgen und verwalten."
+      },
+      "admin": {
+        "title": "Administration",
+        "description": "Benutzer und Konfiguration verwalten."
+      },
+      "adminUsers": {
+        "title": "Benutzer",
+        "description": "Benutzerrollen verwalten."
+      },
+      "adminStatuses": {
+        "title": "Ticket-Status",
+        "description": "Workflow-Status konfigurieren."
       },
       "default": {
         "title": "Ops Tracker",

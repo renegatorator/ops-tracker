@@ -46,7 +46,11 @@
       "statusLabel": "Status",
       "statusPlaceholder": "Choose status",
       "statusReadOnlyHint": "You cannot change status for this issue.",
-      "statusUpdateFailedTitle": "Status update failed"
+      "statusUpdateFailedTitle": "Status update failed",
+      "assigneeLabel": "Assignee",
+      "assignPlaceholder": "Assign to…",
+      "assignReadOnlyHint": "Only administrators can change assignment.",
+      "assignUpdateFailedTitle": "Assignment update failed"
     },
     "empty": "No issues yet.",
     "unassigned": "Unassigned",
@@ -106,7 +110,70 @@
       "searchTooLong": "Search text is too long.",
       "cursorInvalid": "Invalid cursor.",
       "sortInvalid": "Invalid sort column.",
-      "sortDirInvalid": "Invalid sort direction."
+      "sortDirInvalid": "Invalid sort direction.",
+      "slugInvalid": "Use a lowercase slug starting with a letter (letters, numbers, underscores).",
+      "slugTooLong": "Slug is too long.",
+      "statusNameRequired": "Status name is required.",
+      "statusNameTooLong": "Status name is too long.",
+      "userIdInvalid": "Invalid user.",
+      "roleInvalid": "Invalid role."
+    }
+  },
+  "admin": {
+    "title": "Administration",
+    "nav": {
+      "link": "Admin",
+      "overview": "Overview",
+      "users": "Users",
+      "statuses": "Statuses"
+    },
+    "overview": {
+      "title": "Overview",
+      "description": "Manage users, workflow statuses, and use assignment controls on issues."
+    },
+    "users": {
+      "title": "Users",
+      "loading": "Loading users…",
+      "email": "Email",
+      "name": "Name",
+      "role": "Role"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin",
+      "super_admin": "Super admin"
+    },
+    "errors": {
+      "listUsersFailed": "Could not load users.",
+      "readUserFailed": "Could not read user.",
+      "updateRoleFailed": "Could not update role.",
+      "cannotAssignSuperAdmin": "Only a super admin can assign that role.",
+      "cannotEditRole": "You cannot change this user’s role."
+    },
+    "statuses": {
+      "pageTitle": "Issue statuses",
+      "loading": "Loading statuses…",
+      "add": "Add status",
+      "name": "Name",
+      "slug": "Slug",
+      "slugHint": "Lowercase, start with a letter; use letters, numbers, underscores.",
+      "sortOrder": "Sort order",
+      "terminal": "Terminal",
+      "yes": "Yes",
+      "no": "No",
+      "edit": "Edit",
+      "delete": "Delete",
+      "createTitle": "New status",
+      "editTitle": "Edit status",
+      "deleteTitle": "Delete status",
+      "deleteConfirm": "Delete status {name}? Issues still using it cannot be deleted.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "createFailed": "Could not create the status.",
+      "updateFailed": "Could not update the status.",
+      "deleteFailed": "Could not delete the status.",
+      "slugTaken": "That slug is already in use.",
+      "deleteInUse": "This status is still used by issues."
     }
   },
   "ui": {
@@ -146,6 +213,18 @@
       "issues": {
         "title": "Issues",
         "description": "Track and manage operations issues."
+      },
+      "admin": {
+        "title": "Administration",
+        "description": "Manage users and workflow configuration."
+      },
+      "adminUsers": {
+        "title": "Users",
+        "description": "Manage user roles."
+      },
+      "adminStatuses": {
+        "title": "Issue statuses",
+        "description": "Configure workflow statuses."
       },
       "default": {
         "title": "Ops Tracker",

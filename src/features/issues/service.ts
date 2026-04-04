@@ -4,10 +4,13 @@ import { supabaseErrorKey } from "./map-errors";
 import type {
   AssignIssueInput,
   CreateIssueInput,
+  CreateIssueStatusInput,
+  DeleteIssueStatusInput,
   ListIssuesSchemaInput,
   SoftDeleteIssueInput,
   TransitionIssueStatusInput,
   UpdateIssueInput,
+  UpdateIssueStatusInput,
 } from "./schemas";
 import type {
   IssuesActionResult,
@@ -367,4 +370,89 @@ export const listUserProfilesBrief = async (): Promise<
     };
   }
   return { ok: true, data: (data ?? []) as UserProfileBrief[] };
+};
+
+export const createIssueStatus = async (
+  input: CreateIssueStatusInput,
+): Promise<IssuesActionResult<{ id: string }>> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("issue_statuses")
+    .insert({
+      name: input.name,
+      slug: input.slug,
+      sort_order: input.sort_order,
+      is_terminal: input.is_terminal,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    if (error.code === "23505") {
+      return { ok: false, errorKey: "statuses.slugTaken" };
+    }
+    return {
+      ok: false,
+      errorKey: supabaseErrorKey(error, "statuses.createFailed"),
+    };
+  }
+  return { ok: true, data: { id: data.id } };
+};
+
+export const updateIssueStatus = async (
+  input: UpdateIssueStatusInput,
+): Promise<IssuesActionResult<{ id: string }>> => {
+  const supabase = await createClient();
+  const patch: Record<string, string | number | boolean> = {};
+  if (input.name !== undefined) patch.name = input.name;
+  if (input.slug !== undefined) patch.slug = input.slug;
+  if (input.sort_order !== undefined) patch.sort_order = input.sort_order;
+  if (input.is_terminal !== undefined) patch.is_terminal = input.is_terminal;
+
+  const { data, error } = await supabase
+    .from("issue_statuses")
+    .update(patch)
+    .eq("id", input.statusId)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    if (error.code === "23505") {
+      return { ok: false, errorKey: "statuses.slugTaken" };
+    }
+    return {
+      ok: false,
+      errorKey: supabaseErrorKey(error, "statuses.updateFailed"),
+    };
+  }
+  if (!data) {
+    return { ok: false, errorKey: "errors.statusNotFound" };
+  }
+  return { ok: true, data: { id: data.id } };
+};
+
+export const deleteIssueStatus = async (
+  input: DeleteIssueStatusInput,
+): Promise<IssuesActionResult<{ id: string }>> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("issue_statuses")
+    .delete()
+    .eq("id", input.statusId)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    if (error.code === "23503") {
+      return { ok: false, errorKey: "statuses.deleteInUse" };
+    }
+    return {
+      ok: false,
+      errorKey: supabaseErrorKey(error, "statuses.deleteFailed"),
+    };
+  }
+  if (!data) {
+    return { ok: false, errorKey: "errors.statusNotFound" };
+  }
+  return { ok: true, data: { id: data.id } };
 };

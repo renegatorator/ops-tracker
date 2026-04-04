@@ -46,7 +46,11 @@
       "statusLabel": "Status",
       "statusPlaceholder": "Izberi status",
       "statusReadOnlyHint": "Statusa te zadeve ne moreš spremeniti.",
-      "statusUpdateFailedTitle": "Posodobitev statusa ni uspela"
+      "statusUpdateFailedTitle": "Posodobitev statusa ni uspela",
+      "assigneeLabel": "Prevzemnik",
+      "assignPlaceholder": "Dodeli…",
+      "assignReadOnlyHint": "Dodelitev lahko spremenijo samo skrbniki.",
+      "assignUpdateFailedTitle": "Posodobitev dodelitve ni uspela"
     },
     "empty": "Ni še zadev.",
     "unassigned": "Nedodeljeno",
@@ -106,7 +110,70 @@
       "searchTooLong": "Iskalno besedilo je predolgo.",
       "cursorInvalid": "Neveljaven kurzor.",
       "sortInvalid": "Neveljaven stolpec razvrščanja.",
-      "sortDirInvalid": "Neveljavna smer razvrščanja."
+      "sortDirInvalid": "Neveljavna smer razvrščanja.",
+      "slugInvalid": "Mala začetnica, nato črke, številke in podčrtaji.",
+      "slugTooLong": "Slug je predolg.",
+      "statusNameRequired": "Ime statusa je obvezno.",
+      "statusNameTooLong": "Ime statusa je predolgo.",
+      "userIdInvalid": "Neveljaven uporabnik.",
+      "roleInvalid": "Neveljavna vloga."
+    }
+  },
+  "admin": {
+    "title": "Skrbništvo",
+    "nav": {
+      "link": "Skrbnik",
+      "overview": "Pregled",
+      "users": "Uporabniki",
+      "statuses": "Statusi"
+    },
+    "overview": {
+      "title": "Pregled",
+      "description": "Upravljanje uporabnikov, statusov delovnega toka in dodeljevanja zadev."
+    },
+    "users": {
+      "title": "Uporabniki",
+      "loading": "Nalaganje uporabnikov…",
+      "email": "E-pošta",
+      "name": "Ime",
+      "role": "Vloga"
+    },
+    "roles": {
+      "user": "Uporabnik",
+      "admin": "Skrbnik",
+      "super_admin": "Najskrbnik"
+    },
+    "errors": {
+      "listUsersFailed": "Uporabnikov ni bilo mogoče naložiti.",
+      "readUserFailed": "Uporabnika ni bilo mogoče prebrati.",
+      "updateRoleFailed": "Vloge ni bilo mogoče posodobiti.",
+      "cannotAssignSuperAdmin": "Samo najskrbnik lahko dodeli to vlogo.",
+      "cannotEditRole": "Tej uporabnikovi vloge ne moreš spremeniti."
+    },
+    "statuses": {
+      "pageTitle": "Statusi zadev",
+      "loading": "Nalaganje statusov…",
+      "add": "Dodaj status",
+      "name": "Ime",
+      "slug": "Slug",
+      "slugHint": "Male črke, začetek s črko.",
+      "sortOrder": "Vrstni red",
+      "terminal": "Končni",
+      "yes": "Da",
+      "no": "Ne",
+      "edit": "Uredi",
+      "delete": "Izbriši",
+      "createTitle": "Nov status",
+      "editTitle": "Uredi status",
+      "deleteTitle": "Izbriši status",
+      "deleteConfirm": "Izbrisati status {name}? Če ga zadeve še uporabljajo, brisanje ni mogoče.",
+      "save": "Shrani",
+      "cancel": "Prekliči",
+      "createFailed": "Statusa ni bilo mogoče ustvariti.",
+      "updateFailed": "Statusa ni bilo mogoče posodobiti.",
+      "deleteFailed": "Statusa ni bilo mogoče izbrisati.",
+      "slugTaken": "Ta slug je že zaseden.",
+      "deleteInUse": "Ta status še uporabljajo zadeve."
     }
   },
   "ui": {
@@ -146,6 +213,18 @@
       "issues": {
         "title": "Zadeve",
         "description": "Spremljanje in upravljanje operativnih zadev."
+      },
+      "admin": {
+        "title": "Skrbništvo",
+        "description": "Upravljanje uporabnikov in konfiguracije."
+      },
+      "adminUsers": {
+        "title": "Uporabniki",
+        "description": "Upravljanje vlog uporabnikov."
+      },
+      "adminStatuses": {
+        "title": "Statusi zadev",
+        "description": "Nastavitve statusov delovnega toka."
       },
       "default": {
         "title": "Ops Tracker",

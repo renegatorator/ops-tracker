@@ -54,6 +54,49 @@ export const getIssueSchema = z.object({
   issueId: z.uuid({ message: "validation.issueIdInvalid" }),
 });
 
+const statusSlug = z
+  .string()
+  .trim()
+  .regex(/^[a-z][a-z0-9_]*$/, { message: "validation.slugInvalid" })
+  .max(80, { message: "validation.slugTooLong" });
+
+export const createIssueStatusSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "validation.statusNameRequired" })
+    .max(120, { message: "validation.statusNameTooLong" }),
+  slug: statusSlug,
+  sort_order: z.number().int().min(0).max(9999).default(0),
+  is_terminal: z.boolean().default(false),
+});
+
+export const updateIssueStatusSchema = z
+  .object({
+    statusId: z.uuid({ message: "validation.statusInvalid" }),
+    name: z
+      .string()
+      .trim()
+      .min(1, { message: "validation.statusNameRequired" })
+      .max(120, { message: "validation.statusNameTooLong" })
+      .optional(),
+    slug: statusSlug.optional(),
+    sort_order: z.number().int().min(0).max(9999).optional(),
+    is_terminal: z.boolean().optional(),
+  })
+  .refine(
+    (v) =>
+      v.name !== undefined ||
+      v.slug !== undefined ||
+      v.sort_order !== undefined ||
+      v.is_terminal !== undefined,
+    { message: "validation.noChanges", path: ["root"] },
+  );
+
+export const deleteIssueStatusSchema = z.object({
+  statusId: z.uuid({ message: "validation.statusInvalid" }),
+});
+
 const filterFields = {
   statusId: z.uuid({ message: "validation.statusInvalid" }).optional(),
   assigneeId: z
@@ -97,3 +140,7 @@ export type AssignIssueInput = z.infer<typeof assignIssueSchema>;
 export type SoftDeleteIssueInput = z.infer<typeof softDeleteIssueSchema>;
 export type ListIssuesSchemaInput = z.infer<typeof listIssuesSchema>;
 export type GetIssueInput = z.infer<typeof getIssueSchema>;
+export type CreateIssueStatusInput = z.infer<typeof createIssueStatusSchema>;
+export type UpdateIssueStatusInput = z.infer<typeof updateIssueStatusSchema>;
+export type DeleteIssueStatusInput = z.infer<typeof deleteIssueStatusSchema>;
+

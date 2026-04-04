@@ -11,11 +11,14 @@ import { zodToFieldErrors } from "./map-errors";
 import {
   assignIssueSchema,
   createIssueSchema,
+  createIssueStatusSchema,
+  deleteIssueStatusSchema,
   getIssueSchema,
   listIssuesSchema,
   softDeleteIssueSchema,
   transitionIssueStatusSchema,
   updateIssueSchema,
+  updateIssueStatusSchema,
 } from "./schemas";
 import * as issueService from "./service";
 import type {
@@ -32,6 +35,12 @@ const revalidateIssuesSegment = (locale: string, issueId?: string) => {
   if (issueId) {
     revalidatePath(`/${locale}/issues/${issueId}`, "page");
   }
+  revalidateTag(ISSUES_CACHE_TAG, "max");
+};
+
+const revalidateAfterIssueStatusMutation = (locale: string) => {
+  revalidatePath(`/${locale}/issues`, "page");
+  revalidatePath(`/${locale}/admin/statuses`, "page");
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
 
@@ -150,7 +159,62 @@ export const assignIssue = async (
   const parsed = assignIssueSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.assignIssue(parsed.data);
-  if (result.ok) revalidateIssuesSegment(locale);
+  if (result.ok) {
+    revalidateIssuesSegment(locale, parsed.data.issueId);
+  }
+  return result;
+};
+
+const assertAdminOrSuper = async (): Promise<IssuesActionFailure | null> => {
+  const ctx = await getUserAuthContext();
+  if (!ctx) return unauthorized();
+  try {
+    assertRole(ctx, ["admin", "super_admin"]);
+  } catch (e) {
+    if (e instanceof ForbiddenError) {
+      return { ok: false, errorKey: "errors.forbidden" };
+    }
+    throw e;
+  }
+  return null;
+};
+
+export const createIssueStatus = async (
+  locale: string,
+  raw: unknown,
+): Promise<IssuesActionResult<{ id: string }>> => {
+  const gate = await assertAdminOrSuper();
+  if (gate) return gate;
+  const parsed = createIssueStatusSchema.safeParse(raw);
+  if (!parsed.success) return validationFailure(parsed.error);
+  const result = await issueService.createIssueStatus(parsed.data);
+  if (result.ok) revalidateAfterIssueStatusMutation(locale);
+  return result;
+};
+
+export const updateIssueStatus = async (
+  locale: string,
+  raw: unknown,
+): Promise<IssuesActionResult<{ id: string }>> => {
+  const gate = await assertAdminOrSuper();
+  if (gate) return gate;
+  const parsed = updateIssueStatusSchema.safeParse(raw);
+  if (!parsed.success) return validationFailure(parsed.error);
+  const result = await issueService.updateIssueStatus(parsed.data);
+  if (result.ok) revalidateAfterIssueStatusMutation(locale);
+  return result;
+};
+
+export const deleteIssueStatus = async (
+  locale: string,
+  raw: unknown,
+): Promise<IssuesActionResult<{ id: string }>> => {
+  const gate = await assertAdminOrSuper();
+  if (gate) return gate;
+  const parsed = deleteIssueStatusSchema.safeParse(raw);
+  if (!parsed.success) return validationFailure(parsed.error);
+  const result = await issueService.deleteIssueStatus(parsed.data);
+  if (result.ok) revalidateAfterIssueStatusMutation(locale);
   return result;
 };
 
@@ -171,6 +235,8 @@ export const softDeleteIssue = async (
   const parsed = softDeleteIssueSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.softDeleteIssue(parsed.data);
-  if (result.ok) revalidateIssuesSegment(locale);
+  if (result.ok) {
+    revalidateIssuesSegment(locale, parsed.data.issueId);
+  }
   return result;
 };
