@@ -2,7 +2,26 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 
-export type AppRole = "user" | "admin" | "super_admin";
+import type { AppRole, UserAuthContext } from "./types";
+import { parseAppRole } from "./types";
+
+export type { AppRole, UserAuthContext } from "./types";
+
+const fetchProfileRole = async (
+  userId: string,
+): Promise<AppRole | null> => {
+  const supabase = await createClient();
+  const { data: profile, error } = await supabase
+    .from("user_profiles")
+    .select("role")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error || profile?.role == null) {
+    return null;
+  }
+  return parseAppRole(profile.role);
+};
 
 export const getSession = async () => {
   const supabase = await createClient();
@@ -10,6 +29,18 @@ export const getSession = async () => {
     data: { user },
   } = await supabase.auth.getUser();
   return { user: user ?? null };
+};
+
+/**
+ * Signed-in user plus `user_profiles.role` from the database. No redirects.
+ * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, [...])` for admin paths.
+ */
+export const getUserAuthContext = async (): Promise<UserAuthContext | null> => {
+  const { user } = await getSession();
+  if (!user) return null;
+  const role = await fetchProfileRole(user.id);
+  if (role == null) return null;
+  return { user, role };
 };
 
 export const requireUser = async (locale: string) => {
@@ -26,18 +57,12 @@ export const requireUser = async (locale: string) => {
  */
 export const requireRole = async (locale: string, allowed: AppRole[]) => {
   const user = await requireUser(locale);
-  const supabase = await createClient();
-  const { data: profile, error } = await supabase
-    .from("user_profiles")
-    .select("role")
-    .eq("id", user.id)
-    .maybeSingle();
+  const role = await fetchProfileRole(user.id);
 
-  if (error || profile?.role == null) {
+  if (role == null) {
     redirect(`/${locale}/login`);
   }
 
-  const role = profile.role as AppRole;
   if (!allowed.includes(role)) {
     redirect(`/${locale}/dashboard`);
   }

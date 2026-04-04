@@ -37,6 +37,38 @@
     "description": "Du bist erfolgreich angemeldet.",
     "signedInAs": "Angemeldet als: {email}"
   },
+  "issues": {
+    "pageTitle": "Tickets",
+    "empty": "Noch keine Tickets.",
+    "errors": {
+      "unauthorized": "Du musst angemeldet sein.",
+      "validation": "Bitte korrigiere die markierten Felder.",
+      "forbidden": "Du darfst das nicht tun.",
+      "listFailed": "Tickets konnten nicht geladen werden.",
+      "invalidCursor": "Ungültiger Seiten-Cursor.",
+      "readFailed": "Daten konnten nicht gelesen werden.",
+      "statusNotFound": "Dieser Status existiert nicht.",
+      "createFailed": "Ticket konnte nicht erstellt werden.",
+      "updateFailed": "Ticket konnte nicht aktualisiert werden.",
+      "notFound": "Ticket nicht gefunden.",
+      "transitionFailed": "Status konnte nicht geändert werden.",
+      "assignFailed": "Zuweisung konnte nicht aktualisiert werden.",
+      "assigneeNotFound": "Benutzer nicht gefunden.",
+      "deleteFailed": "Ticket konnte nicht archiviert werden.",
+      "referenceInvalid": "Ein verknüpfter Datensatz ist ungültig oder fehlt."
+    },
+    "validation": {
+      "titleRequired": "Titel ist erforderlich.",
+      "titleTooLong": "Titel ist zu lang.",
+      "descriptionTooLong": "Beschreibung ist zu lang.",
+      "statusInvalid": "Bitte einen gültigen Status wählen.",
+      "issueIdInvalid": "Ungültige Ticket-Referenz.",
+      "noChanges": "Mindestens ein Feld zum Aktualisieren angeben.",
+      "assigneeInvalid": "Ungültiger Bearbeiter.",
+      "searchTooLong": "Suchtext ist zu lang.",
+      "cursorInvalid": "Ungültiger Cursor."
+    }
+  },
   "ui": {
     "themeToggle": {
       "toLight": "Zum hellen Modus wechseln",
@@ -70,6 +102,10 @@
       "dashboard": {
         "title": "Dashboard",
         "description": "Wichtige Kennzahlen und aktuelle Aktivitäten."
+      },
+      "issues": {
+        "title": "Tickets",
+        "description": "Operative Tickets verfolgen und verwalten."
       },
       "default": {
         "title": "Ops Tracker",
