@@ -7,7 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "db:link": "npx supabase@latest link",
+    "db:push": "npx supabase@latest db push",
+    "db:pull": "npx supabase@latest db pull",
+    "db:diff": "npx supabase@latest db diff",
+    "db:start": "npx supabase@latest start",
+    "db:stop": "npx supabase@latest stop",
+    "db:reset": "npx supabase@latest db reset"
   },
   "dependencies": {
     "@mantine/core": "^8.3.15",

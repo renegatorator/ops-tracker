@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Supabase CLI project layout: `supabase init` (`config.toml`, `.gitignore`); npm scripts `db:link`, `db:push`, `db:pull`, `db:diff`, `db:start`, `db:stop`, `db:reset` (CLI via `npx supabase@latest`)
+- Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_PHASE1.md`
 - Typed `env()` helper in `src/lib/env.ts` for known `NEXT_PUBLIC_*` variables (autocomplete and missing-value errors)
 
 ### Changed
