@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-04-5
+
 ### Added
 
 - Phase 10 audit trail: `src/lib/audit/log-audit.ts` (`logAudit` best-effort insert, `server-only`); audit calls after successful issue mutations (`issue.create` / `issue.update` / `issue.status_transition` / `issue.assign` / `issue.archive`), issue status admin CRUD (`issue_status.*`), `user.role_change` in `users/service.ts`, `demo.reset` via `logAudit` in settings; `src/features/audit/` (`listAuditLogs` service with filters + offset pagination, actor embed `user_profiles!audit_log_actor_id_fkey`, `listAuditLogsForAdmin` action); admin route `src/app/[locale]/admin/audit/` + nav link, `AdminAuditLogPanel` (debounced action filter, entity type, date range, Mantine table); `IssueAuditActivitySection` on issue detail for admins/super_admins with optional prefetch in `prefetch-issue-queries.ts`; `admin.audit`, `issues.detail.activity`, `admin.nav.audit`, SEO `adminAudit`; Phase 10 marked complete in `docs/IMPLEMENTATION_PLAN.md`
