@@ -13,7 +13,8 @@ type KnownRoute =
   | "/admin"
   | "/admin/users"
   | "/admin/statuses"
-  | "/admin/settings";
+  | "/admin/settings"
+  | "/admin/audit";
 
 const routeToSeoKey: Record<KnownRoute, string> = {
   "/": "home",
@@ -23,6 +24,7 @@ const routeToSeoKey: Record<KnownRoute, string> = {
   "/admin/users": "adminUsers",
   "/admin/statuses": "adminStatuses",
   "/admin/settings": "adminSettings",
+  "/admin/audit": "adminAudit",
 };
 
 function stripLocaleFromPath(pathname: string): string {

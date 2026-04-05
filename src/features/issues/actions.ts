@@ -3,8 +3,10 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { ZodError } from "zod";
 
+import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
+import type { UserAuthContext } from "@/lib/auth/types";
 
 import { ISSUES_CACHE_TAG } from "./cache";
 import { zodToFieldErrors } from "./map-errors";
@@ -110,7 +112,16 @@ export const createIssue = async (
   const parsed = createIssueSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.createIssue(ctx.user.id, parsed.data);
-  if (result.ok) revalidateIssuesSegment(locale);
+  if (result.ok) {
+    await logAudit({
+      actorId: ctx.user.id,
+      action: "issue.create",
+      entityType: "issue",
+      entityId: result.data.id,
+      metadata: { title: parsed.data.title },
+    });
+    revalidateIssuesSegment(locale);
+  }
   return result;
 };
 
@@ -123,7 +134,22 @@ export const updateIssue = async (
   const parsed = updateIssueSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.updateIssue(parsed.data);
-  if (result.ok) revalidateIssuesSegment(locale);
+  if (result.ok) {
+    const fields = (
+      [
+        parsed.data.title !== undefined ? "title" : null,
+        parsed.data.description !== undefined ? "description" : null,
+      ] as const
+    ).filter((x): x is "title" | "description" => x != null);
+    await logAudit({
+      actorId: ctx.user.id,
+      action: "issue.update",
+      entityType: "issue",
+      entityId: parsed.data.issueId,
+      metadata: { fields },
+    });
+    revalidateIssuesSegment(locale);
+  }
   return result;
 };
 
@@ -137,6 +163,13 @@ export const transitionIssueStatus = async (
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.transitionIssueStatus(parsed.data);
   if (result.ok) {
+    await logAudit({
+      actorId: ctx.user.id,
+      action: "issue.status_transition",
+      entityType: "issue",
+      entityId: parsed.data.issueId,
+      metadata: { status_id: parsed.data.statusId },
+    });
     revalidateIssuesSegment(locale, parsed.data.issueId);
   }
   return result;
@@ -160,12 +193,23 @@ export const assignIssue = async (
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.assignIssue(parsed.data);
   if (result.ok) {
+    await logAudit({
+      actorId: ctx.user.id,
+      action: "issue.assign",
+      entityType: "issue",
+      entityId: parsed.data.issueId,
+      metadata: { assignee_id: parsed.data.assigneeId },
+    });
     revalidateIssuesSegment(locale, parsed.data.issueId);
   }
   return result;
 };
 
-const assertAdminOrSuper = async (): Promise<IssuesActionFailure | null> => {
+type AdminAuthResult =
+  | IssuesActionFailure
+  | { ok: true; ctx: UserAuthContext };
+
+const requireAdminOrSuperCtx = async (): Promise<AdminAuthResult> => {
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
@@ -176,19 +220,28 @@ const assertAdminOrSuper = async (): Promise<IssuesActionFailure | null> => {
     }
     throw e;
   }
-  return null;
+  return { ok: true, ctx };
 };
 
 export const createIssueStatus = async (
   locale: string,
   raw: unknown,
 ): Promise<IssuesActionResult<{ id: string }>> => {
-  const gate = await assertAdminOrSuper();
-  if (gate) return gate;
+  const auth = await requireAdminOrSuperCtx();
+  if (auth.ok === false) return auth;
   const parsed = createIssueStatusSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.createIssueStatus(parsed.data);
-  if (result.ok) revalidateAfterIssueStatusMutation(locale);
+  if (result.ok) {
+    await logAudit({
+      actorId: auth.ctx.user.id,
+      action: "issue_status.create",
+      entityType: "issue_status",
+      entityId: result.data.id,
+      metadata: { slug: parsed.data.slug, name: parsed.data.name },
+    });
+    revalidateAfterIssueStatusMutation(locale);
+  }
   return result;
 };
 
@@ -196,12 +249,29 @@ export const updateIssueStatus = async (
   locale: string,
   raw: unknown,
 ): Promise<IssuesActionResult<{ id: string }>> => {
-  const gate = await assertAdminOrSuper();
-  if (gate) return gate;
+  const auth = await requireAdminOrSuperCtx();
+  if (auth.ok === false) return auth;
   const parsed = updateIssueStatusSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.updateIssueStatus(parsed.data);
-  if (result.ok) revalidateAfterIssueStatusMutation(locale);
+  if (result.ok) {
+    const fields = (
+      [
+        parsed.data.name !== undefined ? "name" : null,
+        parsed.data.slug !== undefined ? "slug" : null,
+        parsed.data.sort_order !== undefined ? "sort_order" : null,
+        parsed.data.is_terminal !== undefined ? "is_terminal" : null,
+      ] as const
+    ).filter((x): x is "name" | "slug" | "sort_order" | "is_terminal" => x != null);
+    await logAudit({
+      actorId: auth.ctx.user.id,
+      action: "issue_status.update",
+      entityType: "issue_status",
+      entityId: parsed.data.statusId,
+      metadata: { fields },
+    });
+    revalidateAfterIssueStatusMutation(locale);
+  }
   return result;
 };
 
@@ -209,12 +279,21 @@ export const deleteIssueStatus = async (
   locale: string,
   raw: unknown,
 ): Promise<IssuesActionResult<{ id: string }>> => {
-  const gate = await assertAdminOrSuper();
-  if (gate) return gate;
+  const auth = await requireAdminOrSuperCtx();
+  if (auth.ok === false) return auth;
   const parsed = deleteIssueStatusSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.deleteIssueStatus(parsed.data);
-  if (result.ok) revalidateAfterIssueStatusMutation(locale);
+  if (result.ok) {
+    await logAudit({
+      actorId: auth.ctx.user.id,
+      action: "issue_status.delete",
+      entityType: "issue_status",
+      entityId: parsed.data.statusId,
+      metadata: {},
+    });
+    revalidateAfterIssueStatusMutation(locale);
+  }
   return result;
 };
 
@@ -236,6 +315,13 @@ export const softDeleteIssue = async (
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await issueService.softDeleteIssue(parsed.data);
   if (result.ok) {
+    await logAudit({
+      actorId: ctx.user.id,
+      action: "issue.archive",
+      entityType: "issue",
+      entityId: parsed.data.issueId,
+      metadata: {},
+    });
     revalidateIssuesSegment(locale, parsed.data.issueId);
   }
   return result;

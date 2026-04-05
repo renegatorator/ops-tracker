@@ -50,7 +50,18 @@
       "assigneeLabel": "Assignee",
       "assignPlaceholder": "Assign to…",
       "assignReadOnlyHint": "Only administrators can change assignment.",
-      "assignUpdateFailedTitle": "Assignment update failed"
+      "assignUpdateFailedTitle": "Assignment update failed",
+      "activity": {
+        "title": "Activity (audit)",
+        "hint": "Visible to administrators only. Recent actions recorded for this issue.",
+        "loading": "Loading activity…",
+        "empty": "No audit entries for this issue yet.",
+        "loadFailed": "Could not load activity.",
+        "when": "When",
+        "actor": "Actor",
+        "action": "Action",
+        "details": "Details"
+      }
     },
     "empty": "No issues yet.",
     "unassigned": "Unassigned",
@@ -126,6 +137,7 @@
       "overview": "Overview",
       "users": "Users",
       "statuses": "Statuses",
+      "audit": "Audit",
       "settings": "Super admin"
     },
     "overview": {
@@ -204,6 +216,42 @@
       "deleteFailed": "Could not delete the status.",
       "slugTaken": "That slug is already in use.",
       "deleteInUse": "This status is still used by issues."
+    },
+    "audit": {
+      "title": "Audit log",
+      "loading": "Loading audit entries…",
+      "empty": "No audit entries match these filters.",
+      "filters": {
+        "action": "Action contains",
+        "actionPlaceholder": "e.g. issue.assign",
+        "entityType": "Entity type",
+        "entityAll": "All types",
+        "entity": {
+          "issue": "Issue",
+          "issue_status": "Issue status",
+          "user_profile": "User profile",
+          "system": "System"
+        },
+        "fromDate": "From date",
+        "toDate": "To date"
+      },
+      "table": {
+        "when": "When",
+        "actor": "Actor",
+        "action": "Action",
+        "entity": "Entity",
+        "entityId": "Entity ID",
+        "metadata": "Metadata"
+      },
+      "pagination": {
+        "summary": "Showing {from}–{to} of {total}",
+        "prev": "Previous",
+        "next": "Next",
+        "pageOf": "Page {page} of {totalPages}"
+      },
+      "errors": {
+        "listFailed": "Could not load audit log."
+      }
     }
   },
   "ui": {
@@ -259,6 +307,10 @@
       "adminSettings": {
         "title": "Super admin settings",
         "description": "System flags and demo data controls."
+      },
+      "adminAudit": {
+        "title": "Audit log",
+        "description": "Security and workflow events."
       },
       "default": {
         "title": "Ops Tracker",

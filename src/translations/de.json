@@ -50,7 +50,18 @@
       "assigneeLabel": "Bearbeiter",
       "assignPlaceholder": "Zuweisen…",
       "assignReadOnlyHint": "Nur Administratoren können die Zuweisung ändern.",
-      "assignUpdateFailedTitle": "Zuweisung konnte nicht aktualisiert werden"
+      "assignUpdateFailedTitle": "Zuweisung konnte nicht aktualisiert werden",
+      "activity": {
+        "title": "Aktivität (Audit)",
+        "hint": "Nur für Administratoren sichtbar. Kürzlich protokollierte Aktionen zu diesem Ticket.",
+        "loading": "Aktivität wird geladen…",
+        "empty": "Noch keine Audit-Einträge für dieses Ticket.",
+        "loadFailed": "Aktivität konnte nicht geladen werden.",
+        "when": "Zeitpunkt",
+        "actor": "Akteur",
+        "action": "Aktion",
+        "details": "Details"
+      }
     },
     "empty": "Noch keine Tickets.",
     "unassigned": "Nicht zugewiesen",
@@ -126,6 +137,7 @@
       "overview": "Übersicht",
       "users": "Benutzer",
       "statuses": "Status",
+      "audit": "Audit",
       "settings": "Super-Admin"
     },
     "overview": {
@@ -204,6 +216,42 @@
       "deleteFailed": "Status konnte nicht gelöscht werden.",
       "slugTaken": "Dieser Slug ist bereits vergeben.",
       "deleteInUse": "Dieser Status wird noch von Tickets verwendet."
+    },
+    "audit": {
+      "title": "Audit-Protokoll",
+      "loading": "Audit-Einträge werden geladen…",
+      "empty": "Keine Audit-Einträge für diese Filter.",
+      "filters": {
+        "action": "Aktion enthält",
+        "actionPlaceholder": "z. B. issue.assign",
+        "entityType": "Entitätstyp",
+        "entityAll": "Alle Typen",
+        "entity": {
+          "issue": "Ticket",
+          "issue_status": "Ticket-Status",
+          "user_profile": "Benutzerprofil",
+          "system": "System"
+        },
+        "fromDate": "Von Datum",
+        "toDate": "Bis Datum"
+      },
+      "table": {
+        "when": "Zeitpunkt",
+        "actor": "Akteur",
+        "action": "Aktion",
+        "entity": "Entität",
+        "entityId": "Entitäts-ID",
+        "metadata": "Metadaten"
+      },
+      "pagination": {
+        "summary": "{from}–{to} von {total}",
+        "prev": "Zurück",
+        "next": "Weiter",
+        "pageOf": "Seite {page} von {totalPages}"
+      },
+      "errors": {
+        "listFailed": "Audit-Protokoll konnte nicht geladen werden."
+      }
     }
   },
   "ui": {
@@ -259,6 +307,10 @@
       "adminSettings": {
         "title": "Super-Admin-Einstellungen",
         "description": "System-Flags und Demo-Daten."
+      },
+      "adminAudit": {
+        "title": "Audit-Protokoll",
+        "description": "Sicherheits- und Workflow-Ereignisse."
       },
       "default": {
         "title": "Ops Tracker",

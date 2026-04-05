@@ -50,7 +50,18 @@
       "assigneeLabel": "Prevzemnik",
       "assignPlaceholder": "Dodeli…",
       "assignReadOnlyHint": "Dodelitev lahko spremenijo samo skrbniki.",
-      "assignUpdateFailedTitle": "Posodobitev dodelitve ni uspela"
+      "assignUpdateFailedTitle": "Posodobitev dodelitve ni uspela",
+      "activity": {
+        "title": "Aktivnost (revizija)",
+        "hint": "Vidno samo skrbnikom. Nedavna dejanja, zabeležena za to zadevo.",
+        "loading": "Nalaganje aktivnosti…",
+        "empty": "Za to zadevo še ni vnosov v revizijskem dnevniku.",
+        "loadFailed": "Aktivnosti ni bilo mogoče naložiti.",
+        "when": "Kdaj",
+        "actor": "Izvajalec",
+        "action": "Dejanje",
+        "details": "Podrobnosti"
+      }
     },
     "empty": "Ni še zadev.",
     "unassigned": "Nedodeljeno",
@@ -126,6 +137,7 @@
       "overview": "Pregled",
       "users": "Uporabniki",
       "statuses": "Statusi",
+      "audit": "Revizija",
       "settings": "Najskrbnik"
     },
     "overview": {
@@ -204,6 +216,42 @@
       "deleteFailed": "Statusa ni bilo mogoče izbrisati.",
       "slugTaken": "Ta slug je že zaseden.",
       "deleteInUse": "Ta status še uporabljajo zadeve."
+    },
+    "audit": {
+      "title": "Revizijski dnevnik",
+      "loading": "Nalaganje vnosov…",
+      "empty": "Noben vnos ne ustreza filtrom.",
+      "filters": {
+        "action": "Dejanje vsebuje",
+        "actionPlaceholder": "npr. issue.assign",
+        "entityType": "Tip entitete",
+        "entityAll": "Vsi tipi",
+        "entity": {
+          "issue": "Zadeva",
+          "issue_status": "Status zadeve",
+          "user_profile": "Uporabniški profil",
+          "system": "Sistem"
+        },
+        "fromDate": "Od datuma",
+        "toDate": "Do datuma"
+      },
+      "table": {
+        "when": "Kdaj",
+        "actor": "Izvajalec",
+        "action": "Dejanje",
+        "entity": "Entiteta",
+        "entityId": "ID entitete",
+        "metadata": "Metapodatki"
+      },
+      "pagination": {
+        "summary": "{from}–{to} od {total}",
+        "prev": "Nazaj",
+        "next": "Naprej",
+        "pageOf": "Stran {page} od {totalPages}"
+      },
+      "errors": {
+        "listFailed": "Revizijskega dnevnika ni bilo mogoče naložiti."
+      }
     }
   },
   "ui": {
@@ -259,6 +307,10 @@
       "adminSettings": {
         "title": "Nastavitve najskrbnika",
         "description": "Sistemske zastavice in demo podatki."
+      },
+      "adminAudit": {
+        "title": "Revizijski dnevnik",
+        "description": "Varnostni in delovni dogodki."
       },
       "default": {
         "title": "Ops Tracker",

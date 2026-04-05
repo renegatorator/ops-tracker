@@ -33,6 +33,9 @@ const AdminLayout = async ({
             <Anchor component={Link} href="/admin/statuses" size="sm">
               {t("nav.statuses")}
             </Anchor>
+            <Anchor component={Link} href="/admin/audit" size="sm">
+              {t("nav.audit")}
+            </Anchor>
             {showSuperSettings ? (
               <Anchor component={Link} href="/admin/settings" size="sm">
                 {t("nav.settings")}

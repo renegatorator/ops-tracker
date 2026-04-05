@@ -11,6 +11,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
+import { IssueAuditActivitySection } from "@/features/audit/components/IssueAuditActivitySection";
 import { Link } from "@/i18n/navigation";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
@@ -27,6 +28,7 @@ interface IssueDetailPanelProps {
   issueId: string;
   canTransitionStatus: boolean;
   canAssignIssue: boolean;
+  canViewIssueAudit: boolean;
 }
 
 export const IssueDetailPanel = ({
@@ -34,6 +36,7 @@ export const IssueDetailPanel = ({
   issueId,
   canTransitionStatus,
   canAssignIssue,
+  canViewIssueAudit,
 }: IssueDetailPanelProps) => {
   const t = useTranslations("issues");
   const tDetail = useTranslations("issues.detail");
@@ -171,6 +174,9 @@ export const IssueDetailPanel = ({
           )}
           {data.description ? (
             <Text style={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
+          ) : null}
+          {canViewIssueAudit ? (
+            <IssueAuditActivitySection locale={locale} issueId={issueId} />
           ) : null}
         </>
       )}

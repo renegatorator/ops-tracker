@@ -42,7 +42,12 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
     },
   });
 
-  await prefetchIssueDetailPageQueries(queryClient, locale, id);
+  const canViewIssueAudit =
+    ctx.role === "admin" || ctx.role === "super_admin";
+
+  await prefetchIssueDetailPageQueries(queryClient, locale, id, {
+    prefetchIssueAudit: canViewIssueAudit,
+  });
 
   const issue = queryClient.getQueryData<IssueWithStatus>(
     issueQueryKeys.detail(locale, id),
@@ -66,6 +71,7 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
                 issueId={id}
                 canTransitionStatus={canTransitionStatus}
                 canAssignIssue={canAssignIssue}
+                canViewIssueAudit={canViewIssueAudit}
               />
             </HydrationBoundary>
           </Stack>

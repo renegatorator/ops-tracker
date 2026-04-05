@@ -3,6 +3,7 @@ import type {
   IssuesActionFailure,
   IssuesActionResult,
 } from "@/features/issues/types";
+import { logAudit } from "@/lib/audit/log-audit";
 import type { AppRole } from "@/lib/auth/types";
 import { parseAppRole } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
@@ -36,6 +37,7 @@ const forbidden = (): IssuesActionFailure => ({
 });
 
 export const updateUserRole = async (
+  actorId: string,
   actorRole: AppRole,
   input: UpdateUserRoleInput,
 ): Promise<IssuesActionResult<{ id: string }>> => {
@@ -90,5 +92,12 @@ export const updateUserRole = async (
   if (!data) {
     return { ok: false, errorKey: "errors.notFound" };
   }
+  await logAudit({
+    actorId,
+    action: "user.role_change",
+    entityType: "user_profile",
+    entityId: input.userId,
+    metadata: { from: targetRole, to: input.role },
+  });
   return { ok: true, data: { id: data.id } };
 };

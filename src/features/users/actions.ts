@@ -59,7 +59,11 @@ export const updateUserRole = async (
   }
   const parsed = updateUserRoleSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
-  const result = await userService.updateUserRole(ctx.role, parsed.data);
+  const result = await userService.updateUserRole(
+    ctx.user.id,
+    ctx.role,
+    parsed.data,
+  );
   if (result.ok) {
     revalidatePath(`/${locale}/admin/users`, "page");
   }

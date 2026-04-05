@@ -6,6 +6,7 @@ import type {
   IssuesActionFailure,
   IssuesActionResult,
 } from "@/features/issues/types";
+import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { isDemoResetEnabled } from "@/lib/env";
@@ -52,15 +53,15 @@ export const resetDemoData = async (
 
   const issuesDeleted = count ?? 0;
 
-  const { error: auditError } = await supabase.from("audit_log").insert({
-    actor_id: ctx.user.id,
+  const auditOk = await logAudit({
+    actorId: ctx.user.id,
     action: "demo.reset",
-    entity_type: "system",
-    entity_id: null,
+    entityType: "system",
+    entityId: null,
     metadata: { issues_deleted: issuesDeleted },
   });
 
-  if (auditError) {
+  if (!auditOk) {
     return { ok: false, errorKey: "settings.errors.auditFailed" };
   }
 
