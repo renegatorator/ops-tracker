@@ -1,32 +1,23 @@
 import { Container, Paper, Stack, Text, Title } from "@mantine/core";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
-import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/session";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
-type Props = {
+interface DashboardPageProps {
   params: Promise<{ locale: string }>;
-};
-
-export async function generateMetadata({ params }: Props) {
-  const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/dashboard");
 }
 
-export default async function DashboardPage({ params }: Props) {
+export const generateMetadata = async ({ params }: DashboardPageProps) => {
+  const { locale } = await params;
+  return getLocalizedSeoMetadata(locale, "/dashboard");
+};
+
+const DashboardPage = async ({ params }: DashboardPageProps) => {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "dashboard" });
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect(`/${locale}/login`);
-  }
+  const user = await requireUser(locale);
 
   return (
     <PagesLayout>
@@ -43,4 +34,6 @@ export default async function DashboardPage({ params }: Props) {
       </Container>
     </PagesLayout>
   );
-}
+};
+
+export default DashboardPage;

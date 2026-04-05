@@ -6,11 +6,25 @@ import { getTranslations } from "next-intl/server";
 
 import { routing } from "@/i18n/routing";
 
-type KnownRoute = "/" | "/dashboard";
+type KnownRoute =
+  | "/"
+  | "/dashboard"
+  | "/issues"
+  | "/admin"
+  | "/admin/users"
+  | "/admin/statuses"
+  | "/admin/settings"
+  | "/admin/audit";
 
 const routeToSeoKey: Record<KnownRoute, string> = {
   "/": "home",
   "/dashboard": "dashboard",
+  "/issues": "issues",
+  "/admin": "admin",
+  "/admin/users": "adminUsers",
+  "/admin/statuses": "adminStatuses",
+  "/admin/settings": "adminSettings",
+  "/admin/audit": "adminAudit",
 };
 
 function stripLocaleFromPath(pathname: string): string {

@@ -37,6 +37,223 @@
     "description": "You are successfully signed in.",
     "signedInAs": "Signed in as: {email}"
   },
+  "issues": {
+    "pageTitle": "Issues",
+    "detailTitle": "Issue",
+    "loading": "Loading…",
+    "backToList": "Back to issues",
+    "detail": {
+      "statusLabel": "Status",
+      "statusPlaceholder": "Choose status",
+      "statusReadOnlyHint": "You cannot change status for this issue.",
+      "statusUpdateFailedTitle": "Status update failed",
+      "assigneeLabel": "Assignee",
+      "assignPlaceholder": "Assign to…",
+      "assignReadOnlyHint": "Only administrators can change assignment.",
+      "assignUpdateFailedTitle": "Assignment update failed",
+      "activity": {
+        "title": "Activity (audit)",
+        "hint": "Visible to administrators only. Recent actions recorded for this issue.",
+        "loading": "Loading activity…",
+        "empty": "No audit entries for this issue yet.",
+        "loadFailed": "Could not load activity.",
+        "when": "When",
+        "actor": "Actor",
+        "action": "Action",
+        "details": "Details"
+      }
+    },
+    "empty": "No issues yet.",
+    "unassigned": "Unassigned",
+    "table": {
+      "title": "Title",
+      "status": "Status",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "assignee": "Assignee",
+      "searchLabel": "Search",
+      "searchPlaceholder": "Search titles…",
+      "filterStatus": "Status",
+      "filterStatusAll": "All statuses",
+      "filterAssignee": "Assignee",
+      "filterAssigneeAll": "Anyone",
+      "filterAssigneeMe": "Assigned to me",
+      "rowsPerPage": "Rows per page",
+      "perPage": "{count} rows",
+      "columnsMenu": "Columns",
+      "columns": {
+        "title": "Title",
+        "status": "Status",
+        "created_at": "Created",
+        "updated_at": "Updated",
+        "assignee": "Assignee"
+      },
+      "refreshing": "Updating…",
+      "pageSummary": "Page {page} · showing {count} issues",
+      "prevPage": "Previous",
+      "nextPage": "Next"
+    },
+    "errors": {
+      "unauthorized": "You must be signed in.",
+      "validation": "Please fix the highlighted fields.",
+      "forbidden": "You do not have permission to do that.",
+      "listFailed": "Could not load issues.",
+      "invalidCursor": "Invalid pagination cursor.",
+      "readFailed": "Could not read data.",
+      "statusNotFound": "That status does not exist.",
+      "createFailed": "Could not create the issue.",
+      "updateFailed": "Could not update the issue.",
+      "notFound": "Issue not found.",
+      "transitionFailed": "Could not change status.",
+      "assignFailed": "Could not update assignment.",
+      "assigneeNotFound": "That user was not found.",
+      "deleteFailed": "Could not archive the issue.",
+      "referenceInvalid": "A related record is invalid or missing."
+    },
+    "validation": {
+      "titleRequired": "Title is required.",
+      "titleTooLong": "Title is too long.",
+      "descriptionTooLong": "Description is too long.",
+      "statusInvalid": "Choose a valid status.",
+      "issueIdInvalid": "Invalid issue reference.",
+      "noChanges": "Provide at least one field to update.",
+      "assigneeInvalid": "Invalid assignee.",
+      "searchTooLong": "Search text is too long.",
+      "cursorInvalid": "Invalid cursor.",
+      "sortInvalid": "Invalid sort column.",
+      "sortDirInvalid": "Invalid sort direction.",
+      "slugInvalid": "Use a lowercase slug starting with a letter (letters, numbers, underscores).",
+      "slugTooLong": "Slug is too long.",
+      "statusNameRequired": "Status name is required.",
+      "statusNameTooLong": "Status name is too long.",
+      "userIdInvalid": "Invalid user.",
+      "roleInvalid": "Invalid role."
+    }
+  },
+  "admin": {
+    "title": "Administration",
+    "nav": {
+      "link": "Admin",
+      "overview": "Overview",
+      "users": "Users",
+      "statuses": "Statuses",
+      "audit": "Audit",
+      "settings": "Super admin"
+    },
+    "overview": {
+      "title": "Overview",
+      "description": "Manage users, workflow statuses, and use assignment controls on issues."
+    },
+    "users": {
+      "title": "Users",
+      "loading": "Loading users…",
+      "email": "Email",
+      "name": "Name",
+      "role": "Role"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin",
+      "super_admin": "Super admin"
+    },
+    "errors": {
+      "listUsersFailed": "Could not load users.",
+      "readUserFailed": "Could not read user.",
+      "updateRoleFailed": "Could not update role.",
+      "cannotAssignSuperAdmin": "Only a super admin can assign that role.",
+      "cannotEditRole": "You cannot change this user’s role."
+    },
+    "settings": {
+      "title": "Super admin settings",
+      "flags": {
+        "title": "Environment & feature flags",
+        "demoReset": "Demo data reset",
+        "demoResetEnv": "OPS_DEMO_RESET_ENABLED",
+        "experimentalUi": "Experimental UI (OPS_EXPERIMENTAL_UI)",
+        "publicSiteUrl": "Public site URL",
+        "nodeEnv": "Node environment",
+        "on": "On",
+        "off": "Off",
+        "unset": "(unset)"
+      },
+      "demoReset": {
+        "title": "Demo data",
+        "description": "Permanently deletes every row in the issues table. User profiles and issue statuses are not changed. The action is written to the audit log.",
+        "button": "Reset demo data",
+        "confirmTitle": "Reset all issues?",
+        "confirmBody": "This removes all issues from the database. You cannot undo this.",
+        "confirmButton": "Yes, reset demo data",
+        "cancel": "Cancel",
+        "success": "Demo reset complete. Removed {count} issues."
+      },
+      "errors": {
+        "demoResetDisabled": "Demo reset is turned off for this deployment (see OPS_DEMO_RESET_ENABLED).",
+        "resetFailed": "Could not delete issues. Nothing was changed.",
+        "auditFailed": "Issues were removed but the audit log entry could not be saved. Check server logs."
+      }
+    },
+    "statuses": {
+      "pageTitle": "Issue statuses",
+      "loading": "Loading statuses…",
+      "add": "Add status",
+      "name": "Name",
+      "slug": "Slug",
+      "slugHint": "Lowercase, start with a letter; use letters, numbers, underscores.",
+      "sortOrder": "Sort order",
+      "terminal": "Terminal",
+      "yes": "Yes",
+      "no": "No",
+      "edit": "Edit",
+      "delete": "Delete",
+      "createTitle": "New status",
+      "editTitle": "Edit status",
+      "deleteTitle": "Delete status",
+      "deleteConfirm": "Delete status {name}? Issues still using it cannot be deleted.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "createFailed": "Could not create the status.",
+      "updateFailed": "Could not update the status.",
+      "deleteFailed": "Could not delete the status.",
+      "slugTaken": "That slug is already in use.",
+      "deleteInUse": "This status is still used by issues."
+    },
+    "audit": {
+      "title": "Audit log",
+      "loading": "Loading audit entries…",
+      "empty": "No audit entries match these filters.",
+      "filters": {
+        "action": "Action contains",
+        "actionPlaceholder": "e.g. issue.assign",
+        "entityType": "Entity type",
+        "entityAll": "All types",
+        "entity": {
+          "issue": "Issue",
+          "issue_status": "Issue status",
+          "user_profile": "User profile",
+          "system": "System"
+        },
+        "fromDate": "From date",
+        "toDate": "To date"
+      },
+      "table": {
+        "when": "When",
+        "actor": "Actor",
+        "action": "Action",
+        "entity": "Entity",
+        "entityId": "Entity ID",
+        "metadata": "Metadata"
+      },
+      "pagination": {
+        "summary": "Showing {from}–{to} of {total}",
+        "prev": "Previous",
+        "next": "Next",
+        "pageOf": "Page {page} of {totalPages}"
+      },
+      "errors": {
+        "listFailed": "Could not load audit log."
+      }
+    }
+  },
   "ui": {
     "themeToggle": {
       "toLight": "Switch to light mode",
@@ -54,7 +271,8 @@
     }
   },
   "layout": {
-    "footer": "\u00a9 2026 Rene Krajnc. All rights reserved."
+    "footer": "\u00a9 2026 Rene Krajnc. All rights reserved.",
+    "logout": "Log out"
   },
   "seo": {
     "root": {
@@ -69,6 +287,30 @@
       "dashboard": {
         "title": "Dashboard",
         "description": "Key metrics and recent activity."
+      },
+      "issues": {
+        "title": "Issues",
+        "description": "Track and manage operations issues."
+      },
+      "admin": {
+        "title": "Administration",
+        "description": "Manage users and workflow configuration."
+      },
+      "adminUsers": {
+        "title": "Users",
+        "description": "Manage user roles."
+      },
+      "adminStatuses": {
+        "title": "Issue statuses",
+        "description": "Configure workflow statuses."
+      },
+      "adminSettings": {
+        "title": "Super admin settings",
+        "description": "System flags and demo data controls."
+      },
+      "adminAudit": {
+        "title": "Audit log",
+        "description": "Security and workflow events."
       },
       "default": {
         "title": "Ops Tracker",

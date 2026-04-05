@@ -37,6 +37,223 @@
     "description": "Du bist erfolgreich angemeldet.",
     "signedInAs": "Angemeldet als: {email}"
   },
+  "issues": {
+    "pageTitle": "Tickets",
+    "detailTitle": "Ticket",
+    "loading": "Wird geladen…",
+    "backToList": "Zurück zur Liste",
+    "detail": {
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status wählen",
+      "statusReadOnlyHint": "Du kannst den Status dieses Tickets nicht ändern.",
+      "statusUpdateFailedTitle": "Status konnte nicht aktualisiert werden",
+      "assigneeLabel": "Bearbeiter",
+      "assignPlaceholder": "Zuweisen…",
+      "assignReadOnlyHint": "Nur Administratoren können die Zuweisung ändern.",
+      "assignUpdateFailedTitle": "Zuweisung konnte nicht aktualisiert werden",
+      "activity": {
+        "title": "Aktivität (Audit)",
+        "hint": "Nur für Administratoren sichtbar. Kürzlich protokollierte Aktionen zu diesem Ticket.",
+        "loading": "Aktivität wird geladen…",
+        "empty": "Noch keine Audit-Einträge für dieses Ticket.",
+        "loadFailed": "Aktivität konnte nicht geladen werden.",
+        "when": "Zeitpunkt",
+        "actor": "Akteur",
+        "action": "Aktion",
+        "details": "Details"
+      }
+    },
+    "empty": "Noch keine Tickets.",
+    "unassigned": "Nicht zugewiesen",
+    "table": {
+      "title": "Titel",
+      "status": "Status",
+      "createdAt": "Erstellt",
+      "updatedAt": "Aktualisiert",
+      "assignee": "Bearbeiter",
+      "searchLabel": "Suche",
+      "searchPlaceholder": "Titel durchsuchen…",
+      "filterStatus": "Status",
+      "filterStatusAll": "Alle Status",
+      "filterAssignee": "Bearbeiter",
+      "filterAssigneeAll": "Alle",
+      "filterAssigneeMe": "Mir zugewiesen",
+      "rowsPerPage": "Zeilen pro Seite",
+      "perPage": "{count} Zeilen",
+      "columnsMenu": "Spalten",
+      "columns": {
+        "title": "Titel",
+        "status": "Status",
+        "created_at": "Erstellt",
+        "updated_at": "Aktualisiert",
+        "assignee": "Bearbeiter"
+      },
+      "refreshing": "Aktualisiere…",
+      "pageSummary": "Seite {page} · {count} Tickets",
+      "prevPage": "Zurück",
+      "nextPage": "Weiter"
+    },
+    "errors": {
+      "unauthorized": "Du musst angemeldet sein.",
+      "validation": "Bitte korrigiere die markierten Felder.",
+      "forbidden": "Du darfst das nicht tun.",
+      "listFailed": "Tickets konnten nicht geladen werden.",
+      "invalidCursor": "Ungültiger Seiten-Cursor.",
+      "readFailed": "Daten konnten nicht gelesen werden.",
+      "statusNotFound": "Dieser Status existiert nicht.",
+      "createFailed": "Ticket konnte nicht erstellt werden.",
+      "updateFailed": "Ticket konnte nicht aktualisiert werden.",
+      "notFound": "Ticket nicht gefunden.",
+      "transitionFailed": "Status konnte nicht geändert werden.",
+      "assignFailed": "Zuweisung konnte nicht aktualisiert werden.",
+      "assigneeNotFound": "Benutzer nicht gefunden.",
+      "deleteFailed": "Ticket konnte nicht archiviert werden.",
+      "referenceInvalid": "Ein verknüpfter Datensatz ist ungültig oder fehlt."
+    },
+    "validation": {
+      "titleRequired": "Titel ist erforderlich.",
+      "titleTooLong": "Titel ist zu lang.",
+      "descriptionTooLong": "Beschreibung ist zu lang.",
+      "statusInvalid": "Bitte einen gültigen Status wählen.",
+      "issueIdInvalid": "Ungültige Ticket-Referenz.",
+      "noChanges": "Mindestens ein Feld zum Aktualisieren angeben.",
+      "assigneeInvalid": "Ungültiger Bearbeiter.",
+      "searchTooLong": "Suchtext ist zu lang.",
+      "cursorInvalid": "Ungültiger Cursor.",
+      "sortInvalid": "Ungültige Sortierspalte.",
+      "sortDirInvalid": "Ungültige Sortierrichtung.",
+      "slugInvalid": "Kleinbuchstaben, beginnend mit einem Buchstaben (Buchstaben, Zahlen, Unterstriche).",
+      "slugTooLong": "Der Slug ist zu lang.",
+      "statusNameRequired": "Der Statusname ist erforderlich.",
+      "statusNameTooLong": "Der Statusname ist zu lang.",
+      "userIdInvalid": "Ungültiger Benutzer.",
+      "roleInvalid": "Ungültige Rolle."
+    }
+  },
+  "admin": {
+    "title": "Administration",
+    "nav": {
+      "link": "Admin",
+      "overview": "Übersicht",
+      "users": "Benutzer",
+      "statuses": "Status",
+      "audit": "Audit",
+      "settings": "Super-Admin"
+    },
+    "overview": {
+      "title": "Übersicht",
+      "description": "Benutzer, Workflow-Status und Zuweisungen für Tickets verwalten."
+    },
+    "users": {
+      "title": "Benutzer",
+      "loading": "Benutzer werden geladen…",
+      "email": "E-Mail",
+      "name": "Name",
+      "role": "Rolle"
+    },
+    "roles": {
+      "user": "Benutzer",
+      "admin": "Admin",
+      "super_admin": "Super-Admin"
+    },
+    "errors": {
+      "listUsersFailed": "Benutzer konnten nicht geladen werden.",
+      "readUserFailed": "Benutzer konnte nicht gelesen werden.",
+      "updateRoleFailed": "Rolle konnte nicht aktualisiert werden.",
+      "cannotAssignSuperAdmin": "Nur ein Super-Admin kann diese Rolle vergeben.",
+      "cannotEditRole": "Du kannst die Rolle dieses Benutzers nicht ändern."
+    },
+    "settings": {
+      "title": "Super-Admin-Einstellungen",
+      "flags": {
+        "title": "Umgebung & Feature-Flags",
+        "demoReset": "Demo-Daten zurücksetzen",
+        "demoResetEnv": "OPS_DEMO_RESET_ENABLED",
+        "experimentalUi": "Experimentelle Oberfläche (OPS_EXPERIMENTAL_UI)",
+        "publicSiteUrl": "Öffentliche Site-URL",
+        "nodeEnv": "Node-Umgebung",
+        "on": "An",
+        "off": "Aus",
+        "unset": "(nicht gesetzt)"
+      },
+      "demoReset": {
+        "title": "Demo-Daten",
+        "description": "Löscht dauerhaft alle Zeilen in der Tabelle „issues“. Benutzerprofile und Ticket-Status bleiben unverändert. Die Aktion wird im Audit-Log protokolliert.",
+        "button": "Demo-Daten zurücksetzen",
+        "confirmTitle": "Alle Tickets löschen?",
+        "confirmBody": "Damit werden alle Tickets aus der Datenbank entfernt. Das kann nicht rückgängig gemacht werden.",
+        "confirmButton": "Ja, Demo-Daten zurücksetzen",
+        "cancel": "Abbrechen",
+        "success": "Demo zurückgesetzt. {count} Tickets entfernt."
+      },
+      "errors": {
+        "demoResetDisabled": "Demo-Reset ist für dieses Deployment deaktiviert (siehe OPS_DEMO_RESET_ENABLED).",
+        "resetFailed": "Tickets konnten nicht gelöscht werden. Es wurde nichts geändert.",
+        "auditFailed": "Tickets wurden entfernt, aber der Audit-Log-Eintrag konnte nicht gespeichert werden. Server-Logs prüfen."
+      }
+    },
+    "statuses": {
+      "pageTitle": "Ticket-Status",
+      "loading": "Status werden geladen…",
+      "add": "Status hinzufügen",
+      "name": "Name",
+      "slug": "Slug",
+      "slugHint": "Kleinbuchstaben, mit Buchstabe beginnen.",
+      "sortOrder": "Sortierung",
+      "terminal": "Abschluss",
+      "yes": "Ja",
+      "no": "Nein",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "createTitle": "Neuer Status",
+      "editTitle": "Status bearbeiten",
+      "deleteTitle": "Status löschen",
+      "deleteConfirm": "Status {name} löschen? Solange Tickets ihn nutzen, ist Löschen nicht möglich.",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "createFailed": "Status konnte nicht erstellt werden.",
+      "updateFailed": "Status konnte nicht aktualisiert werden.",
+      "deleteFailed": "Status konnte nicht gelöscht werden.",
+      "slugTaken": "Dieser Slug ist bereits vergeben.",
+      "deleteInUse": "Dieser Status wird noch von Tickets verwendet."
+    },
+    "audit": {
+      "title": "Audit-Protokoll",
+      "loading": "Audit-Einträge werden geladen…",
+      "empty": "Keine Audit-Einträge für diese Filter.",
+      "filters": {
+        "action": "Aktion enthält",
+        "actionPlaceholder": "z. B. issue.assign",
+        "entityType": "Entitätstyp",
+        "entityAll": "Alle Typen",
+        "entity": {
+          "issue": "Ticket",
+          "issue_status": "Ticket-Status",
+          "user_profile": "Benutzerprofil",
+          "system": "System"
+        },
+        "fromDate": "Von Datum",
+        "toDate": "Bis Datum"
+      },
+      "table": {
+        "when": "Zeitpunkt",
+        "actor": "Akteur",
+        "action": "Aktion",
+        "entity": "Entität",
+        "entityId": "Entitäts-ID",
+        "metadata": "Metadaten"
+      },
+      "pagination": {
+        "summary": "{from}–{to} von {total}",
+        "prev": "Zurück",
+        "next": "Weiter",
+        "pageOf": "Seite {page} von {totalPages}"
+      },
+      "errors": {
+        "listFailed": "Audit-Protokoll konnte nicht geladen werden."
+      }
+    }
+  },
   "ui": {
     "themeToggle": {
       "toLight": "Zum hellen Modus wechseln",
@@ -54,7 +271,8 @@
     }
   },
   "layout": {
-    "footer": "\u00a9 2026 Rene Krajnc. Alle Rechte vorbehalten."
+    "footer": "\u00a9 2026 Rene Krajnc. Alle Rechte vorbehalten.",
+    "logout": "Abmelden"
   },
   "seo": {
     "root": {
@@ -69,6 +287,30 @@
       "dashboard": {
         "title": "Dashboard",
         "description": "Wichtige Kennzahlen und aktuelle Aktivitäten."
+      },
+      "issues": {
+        "title": "Tickets",
+        "description": "Operative Tickets verfolgen und verwalten."
+      },
+      "admin": {
+        "title": "Administration",
+        "description": "Benutzer und Konfiguration verwalten."
+      },
+      "adminUsers": {
+        "title": "Benutzer",
+        "description": "Benutzerrollen verwalten."
+      },
+      "adminStatuses": {
+        "title": "Ticket-Status",
+        "description": "Workflow-Status konfigurieren."
+      },
+      "adminSettings": {
+        "title": "Super-Admin-Einstellungen",
+        "description": "System-Flags und Demo-Daten."
+      },
+      "adminAudit": {
+        "title": "Audit-Protokoll",
+        "description": "Sicherheits- und Workflow-Ereignisse."
       },
       "default": {
         "title": "Ops Tracker",

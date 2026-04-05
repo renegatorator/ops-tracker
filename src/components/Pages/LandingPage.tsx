@@ -30,9 +30,11 @@ export default async function LandingPage() {
         </Stack>
 
         <Group justify="center">
-          <Button size="lg" variant="filled" component={Link} href="/login">
-            {t("loginButton")}
-          </Button>
+          <Link href="/login">
+            <Button component="span" size="lg" variant="filled">
+              {t("loginButton")}
+            </Button>
+          </Link>
         </Group>
       </Stack>
     </Container>

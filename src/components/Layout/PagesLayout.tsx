@@ -1,21 +1,26 @@
 import { Container, Flex, Stack } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 
 import LanguageSwitcher from "../Language/LanguageSwitcher";
 import ThemeToggle from "../Theme/ThemeToggle";
+import AdminNavLink from "./AdminNavLink";
+import LogoutSection from "./LogoutSection";
 import classes from "./PagesLayout.module.scss";
 
-type PagesLayoutProps = {
-  children: React.ReactNode;
-};
+interface PagesLayoutProps {
+  children: ReactNode;
+}
 
-export default async function PagesLayout({ children }: PagesLayoutProps) {
+const PagesLayout = async ({ children }: PagesLayoutProps) => {
   const t = await getTranslations("layout");
 
   return (
     <div className={classes.layout}>
       <Container className={classes.header} size="lg">
         <Flex justify="flex-end" align="flex-end" className={classes.controls}>
+          <AdminNavLink />
+          <LogoutSection />
           <LanguageSwitcher />
           <ThemeToggle />
         </Flex>
@@ -30,4 +35,6 @@ export default async function PagesLayout({ children }: PagesLayoutProps) {
       </Container>
     </div>
   );
-}
+};
+
+export default PagesLayout;
