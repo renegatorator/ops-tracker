@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { RouteLoading } from "@/components/RouteLoading";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const AdminUsersPanel = dynamic(
   () =>
@@ -12,7 +13,6 @@ const AdminUsersPanel = dynamic(
     })),
   { loading: () => <RouteLoading compact /> },
 );
-import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface AdminUsersPageProps {
   params: Promise<{ locale: string }>;

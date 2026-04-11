@@ -4,6 +4,13 @@ import { getTranslations } from "next-intl/server";
 
 import { RouteLoading } from "@/components/RouteLoading";
 import { requireRole } from "@/lib/auth/session";
+import {
+  env,
+  getDemoResetEnvRaw,
+  isDemoResetEnabled,
+  isExperimentalUiFlagSet,
+} from "@/lib/env";
+import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const SuperAdminSettingsPanel = dynamic(
   () =>
@@ -14,13 +21,6 @@ const SuperAdminSettingsPanel = dynamic(
     ),
   { loading: () => <RouteLoading compact /> },
 );
-import {
-  env,
-  getDemoResetEnvRaw,
-  isDemoResetEnabled,
-  isExperimentalUiFlagSet,
-} from "@/lib/env";
-import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface AdminSettingsPageProps {
   params: Promise<{ locale: string }>;
