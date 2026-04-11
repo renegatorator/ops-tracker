@@ -43,29 +43,29 @@ export const sendIssueAssignedEmailIfConfigured = async (input: {
   const apiKey = getResendApiKey();
   if (!apiKey) return;
 
-  const supabase = await createClient();
-  const [{ data: issueRow, error: issueErr }, { data: profile, error: profileErr }] =
-    await Promise.all([
-      supabase
-        .from("issues")
-        .select("title")
-        .eq("id", input.issueId)
-        .maybeSingle(),
-      supabase
-        .from("user_profiles")
-        .select("email, full_name")
-        .eq("id", input.assigneeId)
-        .maybeSingle(),
-    ]);
-
-  if (issueErr || profileErr || !issueRow?.title || !profile?.email?.trim()) {
-    return;
-  }
-
-  const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
-  const issueUrl = `${siteUrl}/${input.locale}/issues/${input.issueId}`;
-
   try {
+    const supabase = await createClient();
+    const [{ data: issueRow, error: issueErr }, { data: profile, error: profileErr }] =
+      await Promise.all([
+        supabase
+          .from("issues")
+          .select("title")
+          .eq("id", input.issueId)
+          .maybeSingle(),
+        supabase
+          .from("user_profiles")
+          .select("email, full_name")
+          .eq("id", input.assigneeId)
+          .maybeSingle(),
+      ]);
+
+    if (issueErr || profileErr || !issueRow?.title || !profile?.email?.trim()) {
+      return;
+    }
+
+    const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
+    const issueUrl = `${siteUrl}/${input.locale}/issues/${input.issueId}`;
+
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
       from: getResendFrom(),

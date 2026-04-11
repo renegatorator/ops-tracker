@@ -25,18 +25,18 @@ export const sendIssueCreatedReporterEmailIfConfigured = async (input: {
   const to = input.toEmail?.trim();
   if (!apiKey || !to) return;
 
-  const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
-  const issueUrl = `${siteUrl}/${input.locale}/issues/${input.issueId}`;
-  const title = escapeHtml(input.title);
-  const url = escapeHtml(issueUrl);
+  try {
+    const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
+    const issueUrl = `${siteUrl}/${input.locale}/issues/${input.issueId}`;
+    const title = escapeHtml(input.title);
+    const url = escapeHtml(issueUrl);
 
-  const html = `
+    const html = `
     <p>Your issue was created:</p>
     <p><strong>${title}</strong></p>
     <p><a href="${url}">View issue</a></p>
   `.trim();
 
-  try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
       from: getResendFrom(),
