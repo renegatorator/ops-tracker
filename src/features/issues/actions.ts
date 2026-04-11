@@ -7,6 +7,8 @@ import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import type { UserAuthContext } from "@/lib/auth/types";
+import { sendIssueAssignedEmailIfConfigured } from "@/lib/email/send-issue-assigned-email";
+import { sendIssueCreatedReporterEmailIfConfigured } from "@/lib/email/send-issue-created-email";
 
 import { ISSUES_CACHE_TAG } from "./cache";
 import { zodToFieldErrors } from "./map-errors";
@@ -120,6 +122,12 @@ export const createIssue = async (
       entityId: result.data.id,
       metadata: { title: parsed.data.title },
     });
+    await sendIssueCreatedReporterEmailIfConfigured({
+      locale,
+      issueId: result.data.id,
+      title: parsed.data.title,
+      toEmail: ctx.user.email ?? undefined,
+    });
     revalidateIssuesSegment(locale);
   }
   return result;
@@ -200,6 +208,13 @@ export const assignIssue = async (
       entityId: parsed.data.issueId,
       metadata: { assignee_id: parsed.data.assigneeId },
     });
+    if (parsed.data.assigneeId) {
+      await sendIssueAssignedEmailIfConfigured({
+        locale,
+        issueId: parsed.data.issueId,
+        assigneeId: parsed.data.assigneeId,
+      });
+    }
     revalidateIssuesSegment(locale, parsed.data.issueId);
   }
   return result;

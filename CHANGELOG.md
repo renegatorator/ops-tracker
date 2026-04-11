@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Phase 11 email (Resend): `resend` package; `getResendApiKey` / `getResendFrom` in `src/lib/env.ts`; `src/lib/email/send-issue-assigned-email.ts` and `send-issue-created-email.ts` (HTML bodies); sends after successful `assignIssue` (when assignee set) and `createIssue` (reporter confirmation) without failing mutations on errors; `.env.example` entries and README environment table; Phase 11 marked complete in `docs/IMPLEMENTATION_PLAN.md`
+
+### Changed
+
+- `docs/ARCHITECTURE.md` database row and audit/email sections updated for implemented schema and Resend helpers; implementation plan footer notes remaining phases 12–13
+
 ## [2.0.0] - 2026-04-5
 
 ### Added
