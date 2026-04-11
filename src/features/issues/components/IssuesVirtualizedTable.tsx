@@ -272,7 +272,13 @@ export const IssuesVirtualizedTable = ({
   const totalSize = useVirtual ? virtualizer.getTotalSize() : 0;
 
   const tableInner = (
-    <Table horizontalSpacing="sm" verticalSpacing="xs" striped highlightOnHover>
+    <Table
+      horizontalSpacing="sm"
+      verticalSpacing="xs"
+      striped
+      highlightOnHover
+      data-testid="issues-table"
+    >
       <Table.Thead
         style={
           useVirtual

@@ -111,8 +111,23 @@ Auth-linked profiles use the **`user_profiles`** table and Postgres enum **`app_
 | `NEXT_PUBLIC_SITE_URL` | public | Canonical site URL (emails, metadata); defaults to `http://localhost:3000` in code if unset |
 | `RESEND_API_KEY` | **server only** | [Resend](https://resend.com) API key; when set, assignment and issue-created emails are attempted |
 | `RESEND_FROM` | **server only** | Sender address (use a verified domain in production; Resend’s `onboarding@resend.dev` works for tests) |
+| `OPS_DEMO_RESET_ENABLED` | **server only** | Super-admin demo reset gate; see `src/lib/env.ts` for default behaviour |
+| `E2E_EMAIL`, `E2E_PASSWORD` | local / CI | Optional Playwright credentials; see **End-to-end tests** below |
+| `PLAYWRIGHT_BASE_URL` | local / CI | Optional; Playwright defaults to `http://127.0.0.1:3000` |
 
 See `.env.example` for a starter list.
+
+### Roles for local development
+
+Create a user (sign up in the app or via Supabase Auth), ensure **`user_profiles`** has a row for that user, then set **`app_role`** as needed (for example `super_admin` for full access). Step-by-step SQL is in [docs/SUPABASE_MIGRATIONS.md](docs/SUPABASE_MIGRATIONS.md).
+
+### End-to-end tests (optional)
+
+1. Install browsers once: `npx playwright install chromium`
+2. Set **`E2E_EMAIL`** and **`E2E_PASSWORD`** in `.env.local` to a user that can sign in and already has at least one issue in the same Supabase project.
+3. Run **`npm run test:e2e`** (Playwright can start `npm run dev` automatically, or reuse an existing server on `PLAYWRIGHT_BASE_URL`).
+
+If `E2E_EMAIL` or `E2E_PASSWORD` is unset, the critical-path test **skips** so clones and CI stay green without secrets.
 
 ---
 
