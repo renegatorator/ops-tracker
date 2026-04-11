@@ -46,3 +46,17 @@ export const getDemoResetEnvRaw = (): string | undefined =>
  */
 export const isExperimentalUiFlagSet = (): boolean =>
   parseOptionalBool(process.env.OPS_EXPERIMENTAL_UI, false);
+
+/** Server-only Resend API key. When unset, transactional email is skipped. */
+export const getResendApiKey = (): string | undefined => {
+  const v = process.env.RESEND_API_KEY;
+  return v?.trim() || undefined;
+};
+
+/**
+ * `From` header for Resend (must be a verified sender in production).
+ * Defaults to Resend’s test domain for local/staging.
+ */
+export const getResendFrom = (): string =>
+  process.env.RESEND_FROM?.trim() ||
+  "Ops Tracker <onboarding@resend.dev>";
