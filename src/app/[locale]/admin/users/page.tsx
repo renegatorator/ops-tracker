@@ -1,9 +1,18 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { AdminUsersPanel } from "@/features/users/components/AdminUsersPanel";
+import { RouteLoading } from "@/components/RouteLoading";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
+
+const AdminUsersPanel = dynamic(
+  () =>
+    import("@/features/users/components/AdminUsersPanel").then((m) => ({
+      default: m.AdminUsersPanel,
+    })),
+  { loading: () => <RouteLoading compact /> },
+);
 
 interface AdminUsersPageProps {
   params: Promise<{ locale: string }>;

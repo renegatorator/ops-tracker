@@ -1,7 +1,8 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { SuperAdminSettingsPanel } from "@/features/settings/components/SuperAdminSettingsPanel";
+import { RouteLoading } from "@/components/RouteLoading";
 import { requireRole } from "@/lib/auth/session";
 import {
   env,
@@ -10,6 +11,16 @@ import {
   isExperimentalUiFlagSet,
 } from "@/lib/env";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
+
+const SuperAdminSettingsPanel = dynamic(
+  () =>
+    import("@/features/settings/components/SuperAdminSettingsPanel").then(
+      (m) => ({
+        default: m.SuperAdminSettingsPanel,
+      }),
+    ),
+  { loading: () => <RouteLoading compact /> },
+);
 
 interface AdminSettingsPageProps {
   params: Promise<{ locale: string }>;
