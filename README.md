@@ -95,14 +95,13 @@ The app demonstrates role-based access:
 src/
   app/            # Next.js app router
   components/     # reusable UI components
-  features/       # domain features (issues, users, admin)
+  features/       # domain features (issues, users, admin); hooks colocated per feature
   lib/            # utilities & services
-  hooks/          # custom React hooks
 ```
 
 ### Database (Supabase)
 
-Auth-linked profiles use the **`user_profiles`** table and Postgres enum **`app_role`**. The rest of the schema (issues, audit, etc.) is defined in migrations as the app grows. Canonical details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); implementation order: [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). **Apply migrations:** from the repo root, `npm run db:link` (once), then `npm run db:push` ([Supabase CLI](https://supabase.com/docs/guides/cli) via `npx`), or paste `supabase/migrations/*.sql` into the dashboard SQL Editor.
+Auth-linked profiles use the **`user_profiles`** table and Postgres enum **`app_role`**. The rest of the schema (issues, audit, etc.) is defined in migrations as the app grows. Canonical details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); implementation order: [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md). **Apply migrations and manual DB steps:** [docs/SUPABASE_MIGRATIONS.md](docs/SUPABASE_MIGRATIONS.md). Quick CLI path from repo root: `npm run db:link` (once), then `npm run db:push` ([Supabase CLI](https://supabase.com/docs/guides/cli) via `npx`), or paste each file from `supabase/migrations/` into the dashboard SQL Editor in the order listed in that doc.
 
 ### Environment variables
 

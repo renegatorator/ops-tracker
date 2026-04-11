@@ -14,10 +14,10 @@
 
 **Deliverables:**
 
-- [ ] Add `src/features/` with placeholder `README.md` explaining feature module conventions (exports, colocation).
-- [ ] Add `src/hooks/` (empty or with `README.md`) for cross-feature hooks.
-- [ ] Ensure ESLint/TypeScript paths resolve `@/` to `src/` (verify `tsconfig`).
-- [ ] Document in `docs/` or README: “features vs components” rule (already in ARCHITECTURE).
+- [x] `src/features/` holds domain modules; conventions documented in [ARCHITECTURE.md](./ARCHITECTURE.md) (no per-folder readme required).
+- [x] Cross-feature hooks convention documented in ARCHITECTURE; add `src/hooks/` only when you have shared client hooks (folder optional until then).
+- [x] Ensure ESLint/TypeScript paths resolve `@/` to `src/` (verify `tsconfig`).
+- [x] Document in `docs/` or README: “features vs components” rule (ARCHITECTURE + README structure).
 
 **Acceptance:** `npm run build` and `npm run tsc` pass; folder layout matches README tree.
 
@@ -35,9 +35,9 @@
 **Deliverables:**
 
 - [x] Design **new** tables: `issue_statuses`, `issues` (FK → `user_profiles`, soft delete), `audit_log`; indexes — see `supabase/migrations/20260403140000_phase1_issues_audit_statuses.sql`.
-- [x] Migration SQL in repo + **how to apply**: [SUPABASE_PHASE1.md](./SUPABASE_PHASE1.md).
+- [x] Migration SQL in repo + **how to apply**: [SUPABASE_MIGRATIONS.md](./SUPABASE_MIGRATIONS.md).
 - [x] **You apply** the migration in your Supabase project (SQL Editor or CLI), then verify RLS with the checks in that doc.
-- [x] Optional: trigger on `auth.users` for `user_profiles` — copy/paste block in [SUPABASE_PHASE1.md](./SUPABASE_PHASE1.md) only if you do not already create profiles on signup.
+- [x] Optional: trigger on `auth.users` for `user_profiles` — copy/paste block in [SUPABASE_MIGRATIONS.md](./SUPABASE_MIGRATIONS.md) only if you do not already create profiles on signup.
 
 **Acceptance:** Unprivileged user cannot read others’ issues where policy forbids; admin can manage per spec; no policy relies only on client input.
 
@@ -193,10 +193,10 @@
 
 **Deliverables:**
 
-- [ ] DB indexes reviewed for list/filter/sort queries.
-- [ ] Next.js `loading.tsx` / `error.tsx` for major segments.
-- [ ] Image/font already configured; verify Lighthouse basics.
-- [ ] Bundle: dynamic import heavy admin routes if needed.
+- [x] DB indexes reviewed for list/filter/sort queries.
+- [x] Next.js `loading.tsx` / `error.tsx` for major segments.
+- [x] Image/font already configured; verify Lighthouse basics.
+- [x] Bundle: dynamic import heavy admin routes if needed.
 
 **Acceptance:** No obvious N+1 query patterns; LCP acceptable on list page with realistic data.
 
@@ -241,4 +241,4 @@ Phases 8–11 can overlap **after** Phase 3 is done, but **do not** skip 1–2 f
 
 ---
 
-_Last updated: Phases 1–11 delivered in app code (issues, audit, admin, Resend hooks); Phase 0 placeholder README/hooks optional; Phases 12–13 polish and quality gates remain._
+_Last updated: Phases 0–12 covered in repo (Phase 0 conventions in ARCHITECTURE, `docs/SUPABASE_MIGRATIONS.md`, Phase 12 indexes + route UX); Phase 13 quality gates remain._

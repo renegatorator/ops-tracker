@@ -9,6 +9,11 @@
     "buttons": {
       "save": "Save",
       "cancel": "Cancel"
+    },
+    "route": {
+      "errorTitle": "Something went wrong",
+      "errorDescription": "This page could not be loaded. You can try again.",
+      "tryAgain": "Try again"
     }
   },
   "landing": {

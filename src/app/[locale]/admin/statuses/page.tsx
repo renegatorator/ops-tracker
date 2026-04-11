@@ -1,8 +1,19 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { AdminIssueStatusesPanel } from "@/features/issues/components/AdminIssueStatusesPanel";
+import { RouteLoading } from "@/components/RouteLoading";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
+
+const AdminIssueStatusesPanel = dynamic(
+  () =>
+    import("@/features/issues/components/AdminIssueStatusesPanel").then(
+      (m) => ({
+        default: m.AdminIssueStatusesPanel,
+      }),
+    ),
+  { loading: () => <RouteLoading compact /> },
+);
 
 interface AdminStatusesPageProps {
   params: Promise<{ locale: string }>;

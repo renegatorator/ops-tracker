@@ -8,7 +8,7 @@ This document describes the **end-state** architecture for a scalable, optimized
 
 1. **Server-first data** — Prefer React Server Components and Server Actions for mutations; keep secrets and authorization logic on the server.
 2. **Defense in depth** — UI hides actions; **Supabase Row Level Security (RLS)** and server checks enforce permissions. Never trust the client for authorization.
-3. **Feature boundaries** — Colocate domain code under `src/features/<domain>/` (components, hooks, actions, types) per README; shared UI stays in `src/components/`.
+3. **Feature boundaries** — Colocate domain code under `src/features/<domain>/` (components, hooks, actions, types); shared UI stays in `src/components/`. Hooks used only inside one feature live next to that feature; introduce `src/hooks/` only if you add truly cross-cutting client hooks.
 4. **Explicit caching** — Use Next.js `cache` / `revalidateTag` / `revalidatePath` and TanStack Query defaults tuned per resource (stale times, invalidation on mutation).
 5. **Observable changes** — Append-only **audit log** for security-relevant and workflow events; optional **email** (Resend) for high-signal notifications.
 6. **Performance by default** — Pagination or cursor-based lists; indexes in Postgres; TanStack Table with **virtualization** when row counts are large; avoid over-fetching with column selection.
@@ -75,7 +75,7 @@ The following is **fixed** in the backend; app code and new migrations should al
 
 **Type `app_role`** — must include at least the README roles (e.g. `user`, `admin`, `super_admin`); exact literals must match what you created in Supabase.
 
-**Phase 1 (migrations in repo):** `issue_statuses`, `issues` (with `deleted_at`), and `audit_log`, plus RLS tied to `user_profiles.role`. Apply in Supabase per [SUPABASE_PHASE1.md](./SUPABASE_PHASE1.md). Further tables (e.g. org-scoped data) can follow the same patterns later.
+**Phase 1 (migrations in repo):** `issue_statuses`, `issues` (with `deleted_at`), and `audit_log`, plus RLS tied to `user_profiles.role`. Apply in Supabase per [SUPABASE_MIGRATIONS.md](./SUPABASE_MIGRATIONS.md). Further tables (e.g. org-scoped data) can follow the same patterns later.
 
 ---
 

@@ -1,8 +1,19 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { SuperAdminSettingsPanel } from "@/features/settings/components/SuperAdminSettingsPanel";
+import { RouteLoading } from "@/components/RouteLoading";
 import { requireRole } from "@/lib/auth/session";
+
+const SuperAdminSettingsPanel = dynamic(
+  () =>
+    import("@/features/settings/components/SuperAdminSettingsPanel").then(
+      (m) => ({
+        default: m.SuperAdminSettingsPanel,
+      }),
+    ),
+  { loading: () => <RouteLoading compact /> },
+);
 import {
   env,
   getDemoResetEnvRaw,
