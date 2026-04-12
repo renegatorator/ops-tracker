@@ -31,7 +31,7 @@ import {
   patchIssuesListParams,
 } from "../list-url-params";
 import type { ListIssuesSchemaInput } from "../schemas";
-import { IssuesVirtualizedTable } from "./IssuesVirtualizedTable";
+import IssuesVirtualizedTable from "./IssuesVirtualizedTable";
 
 const COLUMN_STORAGE_KEY = "ops-issues-table-columns-v1";
 
@@ -60,7 +60,7 @@ function loadColumnVisibility(): VisibilityState {
   }
 }
 
-export const IssuesListPageClient = ({
+const IssuesListPageClient = ({
   locale,
   currentUserId,
   canListAllAssignees,
@@ -361,3 +361,5 @@ export const IssuesListPageClient = ({
     </Stack>
   );
 };
+
+export default IssuesListPageClient;

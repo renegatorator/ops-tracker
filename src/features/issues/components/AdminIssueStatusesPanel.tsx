@@ -33,7 +33,7 @@ interface AdminIssueStatusesPanelProps {
   locale: string;
 }
 
-export const AdminIssueStatusesPanel = ({
+const AdminIssueStatusesPanel = ({
   locale,
 }: AdminIssueStatusesPanelProps) => {
   const t = useTranslations("admin.statuses");
@@ -322,3 +322,5 @@ export const AdminIssueStatusesPanel = ({
     </Stack>
   );
 };
+
+export default AdminIssueStatusesPanel;

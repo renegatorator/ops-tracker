@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { signOutAction } from "@/lib/auth/actions";
 import { getSession } from "@/lib/auth/session";
 
-import { LogoutForm } from "./LogoutForm";
+import LogoutForm from "./LogoutForm";
 
 const LogoutSection = async () => {
   const { user } = await getSession();

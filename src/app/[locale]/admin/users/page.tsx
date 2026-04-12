@@ -2,17 +2,14 @@ import { Stack, Title } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { RouteLoading } from "@/components/RouteLoading";
+import RouteLoading from "@/components/RouteLoading";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { isSuperAdminRole } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const AdminUsersPanel = dynamic(
-  () =>
-    import("@/features/users/components/AdminUsersPanel").then((m) => ({
-      default: m.AdminUsersPanel,
-    })),
+  () => import("@/features/users/components/AdminUsersPanel"),
   { loading: () => <RouteLoading compact /> },
 );
 

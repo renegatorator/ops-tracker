@@ -51,7 +51,7 @@ async function signInAction(locale: string, formData: FormData) {
   return redirect({ href: routes.dashboard, locale });
 }
 
-export default async function LoginPage({ locale, error }: LoginPageProps) {
+const LoginPage = async ({ locale, error }: LoginPageProps) => {
   const t = await getTranslations({ locale, namespace: "auth.login" });
   const signIn = signInAction.bind(null, locale);
 
@@ -96,4 +96,6 @@ export default async function LoginPage({ locale, error }: LoginPageProps) {
       </Paper>
     </Container>
   );
-}
+};
+
+export default LoginPage;

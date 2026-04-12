@@ -10,7 +10,7 @@ import { routing } from "@/i18n/routing";
 
 import classes from "./LanguageSwitcher.module.scss";
 
-export default function LanguageSwitcher() {
+const LanguageSwitcher = () => {
   const t = useTranslations("ui.language");
   const locale = useLocale();
   const router = useRouter();
@@ -56,4 +56,6 @@ export default function LanguageSwitcher() {
       )}
     />
   );
-}
+};
+
+export default LanguageSwitcher;

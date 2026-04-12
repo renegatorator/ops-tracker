@@ -9,7 +9,7 @@ type RouteSegmentErrorProps = {
   reset: () => void;
 };
 
-export const RouteSegmentError = ({ error, reset }: RouteSegmentErrorProps) => {
+const RouteSegmentError = ({ error, reset }: RouteSegmentErrorProps) => {
   const t = useTranslations("common.route");
 
   useEffect(() => {
@@ -27,3 +27,5 @@ export const RouteSegmentError = ({ error, reset }: RouteSegmentErrorProps) => {
     </Stack>
   );
 };
+
+export default RouteSegmentError;

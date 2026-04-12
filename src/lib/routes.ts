@@ -16,6 +16,5 @@ export const routes = {
 
 export type AppRoute = (typeof routes)[keyof typeof routes];
 
-export function issueDetailPath(issueId: string): string {
-  return `${routes.issues}/${issueId}`;
-}
+export const issueDetailPath = (issueId: string): string =>
+  `${routes.issues}/${issueId}`;

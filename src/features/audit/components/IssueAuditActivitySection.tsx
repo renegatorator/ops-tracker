@@ -21,7 +21,7 @@ interface IssueAuditActivitySectionProps {
   issueId: string;
 }
 
-export const IssueAuditActivitySection = ({
+const IssueAuditActivitySection = ({
   locale,
   issueId,
 }: IssueAuditActivitySectionProps) => {
@@ -100,3 +100,5 @@ export const IssueAuditActivitySection = ({
     </Stack>
   );
 };
+
+export default IssueAuditActivitySection;
