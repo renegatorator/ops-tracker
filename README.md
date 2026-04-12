@@ -121,11 +121,23 @@ See `.env.example` for a starter list.
 
 Create a user (sign up in the app or via Supabase Auth), ensure **`user_profiles`** has a row for that user, then set **`app_role`** as needed (for example `super_admin` for full access). Step-by-step SQL is in [docs/SUPABASE_MIGRATIONS.md](docs/SUPABASE_MIGRATIONS.md).
 
+### Next.js 16 proxy (auth + locales)
+
+Session refresh and `next-intl` routing run from **`src/proxy.ts`** (shown as **Proxy (Middleware)** in `next build`). Do **not** add a separate `src/middleware.ts`; Next.js 16 errors if both `middleware` and `proxy` exist. Details: [middleware-to-proxy](https://nextjs.org/docs/messages/middleware-to-proxy).
+
+### URL locales (default English unprefixed)
+
+Routing uses **`localePrefix: "as-needed"`** ([next-intl](https://next-intl.dev/docs/routing#locale-prefix)): **English** (default) URLs look like **`/issues`**, **`/dashboard`**, **`/admin`** with no `/en` segment. **Slovenian** and **German** keep a prefix: **`/si/issues`**, **`/de/issues`**, etc. That matches common practice (short URLs for the primary market, explicit prefixes for translations). Use **`Link`** / **`redirect`** from `@/i18n/navigation` so paths stay correct.
+
+### Admin area access
+
+Routes under **`/admin`** require **`user_profiles.role`** of **`admin`** or **`super_admin`**. If you are signed in but visiting `/admin` sends you to **`/dashboard`**, your account is still a normal **`user`**; promote it in SQL (see [docs/SUPABASE_MIGRATIONS.md](docs/SUPABASE_MIGRATIONS.md) §6).
+
 ### End-to-end tests (optional)
 
 1. Install browsers once: `npx playwright install chromium`
 2. Set **`E2E_EMAIL`** and **`E2E_PASSWORD`** in `.env.local` to a user that can sign in and already has at least one issue in the same Supabase project.
-3. Run **`npm run test:e2e`** (Playwright can start `npm run dev` automatically, or reuse an existing server on `PLAYWRIGHT_BASE_URL`).
+3. Run **`npm run test:e2e`** (Playwright can start `npm run dev` automatically, or reuse an existing server on `PLAYWRIGHT_BASE_URL`). The bundled critical-path spec uses **unprefixed** paths for English (`/login`, `/dashboard`, `/issues`).
 
 If `E2E_EMAIL` or `E2E_PASSWORD` is unset, the critical-path test **skips** so clones and CI stay green without secrets.
 

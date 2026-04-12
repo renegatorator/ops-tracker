@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
 import { RouteLoading } from "@/components/RouteLoading";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const AdminIssueStatusesPanel = dynamic(
@@ -21,7 +22,7 @@ interface AdminStatusesPageProps {
 
 export const generateMetadata = async ({ params }: AdminStatusesPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/statuses");
+  return getLocalizedSeoMetadata(locale, routes.adminStatuses);
 };
 
 const AdminStatusesPage = async ({ params }: AdminStatusesPageProps) => {

@@ -21,5 +21,8 @@ export type UserAuthContext = {
 
 export const parseAppRole = (value: unknown): AppRole | null => {
   if (typeof value !== "string") return null;
-  return APP_ROLES.includes(value as AppRole) ? (value as AppRole) : null;
+  const normalized = value.trim();
+  return APP_ROLES.includes(normalized as AppRole)
+    ? (normalized as AppRole)
+    : null;
 };

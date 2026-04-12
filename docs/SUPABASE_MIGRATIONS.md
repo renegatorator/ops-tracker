@@ -38,14 +38,15 @@ Then insert a row for your user after they sign up (see **section 6**), or add a
 | 1 | `20260403140000_phase1_issues_audit_statuses.sql` | `issue_statuses`, `issues`, `audit_log`, RLS, baseline indexes |
 | 2 | `20260405120000_user_profiles_admin_rls.sql` | RLS policies on `user_profiles` for admin user management |
 | 3 | `20260411120000_phase12_list_sort_audit_indexes.sql` | Extra indexes for list/filter/sort and audit |
+| 4 | `20260412140000_fix_user_profiles_rls_recursion.sql` | Fixes `42P17` RLS recursion on `user_profiles` (replaces Phase 8 `EXISTS` subqueries with `SECURITY DEFINER` helpers) |
 
 ---
 
 ## 3. Apply migrations — Supabase SQL Editor (manual)
 
 1. Dashboard → **SQL** → **New query**.
-2. Open the first migration file from this repo in your editor, **copy the entire file**, paste into the SQL Editor, **Run**.
-3. Repeat for the second file, then the third.
+2. Open each migration file from this repo in order, **copy the entire file**, paste into the SQL Editor, **Run**.
+3. Repeat for every file in the table above (order matters for fresh databases).
 4. If a statement fails (e.g. “already exists”), read the error: you may have partially applied before. Fix duplicates or skip idempotent parts only if you know the current DB state.
 
 ---
@@ -147,6 +148,35 @@ Grant and `security definer` details depend on your Supabase version; if the das
 
 ---
 
-## 10. Replacing the old doc name
+## 10. Troubleshooting: `/issues` or `/admin` sends you to login
+
+The **dashboard** only checks Supabase Auth. **Issues** and **admin** also load `user_profiles.role` through the **Supabase client** (PostgREST), which enforces **RLS** as the `authenticated` role.
+
+The **SQL Editor** and **Table Editor** in the dashboard usually run with privileges that **bypass RLS**, so `select * from user_profiles` can show your row even when the app cannot read it.
+
+**Fix:**
+
+1. Confirm your app user id matches the profile row: in **Authentication → Users**, copy the user UUID and compare to `user_profiles.id`.
+2. List policies: `select policyname, cmd, roles::text from pg_policies where schemaname = 'public' and tablename = 'user_profiles';`
+3. Apply **`20260405120000_user_profiles_admin_rls.sql`** if you have not, so at least **select own row** (and admin rules) exist.
+4. If RLS is enabled on `user_profiles` but policies are wrong, either fix policies or temporarily turn RLS off on that table only while debugging (not for production).
+
+With **`npm run dev`**, the server logs a **`[auth] user_profiles:`** hint when no row is visible to the client (see `src/lib/auth/session.ts`).
+
+If Postgres returns **`42P17` infinite recursion detected in policy for relation `user_profiles`**, the Phase 8 policies used `EXISTS (SELECT … FROM user_profiles …)`, which re-triggers RLS on the same table. Apply migration **`20260412140000_fix_user_profiles_rls_recursion.sql`** (adds `SECURITY DEFINER` helpers `ops_auth_is_*` and recreates the three Phase 8 policies without self-referential subqueries).
+
+### Inspect policies from the CLI (linked project)
+
+With the [Supabase CLI](https://supabase.com/docs/guides/cli) logged in and the repo linked (`npm run db:link` once), you can run read-only SQL against the **remote** database:
+
+```bash
+npx supabase db query --linked "select policyname, cmd, roles::text from pg_policies where schemaname = 'public' and tablename = 'user_profiles' order by policyname;"
+```
+
+Use the same command pattern for other checks (for example `relrowsecurity` on `pg_class`, or `information_schema.role_table_grants`).
+
+---
+
+## 11. Replacing the old doc name
 
 Earlier plan text referenced `SUPABASE_PHASE1.md`. Use **this file** as the single place for apply order and manual steps for Phases **1–12** migrations in this repo.

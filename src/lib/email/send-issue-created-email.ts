@@ -2,7 +2,9 @@ import "server-only";
 
 import { Resend } from "resend";
 
+import { localizedPath } from "@/i18n/localized-path";
 import { env, getResendApiKey, getResendFrom } from "@/lib/env";
+import { issueDetailPath } from "@/lib/routes";
 
 const escapeHtml = (s: string): string =>
   s
@@ -27,7 +29,7 @@ export const sendIssueCreatedReporterEmailIfConfigured = async (input: {
 
   try {
     const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
-    const issueUrl = `${siteUrl}/${input.locale}/issues/${input.issueId}`;
+    const issueUrl = `${siteUrl}${localizedPath(input.locale, issueDetailPath(input.issueId))}`;
     const title = escapeHtml(input.title);
     const url = escapeHtml(issueUrl);
 

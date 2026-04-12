@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
-
+import { redirect } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 import type { AppRole, UserAuthContext } from "./types";
@@ -17,10 +17,36 @@ const fetchProfileRole = async (
     .eq("id", userId)
     .maybeSingle();
 
-  if (error || profile?.role == null) {
+  if (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "[auth] user_profiles select failed:",
+        error.message,
+        error.code,
+      );
+    }
     return null;
   }
-  return parseAppRole(profile.role);
+
+  if (!profile) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "[auth] user_profiles: no row visible for",
+        userId,
+        "(missing row, id mismatch, or RLS blocked read — SQL Editor often bypasses RLS)",
+      );
+    }
+    return null;
+  }
+
+  const role = parseAppRole(profile.role);
+  if (role == null && process.env.NODE_ENV === "development") {
+    console.warn(
+      "[auth] user_profiles.role not recognized (expected user|admin|super_admin):",
+      profile.role,
+    );
+  }
+  return role;
 };
 
 export const getSession = async () => {
@@ -46,7 +72,7 @@ export const getUserAuthContext = async (): Promise<UserAuthContext | null> => {
 export const requireUser = async (locale: string) => {
   const { user } = await getSession();
   if (!user) {
-    redirect(`/${locale}/login`);
+    return redirect({ href: routes.login, locale });
   }
   return user;
 };
@@ -60,11 +86,11 @@ export const requireRole = async (locale: string, allowed: AppRole[]) => {
   const role = await fetchProfileRole(user.id);
 
   if (role == null) {
-    redirect(`/${locale}/login`);
+    return redirect({ href: routes.login, locale });
   }
 
   if (!allowed.includes(role)) {
-    redirect(`/${locale}/dashboard`);
+    return redirect({ href: routes.dashboard, locale });
   }
 
   return { user, role };

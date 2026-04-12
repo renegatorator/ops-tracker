@@ -4,7 +4,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
@@ -13,7 +12,9 @@ import { issueQueryKeys } from "@/features/issues/keys";
 import { canUserTransitionIssueStatus } from "@/features/issues/permissions";
 import { prefetchIssueDetailPageQueries } from "@/features/issues/prefetch-issue-queries";
 import type { IssueWithStatus } from "@/features/issues/types";
+import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface IssueDetailPageProps {
@@ -24,14 +25,14 @@ export const generateMetadata = async ({
   params,
 }: IssueDetailPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/issues");
+  return getLocalizedSeoMetadata(locale, routes.issues);
 };
 
 const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
   const { locale, id } = await params;
   const ctx = await getUserAuthContext();
   if (!ctx) {
-    redirect(`/${locale}/login`);
+    return redirect({ href: routes.login, locale });
   }
 
   const queryClient = new QueryClient({

@@ -1,7 +1,7 @@
 "use server";
 
-import { redirect } from "next/navigation";
-
+import { redirect } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 export const signOutAction = async (
@@ -10,5 +10,5 @@ export const signOutAction = async (
 ) => {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect(`/${locale}/login`);
+  return redirect({ href: routes.login, locale });
 };

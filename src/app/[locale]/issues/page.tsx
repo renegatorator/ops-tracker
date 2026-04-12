@@ -1,10 +1,11 @@
 import { Container, Paper, Stack, Title } from "@mantine/core";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
 import { IssuesListPageClient } from "@/features/issues/components/IssuesListPageClient";
+import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface IssuesPageProps {
@@ -13,14 +14,14 @@ interface IssuesPageProps {
 
 export const generateMetadata = async ({ params }: IssuesPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/issues");
+  return getLocalizedSeoMetadata(locale, routes.issues);
 };
 
 const IssuesPage = async ({ params }: IssuesPageProps) => {
   const { locale } = await params;
   const ctx = await getUserAuthContext();
   if (!ctx) {
-    redirect(`/${locale}/login`);
+    return redirect({ href: routes.login, locale });
   }
   const t = await getTranslations({ locale, namespace: "issues" });
   const canListAllAssignees =

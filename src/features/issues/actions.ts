@@ -3,7 +3,9 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { ZodError } from "zod";
 
+import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
+import { issueDetailPath, routes } from "@/lib/routes";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import type { UserAuthContext } from "@/lib/auth/types";
@@ -35,16 +37,16 @@ import type {
 } from "./types";
 
 const revalidateIssuesSegment = (locale: string, issueId?: string) => {
-  revalidatePath(`/${locale}/issues`, "page");
+  revalidatePath(localizedPath(locale, routes.issues), "page");
   if (issueId) {
-    revalidatePath(`/${locale}/issues/${issueId}`, "page");
+    revalidatePath(localizedPath(locale, issueDetailPath(issueId)), "page");
   }
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
 
 const revalidateAfterIssueStatusMutation = (locale: string) => {
-  revalidatePath(`/${locale}/issues`, "page");
-  revalidatePath(`/${locale}/admin/statuses`, "page");
+  revalidatePath(localizedPath(locale, routes.issues), "page");
+  revalidatePath(localizedPath(locale, routes.adminStatuses), "page");
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
 

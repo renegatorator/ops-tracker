@@ -8,7 +8,9 @@ import type {
   IssuesActionFailure,
   IssuesActionResult,
 } from "@/features/issues/types";
+import { localizedPath } from "@/i18n/localized-path";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
+import { routes } from "@/lib/routes";
 import { getUserAuthContext } from "@/lib/auth/session";
 
 import { updateUserRoleSchema } from "./schemas";
@@ -65,7 +67,7 @@ export const updateUserRole = async (
     parsed.data,
   );
   if (result.ok) {
-    revalidatePath(`/${locale}/admin/users`, "page");
+    revalidatePath(localizedPath(locale, routes.adminUsers), "page");
   }
   return result;
 };

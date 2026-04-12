@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { RouteLoading } from "@/components/RouteLoading";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const AdminUsersPanel = dynamic(
@@ -20,7 +21,7 @@ interface AdminUsersPageProps {
 
 export const generateMetadata = async ({ params }: AdminUsersPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/users");
+  return getLocalizedSeoMetadata(locale, routes.adminUsers);
 };
 
 const AdminUsersPage = async ({ params }: AdminUsersPageProps) => {

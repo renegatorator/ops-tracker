@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import Typography from "@/components/Typography/Typography";
 import { Link } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 
 import classes from "./LandingPage.module.scss";
 
@@ -30,7 +31,7 @@ export default async function LandingPage() {
         </Stack>
 
         <Group justify="center">
-          <Link href="/login">
+          <Link href={routes.login}>
             <Button component="span" size="lg" variant="filled">
               {t("loginButton")}
             </Button>

@@ -6,7 +6,9 @@ import type {
   IssuesActionFailure,
   IssuesActionResult,
 } from "@/features/issues/types";
+import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
+import { routes } from "@/lib/routes";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { isDemoResetEnabled } from "@/lib/env";
@@ -65,8 +67,8 @@ export const resetDemoData = async (
     return { ok: false, errorKey: "settings.errors.auditFailed" };
   }
 
-  revalidatePath(`/${locale}/issues`, "layout");
-  revalidatePath(`/${locale}/dashboard`, "layout");
+  revalidatePath(localizedPath(locale, routes.issues), "layout");
+  revalidatePath(localizedPath(locale, routes.dashboard), "layout");
 
   return { ok: true, data: { issuesDeleted } };
 };

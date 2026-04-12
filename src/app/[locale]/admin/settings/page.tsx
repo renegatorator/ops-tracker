@@ -10,6 +10,7 @@ import {
   isDemoResetEnabled,
   isExperimentalUiFlagSet,
 } from "@/lib/env";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const SuperAdminSettingsPanel = dynamic(
@@ -28,7 +29,7 @@ interface AdminSettingsPageProps {
 
 export const generateMetadata = async ({ params }: AdminSettingsPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/settings");
+  return getLocalizedSeoMetadata(locale, routes.adminSettings);
 };
 
 const AdminSettingsPage = async ({ params }: AdminSettingsPageProps) => {
