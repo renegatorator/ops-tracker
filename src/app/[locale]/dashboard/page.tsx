@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
 import { requireUser } from "@/lib/auth/session";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface DashboardPageProps {
@@ -11,7 +12,7 @@ interface DashboardPageProps {
 
 export const generateMetadata = async ({ params }: DashboardPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/dashboard");
+  return getLocalizedSeoMetadata(locale, routes.dashboard);
 };
 
 const DashboardPage = async ({ params }: DashboardPageProps) => {

@@ -27,6 +27,7 @@ import { useTranslations } from "next-intl";
 import { useMemo, useRef } from "react";
 
 import { Link } from "@/i18n/navigation";
+import { issueDetailPath } from "@/lib/routes";
 
 import type { IssuesListSortField } from "../list-url-params";
 import type { IssueWithStatus } from "../types";
@@ -138,7 +139,11 @@ export const IssuesVirtualizedTable = ({
         header: () =>
           sortableHeader(t("title"), "title", sortBy, sortDir, onSortChange),
         cell: ({ row }) => (
-          <Anchor component={Link} href={`/issues/${row.original.id}`} fw={600}>
+          <Anchor
+            component={Link}
+            href={issueDetailPath(row.original.id)}
+            fw={600}
+          >
             {row.original.title}
           </Anchor>
         ),
@@ -272,7 +277,13 @@ export const IssuesVirtualizedTable = ({
   const totalSize = useVirtual ? virtualizer.getTotalSize() : 0;
 
   const tableInner = (
-    <Table horizontalSpacing="sm" verticalSpacing="xs" striped highlightOnHover>
+    <Table
+      horizontalSpacing="sm"
+      verticalSpacing="xs"
+      striped
+      highlightOnHover
+      data-testid="issues-table"
+    >
       <Table.Thead
         style={
           useVirtual

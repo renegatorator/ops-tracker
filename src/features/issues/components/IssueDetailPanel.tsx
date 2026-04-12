@@ -13,6 +13,7 @@ import { useMemo } from "react";
 
 import { IssueAuditActivitySection } from "@/features/audit/components/IssueAuditActivitySection";
 import { Link } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
 import { useAssignIssue } from "../hooks/useAssignIssue";
@@ -75,7 +76,7 @@ export const IssueDetailPanel = ({
 
   return (
     <Stack gap="md">
-      <Anchor component={Link} href="/issues" size="sm">
+      <Anchor component={Link} href={routes.issues} size="sm">
         {t("backToList")}
       </Anchor>
       {isPending ? (

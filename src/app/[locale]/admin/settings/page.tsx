@@ -1,15 +1,28 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { SuperAdminSettingsPanel } from "@/features/settings/components/SuperAdminSettingsPanel";
+import { RouteLoading } from "@/components/RouteLoading";
 import { requireRole } from "@/lib/auth/session";
+import { SUPER_ADMIN_ROLES } from "@/lib/auth/types";
 import {
   env,
   getDemoResetEnvRaw,
   isDemoResetEnabled,
   isExperimentalUiFlagSet,
 } from "@/lib/env";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
+
+const SuperAdminSettingsPanel = dynamic(
+  () =>
+    import("@/features/settings/components/SuperAdminSettingsPanel").then(
+      (m) => ({
+        default: m.SuperAdminSettingsPanel,
+      }),
+    ),
+  { loading: () => <RouteLoading compact /> },
+);
 
 interface AdminSettingsPageProps {
   params: Promise<{ locale: string }>;
@@ -17,12 +30,12 @@ interface AdminSettingsPageProps {
 
 export const generateMetadata = async ({ params }: AdminSettingsPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/settings");
+  return getLocalizedSeoMetadata(locale, routes.adminSettings);
 };
 
 const AdminSettingsPage = async ({ params }: AdminSettingsPageProps) => {
   const { locale } = await params;
-  await requireRole(locale, ["super_admin"]);
+  await requireRole(locale, SUPER_ADMIN_ROLES);
   const t = await getTranslations({ locale, namespace: "admin" });
 
   const demoResetEnabled = isDemoResetEnabled();

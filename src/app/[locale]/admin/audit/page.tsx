@@ -1,8 +1,18 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { AdminAuditLogPanel } from "@/features/audit/components/AdminAuditLogPanel";
+import { RouteLoading } from "@/components/RouteLoading";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
+
+const AdminAuditLogPanel = dynamic(
+  () =>
+    import("@/features/audit/components/AdminAuditLogPanel").then((m) => ({
+      default: m.AdminAuditLogPanel,
+    })),
+  { loading: () => <RouteLoading compact /> },
+);
 
 interface AdminAuditPageProps {
   params: Promise<{ locale: string }>;
@@ -10,7 +20,7 @@ interface AdminAuditPageProps {
 
 export const generateMetadata = async ({ params }: AdminAuditPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/audit");
+  return getLocalizedSeoMetadata(locale, routes.adminAudit);
 };
 
 const AdminAuditPage = async ({ params }: AdminAuditPageProps) => {

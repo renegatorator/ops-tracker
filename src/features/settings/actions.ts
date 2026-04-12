@@ -6,10 +6,13 @@ import type {
   IssuesActionFailure,
   IssuesActionResult,
 } from "@/features/issues/types";
+import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { SUPER_ADMIN_ROLES } from "@/lib/auth/types";
 import { isDemoResetEnabled } from "@/lib/env";
+import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 const NIL_UUID = "00000000-0000-0000-0000-000000000000";
@@ -25,7 +28,7 @@ export const resetDemoData = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["super_admin"]);
+    assertRole(ctx, SUPER_ADMIN_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -65,8 +68,8 @@ export const resetDemoData = async (
     return { ok: false, errorKey: "settings.errors.auditFailed" };
   }
 
-  revalidatePath(`/${locale}/issues`, "layout");
-  revalidatePath(`/${locale}/dashboard`, "layout");
+  revalidatePath(localizedPath(locale, routes.issues), "layout");
+  revalidatePath(localizedPath(locale, routes.dashboard), "layout");
 
   return { ok: true, data: { issuesDeleted } };
 };

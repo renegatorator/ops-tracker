@@ -1,9 +1,20 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { AdminUsersPanel } from "@/features/users/components/AdminUsersPanel";
+import { RouteLoading } from "@/components/RouteLoading";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { isSuperAdminRole } from "@/lib/auth/types";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
+
+const AdminUsersPanel = dynamic(
+  () =>
+    import("@/features/users/components/AdminUsersPanel").then((m) => ({
+      default: m.AdminUsersPanel,
+    })),
+  { loading: () => <RouteLoading compact /> },
+);
 
 interface AdminUsersPageProps {
   params: Promise<{ locale: string }>;
@@ -11,14 +22,14 @@ interface AdminUsersPageProps {
 
 export const generateMetadata = async ({ params }: AdminUsersPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/users");
+  return getLocalizedSeoMetadata(locale, routes.adminUsers);
 };
 
 const AdminUsersPage = async ({ params }: AdminUsersPageProps) => {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   const ctx = await getUserAuthContext();
-  const isSuperAdmin = ctx?.role === "super_admin";
+  const isSuperAdmin = ctx != null && isSuperAdminRole(ctx.role);
 
   return (
     <Stack gap="md" w="100%">

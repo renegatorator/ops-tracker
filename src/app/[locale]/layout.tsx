@@ -8,6 +8,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import {
@@ -20,6 +21,11 @@ import { AppNotifications } from "@/components/Providers/AppNotifications";
 import { QueryProvider } from "@/components/Providers/QueryProvider";
 import { routing } from "@/i18n/routing";
 import { env } from "@/lib/env";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -65,7 +71,7 @@ export default async function LocaleLayout({
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
-      <body>
+      <body className={inter.className}>
         <MantineProvider defaultColorScheme="auto">
           <NextIntlClientProvider messages={messages}>
             <QueryProvider>

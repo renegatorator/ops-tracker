@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
-import type { AppRole } from "@/lib/auth/types";
+import { APP_ROLE, type AppRole } from "@/lib/auth/types";
 
 import { useAdminUsersList } from "../hooks/useAdminUsersList";
 import { useUpdateUserRole } from "../hooks/useUpdateUserRole";
@@ -20,7 +20,7 @@ const canEditUserRow = (
   targetRole: AppRole,
 ): boolean => {
   if (actorIsSuper) return true;
-  return targetRole === "user";
+  return targetRole === APP_ROLE.user;
 };
 
 export const AdminUsersPanel = ({
@@ -36,10 +36,10 @@ export const AdminUsersPanel = ({
   const roleSelectData = useMemo(
     () =>
       [
-        { value: "user" as const, label: tRoles("user") },
-        { value: "admin" as const, label: tRoles("admin") },
+        { value: APP_ROLE.user, label: tRoles("user") },
+        { value: APP_ROLE.admin, label: tRoles("admin") },
         ...(isSuperAdmin
-          ? [{ value: "super_admin" as const, label: tRoles("super_admin") }]
+          ? [{ value: APP_ROLE.super_admin, label: tRoles("super_admin") }]
           : []),
       ],
     [isSuperAdmin, tRoles],

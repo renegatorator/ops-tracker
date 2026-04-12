@@ -4,7 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [2.0.0] - 2026-04-5
+_On release, replace this heading with a semver and date (for example `## [2.1.0] - 2026-04-15`), then add a new empty `## [Unreleased]` section above it._
+
+### Added
+
+- Phase 0 alignment: feature layout and hook conventions documented in `docs/ARCHITECTURE.md`; `docs/SUPABASE_MIGRATIONS.md` (prerequisites, migration order, RLS, roles, optional signup trigger, env); Phase 0 and Phase 12 marked complete in `docs/IMPLEMENTATION_PLAN.md`
+- Phase 11 email (Resend): `resend` package; `getResendApiKey` / `getResendFrom` in `src/lib/env.ts`; `src/lib/email/send-issue-assigned-email.ts` and `send-issue-created-email.ts` (HTML bodies); sends after successful `assignIssue` (when assignee set) and `createIssue` (reporter confirmation) without failing mutations on errors; `.env.example` entries and README environment table; Phase 11 marked complete in `docs/IMPLEMENTATION_PLAN.md`
+- Phase 13 quality gates: `@playwright/test`, `playwright.config.ts`, `e2e/critical-path.spec.ts` (login → issues list → first issue detail; skips when `E2E_EMAIL` / `E2E_PASSWORD` unset); `npm run test:e2e` and `test:e2e:ui`; README sections for roles, optional e2e, and extra env rows (`OPS_DEMO_RESET_ENABLED`, `E2E_*`, `PLAYWRIGHT_BASE_URL`); `data-testid="issues-table"` on `IssuesVirtualizedTable`; Phase 13 marked complete in `docs/IMPLEMENTATION_PLAN.md`
+
+### Changed
+
+- `docs/ARCHITECTURE.md` database row and audit/email sections updated for implemented schema and Resend helpers; migration apply link now `docs/SUPABASE_MIGRATIONS.md`; README database section points to the same; implementation plan footer notes through Phase 13
+
+## [2.0.0] - 2026-04-05
 
 ### Added
 
@@ -19,7 +31,7 @@ All notable changes to this project will be documented in this file.
 - SEO metadata wiring for `/issues` in `src/utils/seoUtils.ts`
 - Phase 5 TanStack Query: `@tanstack/react-query` and devtools (development only), `QueryProvider` in `src/app/[locale]/layout.tsx`, query key factory `src/features/issues/keys.ts`, hooks `useIssuesList` and `useIssueDetail`, read action `getIssue` / `getIssueById`, `IssuesQueryError` for failed queries, client list/detail panels for issues, route `src/app/[locale]/issues/[id]/page.tsx`, extra `issues` strings (`loading`, `backToList`, `detailTitle`); Phase 5 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 - Supabase CLI project layout: `supabase init` (`config.toml`, `.gitignore`); npm scripts `db:link`, `db:push`, `db:pull`, `db:diff`, `db:start`, `db:stop`, `db:reset` (CLI via `npx supabase@latest`)
-- Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_PHASE1.md`
+- Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_MIGRATIONS.md`
 - Typed `env()` helper in `src/lib/env.ts` for known `NEXT_PUBLIC_*` variables (autocomplete and missing-value errors)
 - Phase 2 auth: refresh Supabase session in `src/proxy.ts` after next-intl (and on `/` → `/{locale}` redirect) via `src/lib/supabase/proxy.ts`
 - Shared auth helpers in `src/lib/auth/session.ts` (`getSession`, `requireUser`, `requireRole`) and `signOutAction` in `src/lib/auth/actions.ts`

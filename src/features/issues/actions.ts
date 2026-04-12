@@ -3,10 +3,15 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { ZodError } from "zod";
 
+import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import type { UserAuthContext } from "@/lib/auth/types";
+import { ADMIN_ACCESS_ROLES } from "@/lib/auth/types";
+import { sendIssueAssignedEmailIfConfigured } from "@/lib/email/send-issue-assigned-email";
+import { sendIssueCreatedReporterEmailIfConfigured } from "@/lib/email/send-issue-created-email";
+import { issueDetailPath, routes } from "@/lib/routes";
 
 import { ISSUES_CACHE_TAG } from "./cache";
 import { zodToFieldErrors } from "./map-errors";
@@ -33,16 +38,16 @@ import type {
 } from "./types";
 
 const revalidateIssuesSegment = (locale: string, issueId?: string) => {
-  revalidatePath(`/${locale}/issues`, "page");
+  revalidatePath(localizedPath(locale, routes.issues), "page");
   if (issueId) {
-    revalidatePath(`/${locale}/issues/${issueId}`, "page");
+    revalidatePath(localizedPath(locale, issueDetailPath(issueId)), "page");
   }
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
 
 const revalidateAfterIssueStatusMutation = (locale: string) => {
-  revalidatePath(`/${locale}/issues`, "page");
-  revalidatePath(`/${locale}/admin/statuses`, "page");
+  revalidatePath(localizedPath(locale, routes.issues), "page");
+  revalidatePath(localizedPath(locale, routes.adminStatuses), "page");
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
 
@@ -82,7 +87,7 @@ export const listUserProfilesForIssueFilters = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["admin", "super_admin"]);
+    assertRole(ctx, ADMIN_ACCESS_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -119,6 +124,12 @@ export const createIssue = async (
       entityType: "issue",
       entityId: result.data.id,
       metadata: { title: parsed.data.title },
+    });
+    await sendIssueCreatedReporterEmailIfConfigured({
+      locale,
+      issueId: result.data.id,
+      title: parsed.data.title,
+      toEmail: ctx.user.email ?? undefined,
     });
     revalidateIssuesSegment(locale);
   }
@@ -182,7 +193,7 @@ export const assignIssue = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["admin", "super_admin"]);
+    assertRole(ctx, ADMIN_ACCESS_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -200,6 +211,13 @@ export const assignIssue = async (
       entityId: parsed.data.issueId,
       metadata: { assignee_id: parsed.data.assigneeId },
     });
+    if (parsed.data.assigneeId) {
+      await sendIssueAssignedEmailIfConfigured({
+        locale,
+        issueId: parsed.data.issueId,
+        assigneeId: parsed.data.assigneeId,
+      });
+    }
     revalidateIssuesSegment(locale, parsed.data.issueId);
   }
   return result;
@@ -213,7 +231,7 @@ const requireAdminOrSuperCtx = async (): Promise<AdminAuthResult> => {
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["admin", "super_admin"]);
+    assertRole(ctx, ADMIN_ACCESS_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -304,7 +322,7 @@ export const softDeleteIssue = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["admin", "super_admin"]);
+    assertRole(ctx, ADMIN_ACCESS_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };

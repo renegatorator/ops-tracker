@@ -9,6 +9,11 @@
     "buttons": {
       "save": "Speichern",
       "cancel": "Abbrechen"
+    },
+    "route": {
+      "errorTitle": "Etwas ist schiefgelaufen",
+      "errorDescription": "Diese Seite konnte nicht geladen werden. Sie können es erneut versuchen.",
+      "tryAgain": "Erneut versuchen"
     }
   },
   "landing": {

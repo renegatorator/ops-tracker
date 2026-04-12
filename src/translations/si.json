@@ -9,6 +9,11 @@
     "buttons": {
       "save": "Shrani",
       "cancel": "Prekliči"
+    },
+    "route": {
+      "errorTitle": "Nekaj je šlo narobe",
+      "errorDescription": "Te strani ni bilo mogoče naložiti. Poskusite znova.",
+      "tryAgain": "Poskusi znova"
     }
   },
   "landing": {

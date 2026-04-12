@@ -4,27 +4,29 @@ import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
+import { localizedPath } from "@/i18n/localized-path";
 import { routing } from "@/i18n/routing";
+import { routes } from "@/lib/routes";
 
 type KnownRoute =
-  | "/"
-  | "/dashboard"
-  | "/issues"
-  | "/admin"
-  | "/admin/users"
-  | "/admin/statuses"
-  | "/admin/settings"
-  | "/admin/audit";
+  | typeof routes.home
+  | typeof routes.dashboard
+  | typeof routes.issues
+  | typeof routes.admin
+  | typeof routes.adminUsers
+  | typeof routes.adminStatuses
+  | typeof routes.adminSettings
+  | typeof routes.adminAudit;
 
 const routeToSeoKey: Record<KnownRoute, string> = {
-  "/": "home",
-  "/dashboard": "dashboard",
-  "/issues": "issues",
-  "/admin": "admin",
-  "/admin/users": "adminUsers",
-  "/admin/statuses": "adminStatuses",
-  "/admin/settings": "adminSettings",
-  "/admin/audit": "adminAudit",
+  [routes.home]: "home",
+  [routes.dashboard]: "dashboard",
+  [routes.issues]: "issues",
+  [routes.admin]: "admin",
+  [routes.adminUsers]: "adminUsers",
+  [routes.adminStatuses]: "adminStatuses",
+  [routes.adminSettings]: "adminSettings",
+  [routes.adminAudit]: "adminAudit",
 };
 
 function stripLocaleFromPath(pathname: string): string {
@@ -40,7 +42,7 @@ function stripLocaleFromPath(pathname: string): string {
 }
 
 function getLocalizedPath(locale: string, pathname: string): string {
-  return pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
+  return localizedPath(locale, pathname);
 }
 
 export async function getLocalizedSeoMetadata(

@@ -9,9 +9,10 @@ import {
   Title,
 } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
+import { redirect } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 export type LoginError = "invalid_credentials" | "generic";
@@ -41,10 +42,13 @@ async function signInAction(locale: string, formData: FormData) {
         ? "invalid_credentials"
         : "generic";
 
-    redirect(`/${locale}/login?error=${errorType}`);
+    return redirect({
+      href: `${routes.login}?error=${errorType}`,
+      locale,
+    });
   }
 
-  redirect(`/${locale}/dashboard`);
+  return redirect({ href: routes.dashboard, locale });
 }
 
 export default async function LoginPage({ locale, error }: LoginPageProps) {

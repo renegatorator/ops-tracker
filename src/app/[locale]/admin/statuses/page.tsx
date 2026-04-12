@@ -1,8 +1,20 @@
 import { Stack, Title } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { AdminIssueStatusesPanel } from "@/features/issues/components/AdminIssueStatusesPanel";
+import { RouteLoading } from "@/components/RouteLoading";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
+
+const AdminIssueStatusesPanel = dynamic(
+  () =>
+    import("@/features/issues/components/AdminIssueStatusesPanel").then(
+      (m) => ({
+        default: m.AdminIssueStatusesPanel,
+      }),
+    ),
+  { loading: () => <RouteLoading compact /> },
+);
 
 interface AdminStatusesPageProps {
   params: Promise<{ locale: string }>;
@@ -10,7 +22,7 @@ interface AdminStatusesPageProps {
 
 export const generateMetadata = async ({ params }: AdminStatusesPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/statuses");
+  return getLocalizedSeoMetadata(locale, routes.adminStatuses);
 };
 
 const AdminStatusesPage = async ({ params }: AdminStatusesPageProps) => {
