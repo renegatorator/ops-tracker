@@ -1,6 +1,7 @@
 import { Stack, Text, Title } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface AdminHomePageProps {
@@ -9,7 +10,7 @@ interface AdminHomePageProps {
 
 export const generateMetadata = async ({ params }: AdminHomePageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin");
+  return getLocalizedSeoMetadata(locale, routes.admin);
 };
 
 const AdminHomePage = async ({ params }: AdminHomePageProps) => {

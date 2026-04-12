@@ -40,11 +40,12 @@ const getPreferredLocale = (request: NextRequest): string => {
 const proxy = async (request: NextRequest) => {
   if (request.nextUrl.pathname === "/") {
     const locale = getPreferredLocale(request);
-    const url = request.nextUrl.clone();
-    url.pathname = `/${locale}`;
-
-    const redirectResponse = NextResponse.redirect(url);
-    return refreshSupabaseSession(request, redirectResponse);
+    if (locale !== routing.defaultLocale) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}`;
+      const redirectResponse = NextResponse.redirect(url);
+      return refreshSupabaseSession(request, redirectResponse);
+    }
   }
 
   const response = intlMiddleware(request);

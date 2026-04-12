@@ -208,9 +208,9 @@
 
 **Deliverables:**
 
-- [ ] Critical path E2E (Playwright) optional: login → list → open issue.
-- [ ] Update README with env vars (Resend, Supabase) and role seeding instructions.
-- [ ] CHANGELOG entries per release.
+- [x] Critical path E2E (Playwright) optional: login → list → open issue.
+- [x] Update README with env vars (Resend, Supabase) and role seeding instructions.
+- [x] CHANGELOG entries per release.
 
 **Acceptance:** New contributor can run app and understand role model.
 
@@ -241,4 +241,4 @@ Phases 8–11 can overlap **after** Phase 3 is done, but **do not** skip 1–2 f
 
 ---
 
-_Last updated: Phases 0–12 covered in repo (Phase 0 conventions in ARCHITECTURE, `docs/SUPABASE_MIGRATIONS.md`, Phase 12 indexes + route UX); Phase 13 quality gates remain._
+_Last updated: Phases 0–13 covered in repo (Playwright optional e2e, README env/roles/e2e, changelog policy); see `docs/SUPABASE_MIGRATIONS.md` for database apply steps._

@@ -1,9 +1,8 @@
-import { redirect } from "next/navigation";
-
+import { redirect } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
-import type { AppRole, UserAuthContext } from "./types";
-import { parseAppRole } from "./types";
+import { APP_ROLES, type AppRole, parseAppRole, type UserAuthContext } from "./types";
 
 export type { AppRole, UserAuthContext } from "./types";
 
@@ -17,10 +16,36 @@ const fetchProfileRole = async (
     .eq("id", userId)
     .maybeSingle();
 
-  if (error || profile?.role == null) {
+  if (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "[auth] user_profiles select failed:",
+        error.message,
+        error.code,
+      );
+    }
     return null;
   }
-  return parseAppRole(profile.role);
+
+  if (!profile) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "[auth] user_profiles: no row visible for",
+        userId,
+        "(missing row, id mismatch, or RLS blocked read — SQL Editor often bypasses RLS)",
+      );
+    }
+    return null;
+  }
+
+  const role = parseAppRole(profile.role);
+  if (role == null && process.env.NODE_ENV === "development") {
+    console.warn(
+      `[auth] user_profiles.role not recognized (expected ${APP_ROLES.join("|")}):`,
+      profile.role,
+    );
+  }
+  return role;
 };
 
 export const getSession = async () => {
@@ -33,7 +58,7 @@ export const getSession = async () => {
 
 /**
  * Signed-in user plus `user_profiles.role` from the database. No redirects.
- * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, [...])` for admin paths.
+ * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, ADMIN_ACCESS_ROLES)` (or `SUPER_ADMIN_ROLES`) for gated actions.
  */
 export const getUserAuthContext = async (): Promise<UserAuthContext | null> => {
   const { user } = await getSession();
@@ -46,7 +71,7 @@ export const getUserAuthContext = async (): Promise<UserAuthContext | null> => {
 export const requireUser = async (locale: string) => {
   const { user } = await getSession();
   if (!user) {
-    redirect(`/${locale}/login`);
+    return redirect({ href: routes.login, locale });
   }
   return user;
 };
@@ -55,16 +80,19 @@ export const requireUser = async (locale: string) => {
  * Ensures the user is signed in and their `user_profiles.role` is one of `allowed`.
  * Redirects to login if unauthenticated or profile missing; to dashboard if role not allowed.
  */
-export const requireRole = async (locale: string, allowed: AppRole[]) => {
+export const requireRole = async (
+  locale: string,
+  allowed: readonly AppRole[],
+) => {
   const user = await requireUser(locale);
   const role = await fetchProfileRole(user.id);
 
   if (role == null) {
-    redirect(`/${locale}/login`);
+    return redirect({ href: routes.login, locale });
   }
 
   if (!allowed.includes(role)) {
-    redirect(`/${locale}/dashboard`);
+    return redirect({ href: routes.dashboard, locale });
   }
 
   return { user, role };

@@ -111,8 +111,35 @@ Auth-linked profiles use the **`user_profiles`** table and Postgres enum **`app_
 | `NEXT_PUBLIC_SITE_URL` | public | Canonical site URL (emails, metadata); defaults to `http://localhost:3000` in code if unset |
 | `RESEND_API_KEY` | **server only** | [Resend](https://resend.com) API key; when set, assignment and issue-created emails are attempted |
 | `RESEND_FROM` | **server only** | Sender address (use a verified domain in production; Resend’s `onboarding@resend.dev` works for tests) |
+| `OPS_DEMO_RESET_ENABLED` | **server only** | Super-admin demo reset gate; see `src/lib/env.ts` for default behaviour |
+| `E2E_EMAIL`, `E2E_PASSWORD` | local / CI | Optional Playwright credentials; see **End-to-end tests** below |
+| `PLAYWRIGHT_BASE_URL` | local / CI | Optional; Playwright defaults to `http://127.0.0.1:3000`. When Playwright starts the dev server, the port in this URL is passed to `next dev` so the server matches `use.baseURL`. If you reuse an existing dev process, run it on the same port (for example `npm run dev -- -p 3001` when this URL uses `:3001`). |
 
 See `.env.example` for a starter list.
+
+### Roles for local development
+
+Create a user (sign up in the app or via Supabase Auth), ensure **`user_profiles`** has a row for that user, then set **`app_role`** as needed (for example `super_admin` for full access). Step-by-step SQL is in [docs/SUPABASE_MIGRATIONS.md](docs/SUPABASE_MIGRATIONS.md).
+
+### Next.js 16 proxy (auth + locales)
+
+Session refresh and `next-intl` routing run from **`src/proxy.ts`** (shown as **Proxy (Middleware)** in `next build`). Do **not** add a separate `src/middleware.ts`; Next.js 16 errors if both `middleware` and `proxy` exist. Details: [middleware-to-proxy](https://nextjs.org/docs/messages/middleware-to-proxy).
+
+### URL locales (default English unprefixed)
+
+Routing uses **`localePrefix: "as-needed"`** ([next-intl](https://next-intl.dev/docs/routing#locale-prefix)): **English** (default) URLs look like **`/issues`**, **`/dashboard`**, **`/admin`** with no `/en` segment. **Slovenian** and **German** keep a prefix: **`/si/issues`**, **`/de/issues`**, etc. That matches common practice (short URLs for the primary market, explicit prefixes for translations). Use **`Link`** / **`redirect`** from `@/i18n/navigation` so paths stay correct.
+
+### Admin area access
+
+Routes under **`/admin`** require **`user_profiles.role`** of **`admin`** or **`super_admin`**. If you are signed in but visiting `/admin` sends you to **`/dashboard`**, your account is still a normal **`user`**; promote it in SQL (see [docs/SUPABASE_MIGRATIONS.md](docs/SUPABASE_MIGRATIONS.md) §6).
+
+### End-to-end tests (optional)
+
+1. Install browsers once: `npx playwright install chromium`
+2. Set **`E2E_EMAIL`** and **`E2E_PASSWORD`** in `.env.local` to a user that can sign in and already has at least one issue in the same Supabase project.
+3. Run **`npm run test:e2e`** (Playwright can start `npm run dev` automatically, or reuse an existing server on `PLAYWRIGHT_BASE_URL`). The bundled critical-path spec uses **unprefixed** paths for English (`/login`, `/dashboard`, `/issues`).
+
+If `E2E_EMAIL` or `E2E_PASSWORD` is unset, the critical-path test **skips** so clones and CI stay green without secrets.
 
 ---
 

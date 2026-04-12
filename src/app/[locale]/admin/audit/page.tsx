@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
 import { RouteLoading } from "@/components/RouteLoading";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const AdminAuditLogPanel = dynamic(
@@ -19,7 +20,7 @@ interface AdminAuditPageProps {
 
 export const generateMetadata = async ({ params }: AdminAuditPageProps) => {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, "/admin/audit");
+  return getLocalizedSeoMetadata(locale, routes.adminAudit);
 };
 
 const AdminAuditPage = async ({ params }: AdminAuditPageProps) => {

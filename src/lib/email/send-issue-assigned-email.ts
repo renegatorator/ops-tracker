@@ -2,7 +2,9 @@ import "server-only";
 
 import { Resend } from "resend";
 
+import { localizedPath } from "@/i18n/localized-path";
 import { env, getResendApiKey, getResendFrom } from "@/lib/env";
+import { issueDetailPath } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 const escapeHtml = (s: string): string =>
@@ -64,7 +66,7 @@ export const sendIssueAssignedEmailIfConfigured = async (input: {
     }
 
     const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
-    const issueUrl = `${siteUrl}/${input.locale}/issues/${input.issueId}`;
+    const issueUrl = `${siteUrl}${localizedPath(input.locale, issueDetailPath(input.issueId))}`;
 
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
