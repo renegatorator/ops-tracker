@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { ZodError } from "zod";
 
+import * as projectService from "@/features/projects/service";
 import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
@@ -11,7 +12,12 @@ import type { UserAuthContext } from "@/lib/auth/types";
 import { ADMIN_ACCESS_ROLES } from "@/lib/auth/types";
 import { sendIssueAssignedEmailIfConfigured } from "@/lib/email/send-issue-assigned-email";
 import { sendIssueCreatedReporterEmailIfConfigured } from "@/lib/email/send-issue-created-email";
-import { issueDetailPath, routes } from "@/lib/routes";
+import {
+  issueDetailPath,
+  projectBoardPath,
+  projectIssuesPath,
+  routes,
+} from "@/lib/routes";
 
 import { ISSUES_CACHE_TAG } from "./cache";
 import { zodToFieldErrors } from "./map-errors";
@@ -21,6 +27,7 @@ import {
   createIssueStatusSchema,
   deleteIssueStatusSchema,
   getIssueSchema,
+  listAssigneeFiltersSchema,
   listIssuesSchema,
   softDeleteIssueSchema,
   transitionIssueStatusSchema,
@@ -37,16 +44,31 @@ import type {
   UserProfileBrief,
 } from "./types";
 
-const revalidateIssuesSegment = (locale: string, issueId?: string) => {
+const revalidateIssuesSegment = (
+  locale: string,
+  opts?: { issueId?: string; projectKey?: string },
+) => {
   revalidatePath(localizedPath(locale, routes.issues), "page");
-  if (issueId) {
-    revalidatePath(localizedPath(locale, issueDetailPath(issueId)), "page");
+  revalidatePath(localizedPath(locale, routes.projects), "layout");
+  if (opts?.projectKey) {
+    revalidatePath(
+      localizedPath(locale, projectBoardPath(opts.projectKey)),
+      "page",
+    );
+    revalidatePath(
+      localizedPath(locale, projectIssuesPath(opts.projectKey)),
+      "page",
+    );
+  }
+  if (opts?.issueId) {
+    revalidatePath(localizedPath(locale, issueDetailPath(opts.issueId)), "page");
   }
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
 
 const revalidateAfterIssueStatusMutation = (locale: string) => {
   revalidatePath(localizedPath(locale, routes.issues), "page");
+  revalidatePath(localizedPath(locale, routes.projects), "layout");
   revalidatePath(localizedPath(locale, routes.adminStatuses), "page");
   revalidateTag(ISSUES_CACHE_TAG, "max");
 };
@@ -83,6 +105,7 @@ export const listIssueStatuses = async (
 
 export const listUserProfilesForIssueFilters = async (
   _locale: string,
+  raw?: unknown,
 ): Promise<IssuesActionResult<UserProfileBrief[]>> => {
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
@@ -93,6 +116,11 @@ export const listUserProfilesForIssueFilters = async (
       return { ok: false, errorKey: "errors.forbidden" };
     }
     throw e;
+  }
+  const parsed = listAssigneeFiltersSchema.safeParse(raw ?? {});
+  if (!parsed.success) return validationFailure(parsed.error);
+  if (parsed.data.projectId) {
+    return projectService.listProjectMemberProfilesBrief(parsed.data.projectId);
   }
   return issueService.listUserProfilesBrief();
 };
@@ -105,13 +133,27 @@ export const getIssue = async (
   if (!ctx) return unauthorized();
   const parsed = getIssueSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
-  return issueService.getIssueById(parsed.data.issueId);
+  const d = parsed.data;
+  if (d.issueId) {
+    return issueService.getIssue({ issueId: d.issueId });
+  }
+  return issueService.getIssue({
+    projectKey: d.projectKey!.trim().toUpperCase(),
+    issueNumber: d.issueNumber!,
+  });
 };
 
 export const createIssue = async (
   locale: string,
   raw: unknown,
-): Promise<IssuesActionResult<{ id: string }>> => {
+): Promise<
+  IssuesActionResult<{
+    id: string;
+    issue_key: string;
+    issue_number: number;
+    project_key: string;
+  }>
+> => {
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   const parsed = createIssueSchema.safeParse(raw);
@@ -123,7 +165,11 @@ export const createIssue = async (
       action: "issue.create",
       entityType: "issue",
       entityId: result.data.id,
-      metadata: { title: parsed.data.title },
+      metadata: {
+        title: parsed.data.title,
+        project_id: parsed.data.project_id,
+        issue_key: result.data.issue_key,
+      },
     });
     await sendIssueCreatedReporterEmailIfConfigured({
       locale,
@@ -131,7 +177,9 @@ export const createIssue = async (
       title: parsed.data.title,
       toEmail: ctx.user.email ?? undefined,
     });
-    revalidateIssuesSegment(locale);
+    revalidateIssuesSegment(locale, {
+      projectKey: result.data.project_key,
+    });
   }
   return result;
 };
@@ -159,7 +207,7 @@ export const updateIssue = async (
       entityId: parsed.data.issueId,
       metadata: { fields },
     });
-    revalidateIssuesSegment(locale);
+    revalidateIssuesSegment(locale, { projectKey: result.data.project_key });
   }
   return result;
 };
@@ -181,7 +229,7 @@ export const transitionIssueStatus = async (
       entityId: parsed.data.issueId,
       metadata: { status_id: parsed.data.statusId },
     });
-    revalidateIssuesSegment(locale, parsed.data.issueId);
+    revalidateIssuesSegment(locale, { issueId: parsed.data.issueId });
   }
   return result;
 };
@@ -218,7 +266,7 @@ export const assignIssue = async (
         assigneeId: parsed.data.assigneeId,
       });
     }
-    revalidateIssuesSegment(locale, parsed.data.issueId);
+    revalidateIssuesSegment(locale, { issueId: parsed.data.issueId });
   }
   return result;
 };
@@ -340,7 +388,7 @@ export const softDeleteIssue = async (
       entityId: parsed.data.issueId,
       metadata: {},
     });
-    revalidateIssuesSegment(locale, parsed.data.issueId);
+    revalidateIssuesSegment(locale, { issueId: parsed.data.issueId });
   }
   return result;
 };

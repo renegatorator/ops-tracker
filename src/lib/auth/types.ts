@@ -30,10 +30,11 @@ export const isAdminAccessRole = (role: AppRole): boolean =>
 export const isSuperAdminRole = (role: AppRole): boolean =>
   role === APP_ROLE.super_admin;
 
-/** Signed-in user plus `user_profiles.role` from the database (see `getUserAuthContext`). */
+/** Signed-in user plus `user_profiles.role` and `full_name` from the database (see `getUserAuthContext`). */
 export type UserAuthContext = {
   user: User;
   role: AppRole;
+  fullName: string | null;
 };
 
 export const parseAppRole = (value: unknown): AppRole | null => {

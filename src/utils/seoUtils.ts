@@ -12,6 +12,7 @@ type KnownRoute =
   | typeof routes.home
   | typeof routes.dashboard
   | typeof routes.issues
+  | typeof routes.projects
   | typeof routes.admin
   | typeof routes.adminUsers
   | typeof routes.adminStatuses
@@ -22,6 +23,7 @@ const routeToSeoKey: Record<KnownRoute, string> = {
   [routes.home]: "home",
   [routes.dashboard]: "dashboard",
   [routes.issues]: "issues",
+  [routes.projects]: "projects",
   [routes.admin]: "admin",
   [routes.adminUsers]: "adminUsers",
   [routes.adminStatuses]: "adminStatuses",

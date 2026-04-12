@@ -7,6 +7,7 @@ export const routes = {
   login: "/login",
   dashboard: "/dashboard",
   issues: "/issues",
+  projects: "/projects",
   admin: "/admin",
   adminUsers: "/admin/users",
   adminStatuses: "/admin/statuses",
@@ -18,3 +19,18 @@ export type AppRoute = (typeof routes)[keyof typeof routes];
 
 export const issueDetailPath = (issueId: string): string =>
   `${routes.issues}/${issueId}`;
+
+export const projectBoardPath = (projectKey: string): string =>
+  `${routes.projects}/${encodeURIComponent(projectKey)}/board`;
+
+export const projectIssuesPath = (projectKey: string): string =>
+  `${routes.projects}/${encodeURIComponent(projectKey)}/issues`;
+
+export const projectSettingsPath = (projectKey: string): string =>
+  `${routes.projects}/${encodeURIComponent(projectKey)}/settings`;
+
+export const projectIssueDetailPath = (
+  projectKey: string,
+  issueNumber: number,
+): string =>
+  `${routes.projects}/${encodeURIComponent(projectKey)}/issues/${issueNumber}`;

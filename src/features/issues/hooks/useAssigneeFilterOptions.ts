@@ -7,11 +7,20 @@ import { listUserProfilesForIssueFilters } from "@/features/issues/actions";
 import { IssuesQueryError } from "../issues-query-error";
 import { issueQueryKeys } from "../keys";
 
-export const useAssigneeFilterOptions = (locale: string, enabled: boolean) =>
+export const useAssigneeFilterOptions = (
+  locale: string,
+  enabled: boolean,
+  projectId?: string,
+) =>
   useQuery({
-    queryKey: issueQueryKeys.assigneeOptions(locale),
+    queryKey: projectId
+      ? [...issueQueryKeys.assigneeOptions(locale), projectId]
+      : issueQueryKeys.assigneeOptions(locale),
     queryFn: async () => {
-      const result = await listUserProfilesForIssueFilters(locale);
+      const result = await listUserProfilesForIssueFilters(
+        locale,
+        projectId ? { projectId } : {},
+      );
       if (!result.ok) {
         throw new IssuesQueryError(result.errorKey, result.fieldErrors);
       }

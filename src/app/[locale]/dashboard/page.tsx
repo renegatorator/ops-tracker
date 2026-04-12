@@ -1,8 +1,9 @@
-import { Container, Paper, Stack, Text, Title } from "@mantine/core";
-import { getTranslations } from "next-intl/server";
+import { Container, Paper } from "@mantine/core";
 
-import PagesLayout from "@/components/Layout/PagesLayout";
-import { requireUser } from "@/lib/auth/session";
+import DashboardOverview from "@/features/dashboard/components/DashboardOverview";
+import { getDashboardData } from "@/features/dashboard/getDashboardData";
+import { redirect } from "@/i18n/navigation";
+import { getUserAuthContext } from "@/lib/auth/session";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
@@ -17,23 +18,24 @@ export const generateMetadata = async ({ params }: DashboardPageProps) => {
 
 const DashboardPage = async ({ params }: DashboardPageProps) => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "dashboard" });
-  const user = await requireUser(locale);
+  const ctx = await getUserAuthContext();
+  if (!ctx) {
+    return redirect({ href: routes.login, locale });
+  }
+
+  const data = await getDashboardData(ctx.user.id);
 
   return (
-    <PagesLayout>
-      <Container size="sm" py="xl">
-        <Paper withBorder p="lg" radius="md">
-          <Stack gap="sm">
-            <Title order={2}>{t("title")}</Title>
-            <Text>{t("description")}</Text>
-            <Text fw={600}>
-              {t("signedInAs", { email: user.email ?? "-" })}
-            </Text>
-          </Stack>
-        </Paper>
-      </Container>
-    </PagesLayout>
+    <Container size="lg" py="xl">
+      <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
+        <DashboardOverview
+          data={data}
+          email={ctx.user.email ?? ctx.user.id}
+          fullName={ctx.fullName}
+          locale={locale}
+        />
+      </Paper>
+    </Container>
   );
 };
 
