@@ -181,3 +181,27 @@ Use the same command pattern for other checks (for example `relrowsecurity` on `
 ## 11. Replacing the old doc name
 
 Earlier plan text referenced `SUPABASE_PHASE1.md`. Use **this file** as the single place for apply order and manual steps for Phases **1–12** migrations in this repo.
+
+---
+
+## 12. `20260413100000_issue_type_and_default_statuses.sql`
+
+**What it does:**
+
+1. Creates a new Postgres enum `public.issue_type` with values `'bug'` and `'ticket'` (idempotent — skips if already exists).
+2. Adds column `issue_type public.issue_type NOT NULL DEFAULT 'ticket'` to `public.issues`. Existing rows get `'ticket'`.
+3. Upserts the canonical workflow statuses into `issue_statuses` by slug (safe to run multiple times):
+
+| Name | Slug | Sort order | Terminal |
+|---|---|---|---|
+| Open | `open` | 0 | No |
+| In Progress | `in_progress` | 10 | No |
+| Ready for Deployment | `ready_for_deployment` | 20 | No |
+| Testing | `testing` | 30 | No |
+| Done | `done` | 40 | Yes |
+
+**Apply in the Supabase SQL Editor or via CLI:**
+
+```bash
+npx supabase db push --linked
+```

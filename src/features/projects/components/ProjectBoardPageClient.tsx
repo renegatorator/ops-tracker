@@ -9,13 +9,15 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Anchor, Text } from "@mantine/core";
+import { Anchor, Button, Group, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 import { transitionIssueStatus } from "@/features/issues/actions";
+import CreateIssueModal from "@/features/issues/components/CreateIssueModal";
 import { useIssuesList } from "@/features/issues/hooks/useIssuesList";
 import { useIssueStatuses } from "@/features/issues/hooks/useIssueStatuses";
 import {
@@ -33,6 +35,7 @@ interface ProjectBoardPageClientProps {
   locale: string;
   projectId: string;
   projectKey: string;
+  isAdmin?: boolean;
 }
 
 const IssueCard = ({
@@ -102,9 +105,10 @@ const StatusColumn = ({
         flex: "1 1 260px",
         padding: 8,
         borderRadius: 8,
+        border: "1px solid var(--mantine-color-default-border)",
         background: isOver
           ? "var(--mantine-color-blue-light)"
-          : "var(--mantine-color-default-hover)",
+          : "var(--ops-board-column-bg)",
         minHeight: 320,
       }}
     >
@@ -118,10 +122,12 @@ const ProjectBoardPageClient = ({
   locale,
   projectId,
   projectKey,
+  isAdmin = false,
 }: ProjectBoardPageClientProps) => {
   const t = useTranslations("projects.board");
   const tIssues = useTranslations("issues");
   const queryClient = useQueryClient();
+  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
@@ -199,28 +205,48 @@ const ProjectBoardPageClient = ({
   }
 
   return (
-    <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          flexWrap: "wrap",
-          alignItems: "flex-start",
-        }}
-      >
-        {statuses.map((s) => (
-          <StatusColumn key={s.id} statusId={s.id} title={s.name}>
-            {(issuesByStatus.get(s.id) ?? []).map((issue) => (
-              <IssueCard
-                key={issue.id}
-                issue={issue}
-                projectKey={projectKey}
-              />
-            ))}
-          </StatusColumn>
-        ))}
-      </div>
-    </DndContext>
+    <>
+      {isAdmin && (
+        <Group justify="flex-end" mb="sm">
+          <Button onClick={openModal} size="sm">
+            {t("newIssue")}
+          </Button>
+        </Group>
+      )}
+
+      <DndContext sensors={sensors} onDragEnd={onDragEnd}>
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+            alignItems: "flex-start",
+          }}
+        >
+          {statuses.map((s) => (
+            <StatusColumn key={s.id} statusId={s.id} title={s.name}>
+              {(issuesByStatus.get(s.id) ?? []).map((issue) => (
+                <IssueCard
+                  key={issue.id}
+                  issue={issue}
+                  projectKey={projectKey}
+                />
+              ))}
+            </StatusColumn>
+          ))}
+        </div>
+      </DndContext>
+
+      {isAdmin && (
+        <CreateIssueModal
+          locale={locale}
+          projectId={projectId}
+          projectKey={projectKey}
+          opened={modalOpened}
+          onClose={closeModal}
+        />
+      )}
+    </>
   );
 };
 

@@ -17,16 +17,49 @@
     }
   },
   "landing": {
+    "badge": "Sledenje zadevam & upravljanje projektov",
     "title": "Ops Tracker",
     "description": "Zmogljiva platforma za sledenje probleme in upravljanje operacij, zasnovana za pomoč ekipam pri organizaciji, vrednostenju in sledenju dela. Sodelujte brez težav, ostanite sproti z vašimi projekti in dosežite svoje cilje.",
-    "loginButton": "Prijava"
+    "loginButton": "Prijava",
+    "demoUserButton": "Demo kot uporabnik",
+    "demoAdminButton": "Demo kot skrbnik",
+    "demoComingSoon": "Kmalu na voljo",
+    "demoDisclaimer": "Demo različice prihajajo kmalu. Registracija ni potrebna.",
+    "demoSectionHeading": "Zahtevaj demo",
+    "demoSectionSubheading": "Oglej si Ops Tracker kot navaden uporabnik ali kot skrbnik. Demo različice prihajajo kmalu.",
+    "featuresHeading": "Vse kar vaša ekipa potrebuje",
+    "featuresSubheading": "Zgrajeno za moderne operativne ekipe, ki potrebujejo jasnost, hitrost in odgovornost.",
+    "features": {
+      "kanban": {
+        "title": "Kanban plošče",
+        "description": "Vizualizirajte potek dela z Kanban ploščami z vlečenjem in spuščanjem. Premikajte zadeve in uskladite ekipo."
+      },
+      "tracking": {
+        "title": "Sledenje zadevam",
+        "description": "Ustvarite hrošče in vstopnice, jih dodelite članom ekipe in spremljajte napredek od odprto do zaključeno."
+      },
+      "team": {
+        "title": "Timsko sodelovanje",
+        "description": "Povabite člane v projekte, dodelite zadeve in ohranite vse usklajene s popolnim revizijskim sledjem."
+      },
+      "audit": {
+        "title": "Revizijski dnevnik",
+        "description": "Vsako dejanje je zabeleženo. Skrbniki si lahko ogledajo celotno zgodovino sprememb, dodelitev in prehodov stanj."
+      },
+      "dashboard": {
+        "title": "Pregled nadzorne plošče",
+        "description": "Oglejte si aktivne projekte, odprte zadeve in osebne dodelitve na enem mestu."
+      },
+      "projects": {
+        "title": "Podpora več projektov",
+        "description": "Organizirajte delo v več projektih, vsak s svojo ploščo, seznamom zadev, člani in nastavitvami."
+      }
+    }
   },
   "auth": {
     "login": {
-      "title": "Prijava",
       "emailLabel": "E-pošta",
       "emailPlaceholder": "ti@primer.si",
-      "emailDescription": "Uporabi svoj e-poštni naslov (vsebovati mora @).",
       "emailTitle": "E-poštni naslov mora vsebovati @ (npr. ti@primer.si).",
       "passwordLabel": "Geslo",
       "passwordPlaceholder": "Tvoje geslo",
@@ -102,6 +135,9 @@
       "assignPlaceholder": "Dodeli…",
       "assignReadOnlyHint": "Dodelitev lahko spremenijo samo skrbniki.",
       "assignUpdateFailedTitle": "Posodobitev dodelitve ni uspela",
+      "cancelEdit": "Prekliči",
+      "editTooltip": "Uredi zadevo",
+      "noDescription": "Opis ni podan.",
       "activity": {
         "title": "Aktivnost (revizija)",
         "hint": "Vidno samo skrbnikom. Nedavna dejanja, zabeležena za to zadevo.",
@@ -111,19 +147,28 @@
         "when": "Kdaj",
         "actor": "Izvajalec",
         "action": "Dejanje",
-        "details": "Podrobnosti"
+        "issueKey": "Ključ zadeve",
+        "summary": "Povzetek"
       }
     },
     "empty": "Ni še zadev.",
     "create": {
       "modalTitle": "Nova zadeva",
+      "typeLabel": "Vrsta",
+      "typeBug": "Hrošč",
+      "typeTicket": "Vstopnica",
       "titleLabel": "Naslov",
-      "descriptionLabel": "Opis (neobvezno)",
+      "descriptionLabel": "Opis",
+      "descriptionLabelOptional": "Opis (neobvezno)",
+      "assigneeLabel": "Prevzemnik",
+      "assigneeUnassigned": "Nedodeljeno",
       "statusLabel": "Začetni status",
       "submit": "Ustvari",
+      "cancel": "Prekliči",
       "titleRequired": "Naslov je obvezen.",
       "statusRequired": "Izberi status.",
-      "failedTitle": "Zadve ni bilo mogoče ustvariti",
+      "descriptionRequired": "Opis je obvezen za vstopnice.",
+      "failedTitle": "Zadeve ni bilo mogoče ustvariti",
       "successTitle": "Zadeva ustvarjena",
       "successMessage": "Odpiram novo zadevo…"
     },
@@ -193,7 +238,9 @@
       "roleInvalid": "Neveljavna vloga.",
       "projectIdInvalid": "Neveljaven projekt.",
       "projectKeyInvalid": "2–10 znakov: začni z A–Z, nato A–Z ali 0–9.",
-      "issueLookupInvalid": "Vnesi ID zadeve ali ključ projekta in številko."
+      "issueLookupInvalid": "Vnesi ID zadeve ali ključ projekta in številko.",
+      "issueTypeInvalid": "Izberi veljavno vrsto zadeve (hrošč ali vstopnica).",
+      "descriptionRequiredForTicket": "Opis je obvezen za vstopnice."
     }
   },
   "projects": {
@@ -236,7 +283,8 @@
       "pageTitle": "Plošča · {key}",
       "loading": "Nalaganje plošče…",
       "loadFailed": "Plošče ni bilo mogoče naložiti.",
-      "moveFailedTitle": "Premik ni uspel"
+      "moveFailedTitle": "Premik ni uspel",
+      "newIssue": "Nova zadeva"
     },
     "issues": {
       "title": "Zadeve · {name}",
@@ -257,7 +305,12 @@
       "addFailed": "Dodajanje ni uspelo",
       "addSuccess": "Član dodan",
       "removeFailed": "Odstranjevanje ni uspelo",
-      "removeSuccess": "Član odstranjen"
+      "removeSuccess": "Član odstranjen",
+      "renameTitle": "Preimenuj projekt",
+      "renameLabel": "Ime projekta",
+      "renameButton": "Preimenuj",
+      "renameSuccess": "Projekt preimenovan",
+      "renameFailed": "Preimenovanje ni uspelo"
     }
   },
   "admin": {

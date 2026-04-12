@@ -231,6 +231,8 @@ export const createIssue = async (
       title: input.title,
       description: input.description?.length ? input.description : null,
       status_id: input.status_id,
+      issue_type: input.issue_type ?? "ticket",
+      assignee_id: input.assignee_id ?? null,
       reporter_id: userId,
     })
     .select(

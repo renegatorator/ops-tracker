@@ -1,147 +1,75 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to Ops Tracker are documented here.
+Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](https://semver.org/).
+
+---
 
 ## [Unreleased]
 
-_On release, replace this heading with a semver and date (for example `## [2.2.0] - 2026-xx-xx`), then add a new empty `## [Unreleased]` section above it._
-
-## [2.1.0] - 2026-04-12
-
 ### Added
-
-- **Projects**: create and manage projects with unique keys (e.g. `OPS`); project membership (lead / member roles); project settings page with member management
-- **Supabase migration** `20260412200000_projects_members_issues_scope.sql`: `projects` table, `project_members` table, `issue_key` / `issue_number` / `project_id` columns on `issues`, triggers, RLS policies, and OPS backfill
-- **Project-scoped issues**: issues are numbered per project (`KEY-123`); Kanban board route (`/projects/[key]/board`) with drag-and-drop status transitions via `@dnd-kit`; project issues list and issue detail routes under `/projects/[key]/issues/[number]`
-- **`CreateIssueModal`**: create issues from the project issues page with project pre-selection
-- **`useUpdateIssue` hook**: inline title and description editing on the issue detail panel
-- **Workspace app shell** (`WorkspaceShellClient` / `WorkspaceRouteLayout`): unified Mantine `AppShell` across all routes (dashboard, issues, projects, admin); responsive — burger menu appears at ≤`md` breakpoint; mobile sidebar contains nav links, project switcher, and header controls
-- **Professional dashboard** (`/dashboard`): server-rendered workspace overview with KPI cards (active projects, open issues, assigned to me), project shortcuts with board/issues links, recently-updated and assigned-to-you issue lists; data fetched in parallel via `getDashboardData`
-- **`fullName` in `UserAuthContext`**: `user_profiles.full_name` fetched alongside role; dashboard welcome line shows full name when available
-- **SVG logo and favicon**: `public/logo-light.svg`, `public/logo-dark.svg`, `public/favicon.svg` (adaptive via embedded `@media (prefers-color-scheme)`); favicon wired via `generateMetadata` in root layout
-- **Theme-aware logo**: CSS `[data-mantine-color-scheme]` selectors swap logos without JS, avoiding hydration mismatches
-- **Admin shell upgrade**: admin pages now use the full `WorkspaceShellClient` (same chrome as the rest of the app); red `ADMIN` badge in the header; styled tab subnav (Overview / Users / Statuses / Audit / Super admin) via `AdminSubnav`
-- **Skeleton loading states**: `DashboardSkeleton`, `IssuesTableSkeleton`, and per-route `loading.tsx` files
-- **OpenGraph and Twitter card** metadata on root layout; improved, content-specific per-route SEO descriptions across all locales
-- **E2E**: dashboard overview KPI visibility assertion added to `critical-path.spec.ts`
-- Phase 0 alignment: feature layout and hook conventions documented in `docs/ARCHITECTURE.md`; `docs/SUPABASE_MIGRATIONS.md` (prerequisites, migration order, RLS, roles, optional signup trigger, env); Phase 0 and Phase 12 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Phase 11 email (Resend): `resend` package; `getResendApiKey` / `getResendFrom` in `src/lib/env.ts`; `src/lib/email/send-issue-assigned-email.ts` and `send-issue-created-email.ts` (HTML bodies); sends after successful `assignIssue` (when assignee set) and `createIssue` (reporter confirmation) without failing mutations on errors; `.env.example` entries and README environment table; Phase 11 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Phase 13 quality gates: `@playwright/test`, `playwright.config.ts`, `e2e/critical-path.spec.ts` (login → issues list → first issue detail; skips when `E2E_EMAIL` / `E2E_PASSWORD` unset); `npm run test:e2e` and `test:e2e:ui`; README sections for roles, optional e2e, and extra env rows (`OPS_DEMO_RESET_ENABLED`, `E2E_*`, `PLAYWRIGHT_BASE_URL`); `data-testid="issues-table"` on `IssuesVirtualizedTable`; Phase 13 marked complete in `docs/IMPLEMENTATION_PLAN.md`
+- **Issue types** — Issues can now be classified as **Bug** or **Ticket** at creation time. A new `issue_type` column (Postgres enum) is stored on the `issues` table.
+- **Create issue on board** — Administrators now see a **"New issue"** button directly on the project Kanban board, opening the create-issue modal without navigating away.
+- **Assignee field in create modal** — The create-issue modal now includes an **Assignee** selector so issues can be assigned at creation time.
+- **Description required for tickets** — When creating a Ticket (as opposed to a Bug), the description field is now **required** and the textarea is taller (6 rows min).
+- **Workflow statuses** — Default statuses seeded via migration: **Open → In Progress → Ready for Deployment → Testing → Done**.
+- **Professional landing page** — The home page was redesigned with logo, feature highlights grid, and two disabled demo buttons ("Demo as User", "Demo as Admin") marked as coming soon.
+- **Branded email templates** — Transactional emails (issue created, issue assigned) now use a professional HTML layout with the Ops Tracker logo, a highlighted issue title card, a CTA button, and a footer.
+- **Super admin: rename project** — Super admins can now rename an existing project from the project Settings page. The rename is guarded by a dedicated `renameProject` server action (super_admin role only) and recorded in the audit log.
 
 ### Changed
-
-- Issues are now project-scoped: `project_id` (required after migration), `issue_key` (e.g. `OPS-12`), and `issue_number` fields added; service, schemas, actions, hooks, and UI updated throughout
-- Nav label "All issues" shortened to "Issues" (de: "Tickets", si: "Zadeve") across all locales
-- Admin layout replaced `PagesLayout` with `WorkspaceRouteLayout`; ADMIN badge lives only in the header (removed from page content area)
-- `RouteLoading` spinner is now vertically centred using `--app-shell-header-height` CSS variable
-- `seoUtils.getLocalizedSeoMetadata` returns `"default"` SEO key fallback for unknown routes
-- `resetDemoData` (Super admin) also clears `project_members` and `projects` in correct FK order
-- `docs/ARCHITECTURE.md` database row and audit/email sections updated for implemented schema and Resend helpers; migration apply link now `docs/SUPABASE_MIGRATIONS.md`; README database section points to the same; implementation plan footer notes through Phase 13
-
-### Fixed
-
-- AppShell `navbar.collapsed: { desktop: true }` prevents the 260 px left margin being reserved on desktop when the sidebar is hidden
-- Logo hydration mismatch: switched from `useMantineColorScheme()` (server/client mismatch) to CSS `[data-mantine-color-scheme]` attribute selectors
-- `dashboard/page.tsx` `Anchor component={Link}` serialization error (passing a function across the server→client boundary) replaced with `IntlLinkAnchor`
-- Supabase migration backfill SQL: `UPDATE … FROM … JOIN` used the update-target alias inside the `JOIN ON` clause (PostgreSQL `42P01`); fixed by projecting `project_id` into the CTE and joining on `numbered.project_id`
-
-## [2.0.0] - 2026-04-05
-
-### Added
-
-- Phase 10 audit trail: `src/lib/audit/log-audit.ts` (`logAudit` best-effort insert, `server-only`); audit calls after successful issue mutations (`issue.create` / `issue.update` / `issue.status_transition` / `issue.assign` / `issue.archive`), issue status admin CRUD (`issue_status.*`), `user.role_change` in `users/service.ts`, `demo.reset` via `logAudit` in settings; `src/features/audit/` (`listAuditLogs` service with filters + offset pagination, actor embed `user_profiles!audit_log_actor_id_fkey`, `listAuditLogsForAdmin` action); admin route `src/app/[locale]/admin/audit/` + nav link, `AdminAuditLogPanel` (debounced action filter, entity type, date range, Mantine table); `IssueAuditActivitySection` on issue detail for admins/super_admins with optional prefetch in `prefetch-issue-queries.ts`; `admin.audit`, `issues.detail.activity`, `admin.nav.audit`, SEO `adminAudit`; Phase 10 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Phase 9 super admin: route `src/app/[locale]/admin/settings/` with `requireRole` for `super_admin` only, admin layout nav link visible only to `super_admin`, `src/features/settings/` (`resetDemoData` hard-deletes all `issues`, `audit_log` insert `action` `demo.reset` / `entity_type` `system`), `SuperAdminSettingsPanel` with read-only env/feature table (`OPS_DEMO_RESET_ENABLED`, `OPS_EXPERIMENTAL_UI`, public site URL, `NODE_ENV`), confirm modal and `useResetDemoData` with issue query invalidation, `isDemoResetEnabled` / `getDemoResetEnvRaw` / `isExperimentalUiFlagSet` in `src/lib/env.ts`, SEO key for `/admin/settings`; `admin.settings` + `admin.nav.settings` i18n (en/si/de); Phase 9 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Phase 8 admin: routes `src/app/[locale]/admin/` with `requireRole` layout, overview/users/statuses pages, `AdminNavLink` in `PagesLayout`, `src/features/users/` (`listUserProfilesForAdmin`, `updateUserRole`, `AdminUsersPanel`, hooks) with super-admin vs admin role rules on updates, issue status CRUD (`createIssueStatus`, `updateIssueStatus`, `deleteIssueStatus`) and `AdminIssueStatusesPanel`, migration `supabase/migrations/20260405120000_user_profiles_admin_rls.sql` (policies only; enable RLS when signup path allows), `useAssignIssue` with optimistic detail cache + notifications on failure, assignee `Select` on issues table (admins) and issue detail, SEO keys for `/admin` paths; `admin` + extra `issues` i18n (en/si/de); Phase 8 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Phase 7 issue detail: RSC `QueryClient` prefetch of issue + statuses with `HydrationBoundary`/`dehydrate` on `src/app/[locale]/issues/[id]/page.tsx`, `prefetch-issue-queries.ts` (`server-only`), `canUserTransitionIssueStatus` in `permissions.ts` (aligned with RLS: admin/super_admin or reporter/assignee for `user` role), `useTransitionIssueStatus` with optimistic cache update, rollback on error, Mantine `notifications` for failed transitions, success invalidates detail and list queries; `AppNotifications` + `@mantine/notifications/styles.css` in locale layout; `issues.detail` i18n (en/si/de); Phase 7 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Phase 6 issues list UI: `@tanstack/react-table` and `@tanstack/react-virtual`, `IssuesListPageClient` and `IssuesVirtualizedTable` with server-backed sort, column visibility (localStorage), pagination, debounced search, status/assignee filters, row virtualization when the current page has at least 40 rows, shareable URL query params via `src/features/issues/list-url-params.ts`, `listIssueStatuses` and `listUserProfilesForIssueFilters` actions plus `useIssueStatuses` and `useAssigneeFilterOptions`, assignee embed on issue list/detail select in `service.ts`, optional `sortBy`/`sortDir` on `listIssues` schema and service, `issues.table` and related i18n (en/si/de); Phase 6 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Phase 4 issues domain: `src/features/issues/` with Zod schemas, Supabase service layer, server actions (`listIssues`, `createIssue`, `updateIssue`, `transitionIssueStatus`, `assignIssue`, `softDeleteIssue`), i18n error keys (`issues` namespace, en/si/de), `revalidatePath`/`revalidateTag` after mutations, opaque offset-based list cursor helpers colocated in `service.ts`
-- Protected route `src/app/[locale]/issues/page.tsx` (signed-in issue list placeholder)
-- `zod` dependency for issue input validation
-- SEO metadata wiring for `/issues` in `src/utils/seoUtils.ts`
-- Phase 5 TanStack Query: `@tanstack/react-query` and devtools (development only), `QueryProvider` in `src/app/[locale]/layout.tsx`, query key factory `src/features/issues/keys.ts`, hooks `useIssuesList` and `useIssueDetail`, read action `getIssue` / `getIssueById`, `IssuesQueryError` for failed queries, client list/detail panels for issues, route `src/app/[locale]/issues/[id]/page.tsx`, extra `issues` strings (`loading`, `backToList`, `detailTitle`); Phase 5 marked complete in `docs/IMPLEMENTATION_PLAN.md`
-- Supabase CLI project layout: `supabase init` (`config.toml`, `.gitignore`); npm scripts `db:link`, `db:push`, `db:pull`, `db:diff`, `db:start`, `db:stop`, `db:reset` (CLI via `npx supabase@latest`)
-- Phase 1 Supabase migration: `issue_statuses`, `issues`, `audit_log`, RLS, seed statuses; apply guide in `docs/SUPABASE_MIGRATIONS.md`
-- Typed `env()` helper in `src/lib/env.ts` for known `NEXT_PUBLIC_*` variables (autocomplete and missing-value errors)
-- Phase 2 auth: refresh Supabase session in `src/proxy.ts` after next-intl (and on `/` → `/{locale}` redirect) via `src/lib/supabase/proxy.ts`
-- Shared auth helpers in `src/lib/auth/session.ts` (`getSession`, `requireUser`, `requireRole`) and `signOutAction` in `src/lib/auth/actions.ts`
-- Localized header **Log out** when signed in; dashboard protection uses `requireUser`
-
-### Changed
-
-- `assignIssue` and `softDeleteIssue` revalidate the affected issue detail path; status CRUD revalidates issues list and admin statuses; `getLocalizedSeoMetadata` recognizes `/admin`, `/admin/users`, `/admin/statuses`, `/admin/settings`, `/admin/audit`
-- `transitionIssueStatus` revalidates the specific issue detail path in addition to the issues list when a transition succeeds
-- Issue detail page uses `getUserAuthContext` and login redirect consistent with the issues list; `IssueDetailPanel` accepts `canTransitionStatus`, optional admin-only `canViewIssueAudit` with audit activity section, and shows a status `Select` or read-only status copy
-- Component and route props: replace generic `Props` / `type …Props` object types with `interface` names matching the component (e.g. `IssuesListPageClient` props, `LocaleLayoutProps`, `QueryProviderProps`, `HomeProps`, `LoginProps`)
-- Issues index page uses `IssuesListPageClient` with React Query, URL-driven list params, and `getUserAuthContext` for assignee filter options instead of the removed `IssuesListPanel` placeholder list
-- Supabase server and browser clients and root layout `metadataBase` now read public env vars through `env()`
-- Documented optional `NEXT_PUBLIC_SITE_URL` in `.env.example`
-- Phase 2 modules and related layout/dashboard components use const arrow exports where applicable
+- **Issue detail page is now read-only by default** — Title and description are displayed as plain text. A pencil icon button reveals the edit form; a Cancel button reverts changes without saving.
+- **Audit activity section** — The raw truncated JSON "Details" column was replaced with two meaningful columns: **Issue key** and **Summary** (e.g. "Updated: title, description", "Assigned to …", "Status → …"). Action labels are colour-coded badges.
+- **Board column visibility (light theme)** — Kanban columns now use `gray-1` background with a visible border, matching the appearance of the dark theme.
+- **Board column colour (dark theme)** — Column backgrounds now use `dark-6` (`#25262b`) instead of the too-bright `gray-1`, restoring the original subtle elevation over the dark body.
+- **Email subjects** — Issue-assigned emails now use the subject line `"Assigned to you: <title>"` instead of `"Assigned: <title>"`.
+- **Login page** — Removed the redundant "Sign in" heading and the inline email description hint (`"Use your email address (must include @)."`); the form is cleaner without them.
 
 ### Removed
+- **Legacy workflow statuses "Resolved" and "Closed"** — Deleted from the database via migration (`20260413110000`). Any issues previously on those statuses are automatically reassigned to **Done** before the rows are removed.
 
-- `src/features/issues/components/IssuesListPanel.tsx` (superseded by Phase 6 table UI)
+---
 
-### Fixed
-
-- Landing page login CTA: avoid passing `Link` as a Mantine `Button` `component` prop from a Server Component (Next.js client component prop serialization)
-
-## [1.0.2] - 2026-02-24
+## [0.4.0] — 2026-04-12
 
 ### Added
+- **Project-scoped issues** — Issues belong to a project; each issue gets a human-readable key (e.g. `RKP-1`).
+- **Kanban board** — Per-project drag-and-drop board powered by `@dnd-kit/core`. Dropping a card on a column triggers a status transition.
+- **Project members & settings** — Admins can add/remove project members. A project settings page is available under the project sub-navigation.
+- **Project sub-navigation** — Board / Issues / Settings tab strip under each project.
+- **Project switcher** — Workspace header now includes a project quick-jump dropdown.
+- **Dashboard** — Overview page showing active projects, open issues, and personal assignments.
+- **Audit log (admin)** — Global audit log page with filters by action, entity type, and date range.
 
-- Install and integrate Supabase backend,
-- Login page route and reusable login component with Supabase email/password sign-in
-- Protected dashboard route that redirects unauthenticated users to login
-- Localized login and dashboard translations (en, si, de), including localized auth error messages
-- Theme toggle with system preference detection and manual override
-- Language switcher with flag icons and accessible labels
-- Professional copyright footer with translations
-- Next-intl navigation helper for locale routing
-- UI translations for theme and language controls (en, si, de)
-- Landing page component with gradient icon and login button
-- Typography component with predefined text styles (heading-01 through caption-02)
-- PagesLayout wrapper component for consistent page structure
-- SCSS design system with centralized color tokens and CSS custom properties
-- SCSS mixins for media queries, gradient text, animations, and utilities
-- Tabler Icons React library for iconography
-- Multilingual landing page content (en, si, de)
-- Sass compilation support
-- classnames library for conditional className handling
+---
 
-### Changed
-
-- Redirect login CTA on landing page to the login route
-- Redirect successful sign-in to dashboard
-- Converted landing page translations from client-side hook usage to server-side translations
-- Integrated theme toggle and language switcher into PagesLayout header
-- Migrated from CSS to SCSS for styling
-- Integrated Mantine UI with root layout (MantineProvider, ColorSchemeScript)
-- Updated page component to use new LandingPage structure
-- Updated ESLint config to allow setState in useEffect for hydration fixes
-- Replaced template literal className usage with classnames library
-
-### Fixed
-
-- Hydration mismatch in theme toggle with mount state pattern
-
-### Removed
-
-- Unused Geist font variables from layout
-- Dark color-scheme media query override from global styles
-- Old Next.js placeholder page styles (page.module.css)
-- Duplicate globals.css file (replaced with globals.scss)
-
-## [1.0.1] - 2026-02-21
+## [0.3.0] — 2026-04-11
 
 ### Added
+- **Issue list improvements** — Sortable columns, offset + cursor pagination, search by title/key, status and assignee filters.
+- **Issue assignment** — Administrators can assign issues to project members. An email notification is sent via Resend.
+- **Issue archiving** — Soft-delete (archive) support for issues.
+- **Audit indexes** — Additional Postgres indexes for audit log and issue list performance.
 
-- added eslint, typescript and i18n configurations,
-- added changelog,
-- added Mantine UI
+---
 
-### Changed
+## [0.2.0] — 2026-04-05
 
-- updated dependencies,
-- configured i18n support
+### Added
+- **Admin area** — User management (view/change roles), issue status management (CRUD with slug + sort order), and a super-admin settings page.
+- **Role-based access control** — Three roles: `user`, `admin`, `super_admin`. RLS policies enforced at the database layer.
+- **Issue status transitions** — Status select on issue detail; transitions recorded to the audit log.
+- **Per-issue audit trail** — Activity section on issue detail page (admin-only), showing recent actions for that issue.
 
-### Fixed
+---
+
+## [0.1.0] — 2026-04-03
+
+### Added
+- **Initial release** — Next.js 15 App Router project with Supabase (auth + database), Mantine UI, and `next-intl` for English, German, and Slovenian.
+- **Issue tracking** — Create, read, and update issues with title, description, and status.
+- **Issue statuses** — Configurable workflow statuses stored in `issue_statuses`.
+- **Audit logging** — Every mutating action writes a row to `audit_logs` with actor, action, entity, and metadata.
+- **Email notifications** — Resend integration for issue-created confirmation emails.
+- **Multilingual support** — Full i18n for EN / DE / SI across all pages and error messages.
+- **SEO** — `generateMetadata` on all route segments with per-locale titles and descriptions.

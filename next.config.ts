@@ -52,11 +52,16 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              // next-intl dev HMR + reCAPTCHA script + gstatic assets
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
+              // reCAPTCHA badge SVG + general image CDNs
               "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://vitals.vercel-insights.com",
+              // Supabase API, Resend webhooks (server-side only, but kept for SSE/realtime), reCAPTCHA verify, Vercel analytics
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google.com https://vitals.vercel-insights.com",
+              // reCAPTCHA v3 may render an invisible iframe
+              "frame-src 'self' https://www.google.com",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",

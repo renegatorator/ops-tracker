@@ -7,31 +7,7 @@ import { env, getResendApiKey, getResendFrom } from "@/lib/env";
 import { issueDetailPath } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
-const escapeHtml = (s: string): string =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-
-const buildAssignmentEmailHtml = (input: {
-  issueTitle: string;
-  issueUrl: string;
-  assigneeName: string | null;
-}): string => {
-  const title = escapeHtml(input.issueTitle);
-  const url = escapeHtml(input.issueUrl);
-  const greeting = input.assigneeName
-    ? escapeHtml(input.assigneeName)
-    : "there";
-  return `
-    <p>Hi ${greeting},</p>
-    <p>You have been <strong>assigned</strong> to the following issue:</p>
-    <p><strong>${title}</strong></p>
-    <p><a href="${url}">Open issue in Ops Tracker</a></p>
-    <p style="color:#666;font-size:12px">This message was sent because an administrator assigned you. If you did not expect it, you can ignore this email.</p>
-  `.trim();
-};
+import { buildEmailHtml, escapeHtml } from "./email-template";
 
 /**
  * Sends a single transactional email when an issue is assigned to someone.
@@ -47,19 +23,21 @@ export const sendIssueAssignedEmailIfConfigured = async (input: {
 
   try {
     const supabase = await createClient();
-    const [{ data: issueRow, error: issueErr }, { data: profile, error: profileErr }] =
-      await Promise.all([
-        supabase
-          .from("issues")
-          .select("title")
-          .eq("id", input.issueId)
-          .maybeSingle(),
-        supabase
-          .from("user_profiles")
-          .select("email, full_name")
-          .eq("id", input.assigneeId)
-          .maybeSingle(),
-      ]);
+    const [
+      { data: issueRow, error: issueErr },
+      { data: profile, error: profileErr },
+    ] = await Promise.all([
+      supabase
+        .from("issues")
+        .select("title")
+        .eq("id", input.issueId)
+        .maybeSingle(),
+      supabase
+        .from("user_profiles")
+        .select("email, full_name")
+        .eq("id", input.assigneeId)
+        .maybeSingle(),
+    ]);
 
     if (issueErr || profileErr || !issueRow?.title || !profile?.email?.trim()) {
       return;
@@ -67,17 +45,35 @@ export const sendIssueAssignedEmailIfConfigured = async (input: {
 
     const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
     const issueUrl = `${siteUrl}${localizedPath(input.locale, issueDetailPath(input.issueId))}`;
+    const greeting = profile.full_name?.trim()
+      ? escapeHtml(profile.full_name.trim())
+      : "there";
+    const title = escapeHtml(issueRow.title);
+
+    const bodyHtml = `
+      <p style="margin:0 0 16px;">Hi ${greeting},</p>
+      <p style="margin:0 0 16px;">You have been <strong>assigned</strong> to the following issue:</p>
+      <p style="margin:0 0 24px;padding:16px;background:#f8f9fa;border-left:4px solid #6741d9;border-radius:4px;font-weight:600;">
+        ${title}
+      </p>
+      <p style="margin:0 0 24px;color:#495057;">
+        You can view the full details, update the status, and leave comments from the issue page.
+      </p>
+    `;
+
+    const html = buildEmailHtml({
+      siteUrl,
+      bodyHtml,
+      ctaLabel: "Open Issue",
+      ctaUrl: issueUrl,
+    });
 
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
       from: getResendFrom(),
       to: profile.email.trim(),
-      subject: `Assigned: ${issueRow.title}`,
-      html: buildAssignmentEmailHtml({
-        issueTitle: issueRow.title,
-        issueUrl,
-        assigneeName: profile.full_name?.trim() ?? null,
-      }),
+      subject: `Assigned to you: ${issueRow.title}`,
+      html,
     });
     if (error) {
       console.error("[email] Resend API error", error.message);

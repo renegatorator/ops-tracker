@@ -6,7 +6,7 @@ import ProjectSettingsPageClient from "@/features/projects/components/ProjectSet
 import * as projectService from "@/features/projects/service";
 import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
-import { isAdminAccessRole } from "@/lib/auth/types";
+import { isAdminAccessRole, isSuperAdminRole } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
@@ -45,6 +45,8 @@ const ProjectSettingsPage = async ({ params }: ProjectSettingsPageProps) => {
               locale={locale}
               projectId={proj.data.id}
               projectKey={proj.data.key}
+              projectName={proj.data.name}
+              isSuperAdmin={isSuperAdminRole(ctx.role)}
             />
           ) : (
             <Text c="dimmed">{t("adminOnly")}</Text>

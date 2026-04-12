@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ActionIcon,
   Anchor,
   Button,
   Group,
@@ -11,7 +12,9 @@ import {
   Textarea,
   TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
+import { IconPencil } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
@@ -51,10 +54,7 @@ const IssueDetailPanel = ({
   const t = useTranslations("issues");
   const tDetail = useTranslations("issues.detail");
   const listHref = backHref ?? routes.issues;
-  const { data, isPending, isError, error } = useIssueDetail(
-    locale,
-    issueId,
-  );
+  const { data, isPending, isError, error } = useIssueDetail(locale, issueId);
   const {
     data: statuses = [],
     isPending: statusesPending,
@@ -64,15 +64,12 @@ const IssueDetailPanel = ({
     data: assigneeUsers = [],
     isPending: assigneesPending,
     isError: assigneesError,
-  } = useAssigneeFilterOptions(
-    locale,
-    canAssignIssue,
-    data?.project_id,
-  );
+  } = useAssigneeFilterOptions(locale, canAssignIssue, data?.project_id);
   const transition = useTransitionIssueStatus(locale, issueId);
   const assignMutation = useAssignIssue(locale);
   const updateMutation = useUpdateIssue(locale, issueId);
 
+  const [isEditing, setIsEditing] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
   const [descDraft, setDescDraft] = useState("");
 
@@ -111,7 +108,17 @@ const IssueDetailPanel = ({
     if ((descDraft || "") !== (data.description ?? "")) {
       patch.description = descDraft.length ? descDraft : null;
     }
-    updateMutation.mutate(patch);
+    updateMutation.mutate(patch, {
+      onSuccess: () => setIsEditing(false),
+    });
+  };
+
+  const onCancelEdit = () => {
+    if (data) {
+      setTitleDraft(data.title);
+      setDescDraft(data.description ?? "");
+    }
+    setIsEditing(false);
   };
 
   return (
@@ -132,43 +139,73 @@ const IssueDetailPanel = ({
           <Text size="sm" c="dimmed" ff="monospace">
             {data.issue_key}
           </Text>
+
           {canEditDetails ? (
-            <Stack gap="sm">
-              <TextInput
-                label={tDetail("titleLabel")}
-                value={titleDraft}
-                onChange={(e) => setTitleDraft(e.currentTarget.value)}
-                aria-label={tDetail("titleLabel")}
-              />
-              <Textarea
-                label={tDetail("descriptionLabel")}
-                value={descDraft}
-                onChange={(e) => setDescDraft(e.currentTarget.value)}
-                minRows={4}
-                autosize
-                maxRows={16}
-                aria-label={tDetail("descriptionLabel")}
-              />
-              <Group>
-                <Button
-                  onClick={onSaveDetails}
-                  disabled={!dirty || updateMutation.isPending}
-                  loading={updateMutation.isPending}
-                >
-                  {tDetail("save")}
-                </Button>
-              </Group>
-            </Stack>
+            isEditing ? (
+              <Stack gap="sm">
+                <TextInput
+                  label={tDetail("titleLabel")}
+                  value={titleDraft}
+                  onChange={(e) => setTitleDraft(e.currentTarget.value)}
+                  aria-label={tDetail("titleLabel")}
+                />
+                <Textarea
+                  label={tDetail("descriptionLabel")}
+                  value={descDraft}
+                  onChange={(e) => setDescDraft(e.currentTarget.value)}
+                  minRows={4}
+                  autosize
+                  maxRows={16}
+                  aria-label={tDetail("descriptionLabel")}
+                />
+                <Group>
+                  <Button
+                    onClick={onSaveDetails}
+                    disabled={!dirty || updateMutation.isPending}
+                    loading={updateMutation.isPending}
+                  >
+                    {tDetail("save")}
+                  </Button>
+                  <Button variant="subtle" onClick={onCancelEdit}>
+                    {tDetail("cancelEdit")}
+                  </Button>
+                </Group>
+              </Stack>
+            ) : (
+              <Stack gap="sm">
+                <Group justify="space-between" align="flex-start" wrap="nowrap">
+                  <Title order={3} style={{ flex: 1 }}>{data.title}</Title>
+                  <Tooltip label={tDetail("editTooltip")} position="left">
+                    <ActionIcon
+                      variant="subtle"
+                      color="gray"
+                      onClick={() => setIsEditing(true)}
+                      aria-label={tDetail("editTooltip")}
+                    >
+                      <IconPencil size={16} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Group>
+                {data.description ? (
+                  <Text style={{ whiteSpace: "pre-wrap" }} c="dimmed">
+                    {data.description}
+                  </Text>
+                ) : (
+                  <Text size="sm" c="dimmed" fs="italic">
+                    {tDetail("noDescription")}
+                  </Text>
+                )}
+              </Stack>
+            )
           ) : (
             <>
               <Title order={3}>{data.title}</Title>
               {data.description ? (
-                <Text style={{ whiteSpace: "pre-wrap" }}>
-                  {data.description}
-                </Text>
+                <Text style={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
               ) : null}
             </>
           )}
+
           {canTransitionStatus ? (
             statusesError ? (
               <Text c="dimmed" size="sm">
@@ -203,6 +240,7 @@ const IssueDetailPanel = ({
               </Text>
             </Stack>
           )}
+
           {canAssignIssue ? (
             assigneesError ? (
               <Stack gap={4}>
@@ -227,10 +265,7 @@ const IssueDetailPanel = ({
                   const next =
                     value === UNASSIGNED_VALUE || !value ? null : value;
                   if (next === data.assignee_id) return;
-                  assignMutation.mutate({
-                    issueId,
-                    assigneeId: next,
-                  });
+                  assignMutation.mutate({ issueId, assigneeId: next });
                 }}
                 disabled={assignMutation.isPending}
                 comboboxProps={{ withinPortal: true }}
@@ -252,6 +287,7 @@ const IssueDetailPanel = ({
               </Text>
             </Stack>
           )}
+
           {canViewIssueAudit ? (
             <IssueAuditActivitySection locale={locale} issueId={issueId} />
           ) : null}

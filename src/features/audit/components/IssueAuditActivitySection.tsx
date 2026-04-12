@@ -1,19 +1,51 @@
 "use client";
 
-import { Stack, Table, Text, Title } from "@mantine/core";
+import { Badge, Stack, Table, Text, Title } from "@mantine/core";
 import { useTranslations } from "next-intl";
 
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
+import type { AuditLogRow } from "../types";
 import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
 
-const metadataPreview = (meta: Record<string, unknown>): string => {
-  try {
-    const s = JSON.stringify(meta);
-    return s.length > 160 ? `${s.slice(0, 160)}…` : s;
-  } catch {
-    return "—";
+const formatSummary = (row: AuditLogRow): string => {
+  const m = row.metadata as Record<string, unknown>;
+  switch (row.action) {
+    case "issue.create":
+      return typeof m.title === "string" ? m.title : "—";
+    case "issue.update": {
+      const fields = Array.isArray(m.fields) ? (m.fields as string[]) : [];
+      return fields.length > 0 ? `Updated: ${fields.join(", ")}` : "Updated issue";
+    }
+    case "issue.assign": {
+      if (m.assignee_id == null) return "Unassigned";
+      return typeof m.assignee_id === "string"
+        ? `Assigned to ${m.assignee_id.slice(0, 8)}…`
+        : "Assigned";
+    }
+    case "issue.status_transition":
+      return typeof m.status_id === "string"
+        ? `Status → ${m.status_id.slice(0, 8)}…`
+        : "Status changed";
+    case "issue.archive":
+      return "Issue archived";
+    default:
+      return row.action;
   }
+};
+
+const formatIssueKey = (row: AuditLogRow): string => {
+  const m = row.metadata as Record<string, unknown>;
+  if (typeof m.issue_key === "string" && m.issue_key) return m.issue_key;
+  return "—";
+};
+
+const actionColor = (action: string): string => {
+  if (action === "issue.create") return "green";
+  if (action === "issue.archive") return "red";
+  if (action.includes("assign")) return "blue";
+  if (action.includes("status")) return "violet";
+  return "gray";
 };
 
 interface IssueAuditActivitySectionProps {
@@ -63,7 +95,8 @@ const IssueAuditActivitySection = ({
                 <Table.Th>{t("when")}</Table.Th>
                 <Table.Th>{t("actor")}</Table.Th>
                 <Table.Th>{t("action")}</Table.Th>
-                <Table.Th>{t("details")}</Table.Th>
+                <Table.Th>{t("issueKey")}</Table.Th>
+                <Table.Th>{t("summary")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -82,14 +115,17 @@ const IssueAuditActivitySection = ({
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Text size="xs" ff="monospace">
+                    <Badge size="xs" color={actionColor(row.action)} variant="light">
                       {row.action}
+                    </Badge>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="xs" ff="monospace">
+                      {formatIssueKey(row)}
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Text size="xs" ff="monospace" truncate maw={240}>
-                      {metadataPreview(row.metadata as Record<string, unknown>)}
-                    </Text>
+                    <Text size="xs">{formatSummary(row)}</Text>
                   </Table.Td>
                 </Table.Tr>
               ))}

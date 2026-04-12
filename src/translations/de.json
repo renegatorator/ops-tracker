@@ -17,16 +17,49 @@
     }
   },
   "landing": {
+    "badge": "Issue-Tracking & Projektmanagement",
     "title": "Ops Tracker",
     "description": "Eine leistungsstarke Plattform zur Problemverfolgung und Betriebsverwaltung, die Teams dabei hilft, Arbeiten effizient zu organisieren, zu priorisieren und zu verfolgen. Arbeiten Sie nahtlos zusammen, bleiben Sie bei Ihren Projekten auf dem Laufenden und erreichen Sie Ihre Ziele.",
-    "loginButton": "Anmelden"
+    "loginButton": "Anmelden",
+    "demoUserButton": "Demo als Benutzer",
+    "demoAdminButton": "Demo als Admin",
+    "demoComingSoon": "Demnächst verfügbar",
+    "demoDisclaimer": "Live-Demos kommen bald. Keine Registrierung erforderlich.",
+    "demoSectionHeading": "Demo anfragen",
+    "demoSectionSubheading": "Erlebe Ops Tracker als normaler Nutzer oder als Administrator. Demos kommen bald.",
+    "featuresHeading": "Alles, was dein Team braucht",
+    "featuresSubheading": "Entwickelt für moderne Operations-Teams, die Klarheit, Geschwindigkeit und Nachvollziehbarkeit benötigen.",
+    "features": {
+      "kanban": {
+        "title": "Kanban-Boards",
+        "description": "Visualisiere deinen Workflow mit Drag-and-Drop-Kanban-Boards. Verschiebe Tickets und halte das Team synchron."
+      },
+      "tracking": {
+        "title": "Issue-Tracking",
+        "description": "Erstelle Bugs und Tickets, weise sie Teammitgliedern zu und verfolge den Fortschritt von offen bis erledigt."
+      },
+      "team": {
+        "title": "Teamzusammenarbeit",
+        "description": "Lade Mitglieder zu Projekten ein, weise Tickets zu und halte alle auf dem gleichen Stand mit vollständigem Audit-Trail."
+      },
+      "audit": {
+        "title": "Audit-Protokoll",
+        "description": "Jede Aktion wird aufgezeichnet. Administratoren können eine vollständige Historie von Änderungen, Zuweisungen und Statuswechseln einsehen."
+      },
+      "dashboard": {
+        "title": "Dashboard-Übersicht",
+        "description": "Behalte aktive Projekte, offene Tickets und persönliche Zuweisungen auf einen Blick im Überblick."
+      },
+      "projects": {
+        "title": "Multi-Projekt-Support",
+        "description": "Organisiere Arbeit in mehreren Projekten, jeweils mit eigenem Board, Ticket-Liste, Mitgliedern und Einstellungen."
+      }
+    }
   },
   "auth": {
     "login": {
-      "title": "Anmelden",
       "emailLabel": "E-Mail",
       "emailPlaceholder": "du@beispiel.de",
-      "emailDescription": "Verwende deine E-Mail-Adresse (muss ein @ enthalten).",
       "emailTitle": "Die E-Mail muss ein @ enthalten (z. B. du@beispiel.de).",
       "passwordLabel": "Passwort",
       "passwordPlaceholder": "Dein Passwort",
@@ -102,6 +135,9 @@
       "assignPlaceholder": "Zuweisen…",
       "assignReadOnlyHint": "Nur Administratoren können die Zuweisung ändern.",
       "assignUpdateFailedTitle": "Zuweisung konnte nicht aktualisiert werden",
+      "cancelEdit": "Abbrechen",
+      "editTooltip": "Ticket bearbeiten",
+      "noDescription": "Keine Beschreibung vorhanden.",
       "activity": {
         "title": "Aktivität (Audit)",
         "hint": "Nur für Administratoren sichtbar. Kürzlich protokollierte Aktionen zu diesem Ticket.",
@@ -111,18 +147,27 @@
         "when": "Zeitpunkt",
         "actor": "Akteur",
         "action": "Aktion",
-        "details": "Details"
+        "issueKey": "Ticket-Key",
+        "summary": "Zusammenfassung"
       }
     },
     "empty": "Noch keine Tickets.",
     "create": {
       "modalTitle": "Ticket erstellen",
+      "typeLabel": "Typ",
+      "typeBug": "Bug",
+      "typeTicket": "Ticket",
       "titleLabel": "Titel",
-      "descriptionLabel": "Beschreibung (optional)",
+      "descriptionLabel": "Beschreibung",
+      "descriptionLabelOptional": "Beschreibung (optional)",
+      "assigneeLabel": "Bearbeiter",
+      "assigneeUnassigned": "Nicht zugewiesen",
       "statusLabel": "Startstatus",
       "submit": "Erstellen",
+      "cancel": "Abbrechen",
       "titleRequired": "Titel ist erforderlich.",
       "statusRequired": "Bitte einen Status wählen.",
+      "descriptionRequired": "Beschreibung ist für Tickets erforderlich.",
       "failedTitle": "Ticket konnte nicht erstellt werden",
       "successTitle": "Ticket erstellt",
       "successMessage": "Öffne das neue Ticket…"
@@ -193,7 +238,9 @@
       "roleInvalid": "Ungültige Rolle.",
       "projectIdInvalid": "Ungültiges Projekt.",
       "projectKeyInvalid": "2–10 Zeichen: beginne mit A–Z, dann A–Z oder 0–9.",
-      "issueLookupInvalid": "Ticket-ID oder Projekt-Key und Nummer angeben."
+      "issueLookupInvalid": "Ticket-ID oder Projekt-Key und Nummer angeben.",
+      "issueTypeInvalid": "Gültigen Ticket-Typ wählen (Bug oder Ticket).",
+      "descriptionRequiredForTicket": "Beschreibung ist für Tickets erforderlich."
     }
   },
   "projects": {
@@ -236,7 +283,8 @@
       "pageTitle": "Board · {key}",
       "loading": "Board wird geladen…",
       "loadFailed": "Board konnte nicht geladen werden.",
-      "moveFailedTitle": "Verschieben fehlgeschlagen"
+      "moveFailedTitle": "Verschieben fehlgeschlagen",
+      "newIssue": "Neues Ticket"
     },
     "issues": {
       "title": "Tickets · {name}",
@@ -257,7 +305,12 @@
       "addFailed": "Hinzufügen fehlgeschlagen",
       "addSuccess": "Mitglied hinzugefügt",
       "removeFailed": "Entfernen fehlgeschlagen",
-      "removeSuccess": "Mitglied entfernt"
+      "removeSuccess": "Mitglied entfernt",
+      "renameTitle": "Projekt umbenennen",
+      "renameLabel": "Projektname",
+      "renameButton": "Umbenennen",
+      "renameSuccess": "Projekt umbenannt",
+      "renameFailed": "Umbenennen fehlgeschlagen"
     }
   },
   "admin": {

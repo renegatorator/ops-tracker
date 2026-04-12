@@ -4,10 +4,13 @@ export type ProjectBrief = {
   name: string;
 };
 
+export type IssueType = "bug" | "ticket";
+
 export type Issue = {
   id: string;
   title: string;
   description: string | null;
+  issue_type: IssueType;
   project_id: string;
   issue_number: number;
   issue_key: string;

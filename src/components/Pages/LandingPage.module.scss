@@ -1,39 +1,50 @@
 @use "../../styles/mixins" as *;
 
-.content {
+.hero {
   text-align: center;
+  padding: 0 0 40px;
+
+  @include mq("sm") {
+    padding: 48px 0 32px;
+  }
 }
 
-.iconWrapper {
+.logoWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
-  border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary) 0%,
-    var(--color-primary-dark) 100%
-  );
-  color: white;
   @include fadeInScale(0.6s, ease-out);
-
-  @include mq("sm") {
-    width: 100px;
-    height: 100px;
-  }
 }
 
 .title {
   @include gradient-text();
+  line-height: 1.15;
+}
+
+.subtitle {
+  color: var(--mantine-color-dimmed);
+}
+
+.demoCard {
+  background: var(--mantine-color-body);
+}
+
+.featureCard {
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-body);
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
 }
 
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.85);
   }
 
   to {

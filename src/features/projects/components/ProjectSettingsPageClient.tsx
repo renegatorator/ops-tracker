@@ -2,11 +2,13 @@
 
 import {
   Button,
+  Divider,
   Group,
   Select,
   Stack,
   Table,
   Text,
+  TextInput,
   Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -16,7 +18,7 @@ import { useMemo, useState } from "react";
 
 import { listUserProfilesForIssueFilters } from "@/features/issues/actions";
 import { IssuesQueryError } from "@/features/issues/issues-query-error";
-import { addProjectMember, removeProjectMember } from "@/features/projects/actions";
+import { addProjectMember, removeProjectMember, renameProject } from "@/features/projects/actions";
 import { useProjectMembers } from "@/features/projects/hooks/useProjectMembers";
 
 import { projectQueryKeys } from "../keys";
@@ -25,17 +27,23 @@ interface ProjectSettingsPageClientProps {
   locale: string;
   projectId: string;
   projectKey: string;
+  projectName: string;
+  isSuperAdmin: boolean;
 }
 
 const ProjectSettingsPageClient = ({
   locale,
   projectId,
+  projectName,
+  isSuperAdmin,
 }: ProjectSettingsPageClientProps) => {
   const t = useTranslations("projects.settings");
   const queryClient = useQueryClient();
   const { data: members = [], isPending } = useProjectMembers(locale, projectId);
   const [addUserId, setAddUserId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [newName, setNewName] = useState(projectName);
+  const [renaming, setRenaming] = useState(false);
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ["adminUserPick", locale],
@@ -112,8 +120,47 @@ const ProjectSettingsPageClient = ({
     });
   };
 
+  const onRename = async () => {
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === projectName) return;
+    setRenaming(true);
+    const result = await renameProject(locale, { projectId, name: trimmed });
+    setRenaming(false);
+    if (!result.ok) {
+      notifications.show({
+        title: t("renameFailed"),
+        message: t(result.errorKey as Parameters<typeof t>[0]),
+        color: "red",
+      });
+      return;
+    }
+    await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
+    notifications.show({ title: t("renameSuccess"), message: "", color: "green" });
+  };
+
   return (
     <Stack gap="md">
+      {isSuperAdmin && (
+        <>
+          <Title order={4}>{t("renameTitle")}</Title>
+          <Group align="flex-end" wrap="wrap">
+            <TextInput
+              label={t("renameLabel")}
+              value={newName}
+              onChange={(e) => setNewName(e.currentTarget.value)}
+              maw={360}
+            />
+            <Button
+              onClick={onRename}
+              disabled={!newName.trim() || newName.trim() === projectName || renaming}
+              loading={renaming}
+            >
+              {t("renameButton")}
+            </Button>
+          </Group>
+          <Divider />
+        </>
+      )}
       <Title order={3}>{t("membersTitle")}</Title>
       <Group align="flex-end" wrap="wrap">
         <Select

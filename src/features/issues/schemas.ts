@@ -6,15 +6,34 @@ const trimmedTitle = z
   .min(1, { message: "validation.titleRequired" })
   .max(500, { message: "validation.titleTooLong" });
 
-export const createIssueSchema = z.object({
-  project_id: z.uuid({ message: "validation.projectIdInvalid" }),
-  title: trimmedTitle,
-  description: z
-    .string()
-    .max(20_000, { message: "validation.descriptionTooLong" })
-    .optional(),
-  status_id: z.uuid({ message: "validation.statusInvalid" }),
+export const issueTypeSchema = z.enum(["bug", "ticket"], {
+  message: "validation.issueTypeInvalid",
 });
+
+export const createIssueSchema = z
+  .object({
+    project_id: z.uuid({ message: "validation.projectIdInvalid" }),
+    title: trimmedTitle,
+    description: z
+      .string()
+      .max(20_000, { message: "validation.descriptionTooLong" })
+      .optional(),
+    status_id: z.uuid({ message: "validation.statusInvalid" }),
+    issue_type: issueTypeSchema.default("ticket"),
+    assignee_id: z
+      .uuid({ message: "validation.assigneeInvalid" })
+      .optional()
+      .nullable(),
+  })
+  .superRefine((val, ctx) => {
+    if (val.issue_type === "ticket" && !val.description?.trim()) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["description"],
+        message: "validation.descriptionRequiredForTicket",
+      });
+    }
+  });
 
 export const updateIssueSchema = z
   .object({
@@ -142,6 +161,7 @@ export const listIssuesSchema = z.discriminatedUnion("mode", [
   }),
 ]);
 
+export type IssueType = z.infer<typeof issueTypeSchema>;
 export type CreateIssueInput = z.infer<typeof createIssueSchema>;
 export type UpdateIssueInput = z.infer<typeof updateIssueSchema>;
 export type TransitionIssueStatusInput = z.infer<

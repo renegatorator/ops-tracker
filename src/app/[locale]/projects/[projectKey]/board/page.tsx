@@ -6,6 +6,7 @@ import ProjectBoardPageClient from "@/features/projects/components/ProjectBoardP
 import * as projectService from "@/features/projects/service";
 import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { isAdminAccessRole } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
@@ -32,6 +33,7 @@ const ProjectBoardPage = async ({ params }: ProjectBoardPageProps) => {
   }
 
   const t = await getTranslations({ locale, namespace: "projects.board" });
+  const isAdmin = isAdminAccessRole(ctx.role);
 
   return (
     <Container size="xl" py="md">
@@ -42,6 +44,7 @@ const ProjectBoardPage = async ({ params }: ProjectBoardPageProps) => {
             locale={locale}
             projectId={proj.data.id}
             projectKey={proj.data.key}
+            isAdmin={isAdmin}
           />
         </Stack>
       </Paper>

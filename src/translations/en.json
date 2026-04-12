@@ -17,16 +17,49 @@
     }
   },
   "landing": {
+    "badge": "Issue Tracking & Project Management",
     "title": "Ops Tracker",
     "description": "A powerful issue tracking and operations management platform designed to help teams organize, prioritize, and track work efficiently. Collaborate seamlessly, stay on top of your projects, and achieve your goals.",
-    "loginButton": "Login"
+    "loginButton": "Sign in",
+    "demoUserButton": "Demo as User",
+    "demoAdminButton": "Demo as Admin",
+    "demoComingSoon": "Coming soon",
+    "demoDisclaimer": "Live demos are coming soon. No sign-up required.",
+    "demoSectionHeading": "Request a Demo",
+    "demoSectionSubheading": "See Ops Tracker in action as a regular user or as an administrator. Demos are coming soon.",
+    "featuresHeading": "Everything your team needs",
+    "featuresSubheading": "Built for modern operations teams who need clarity, speed, and accountability.",
+    "features": {
+      "kanban": {
+        "title": "Kanban Boards",
+        "description": "Visualise your workflow with drag-and-drop Kanban boards. Move issues across columns and keep the team aligned."
+      },
+      "tracking": {
+        "title": "Issue Tracking",
+        "description": "Create bugs and tickets, assign them to team members, and track progress from open to done."
+      },
+      "team": {
+        "title": "Team Collaboration",
+        "description": "Invite members to projects, assign issues, and keep everyone on the same page with full audit trails."
+      },
+      "audit": {
+        "title": "Audit Log",
+        "description": "Every action is recorded. Administrators can review a full history of changes, assignments, and status transitions."
+      },
+      "dashboard": {
+        "title": "Dashboard Overview",
+        "description": "Get an at-a-glance view of active projects, open issues, and your personal assignments in one place."
+      },
+      "projects": {
+        "title": "Multi-Project Support",
+        "description": "Organise work into multiple projects, each with their own board, issue list, members, and settings."
+      }
+    }
   },
   "auth": {
     "login": {
-      "title": "Sign in",
       "emailLabel": "Email",
       "emailPlaceholder": "you@example.com",
-      "emailDescription": "Use your email address (must include @).",
       "emailTitle": "Email must include @ (for example: you@example.com).",
       "passwordLabel": "Password",
       "passwordPlaceholder": "Your password",
@@ -102,6 +135,9 @@
       "assignPlaceholder": "Assign to…",
       "assignReadOnlyHint": "Only administrators can change assignment.",
       "assignUpdateFailedTitle": "Assignment update failed",
+      "cancelEdit": "Cancel",
+      "editTooltip": "Edit issue",
+      "noDescription": "No description provided.",
       "activity": {
         "title": "Activity (audit)",
         "hint": "Visible to administrators only. Recent actions recorded for this issue.",
@@ -111,18 +147,27 @@
         "when": "When",
         "actor": "Actor",
         "action": "Action",
-        "details": "Details"
+        "issueKey": "Issue key",
+        "summary": "Summary"
       }
     },
     "empty": "No issues yet.",
     "create": {
       "modalTitle": "Create issue",
+      "typeLabel": "Type",
+      "typeBug": "Bug",
+      "typeTicket": "Ticket",
       "titleLabel": "Title",
-      "descriptionLabel": "Description (optional)",
+      "descriptionLabel": "Description",
+      "descriptionLabelOptional": "Description (optional)",
+      "assigneeLabel": "Assignee",
+      "assigneeUnassigned": "Unassigned",
       "statusLabel": "Initial status",
       "submit": "Create",
+      "cancel": "Cancel",
       "titleRequired": "Title is required.",
       "statusRequired": "Choose a status.",
+      "descriptionRequired": "Description is required for tickets.",
       "failedTitle": "Could not create issue",
       "successTitle": "Issue created",
       "successMessage": "Opening the new issue…"
@@ -193,7 +238,9 @@
       "roleInvalid": "Invalid role.",
       "projectIdInvalid": "Invalid project.",
       "projectKeyInvalid": "Use 2–10 characters: start with A–Z, then A–Z or 0–9.",
-      "issueLookupInvalid": "Provide an issue id or project key and number."
+      "issueLookupInvalid": "Provide an issue id or project key and number.",
+      "issueTypeInvalid": "Choose a valid issue type (bug or ticket).",
+      "descriptionRequiredForTicket": "Description is required for tickets."
     }
   },
   "projects": {
@@ -236,7 +283,8 @@
       "pageTitle": "Board · {key}",
       "loading": "Loading board…",
       "loadFailed": "Could not load the board.",
-      "moveFailedTitle": "Move failed"
+      "moveFailedTitle": "Move failed",
+      "newIssue": "New issue"
     },
     "issues": {
       "title": "Issues · {name}",
@@ -257,7 +305,12 @@
       "addFailed": "Add failed",
       "addSuccess": "Member added",
       "removeFailed": "Remove failed",
-      "removeSuccess": "Member removed"
+      "removeSuccess": "Member removed",
+      "renameTitle": "Rename project",
+      "renameLabel": "Project name",
+      "renameButton": "Rename",
+      "renameSuccess": "Project renamed",
+      "renameFailed": "Rename failed"
     }
   },
   "admin": {
@@ -411,8 +464,8 @@
     },
     "routes": {
       "home": {
-        "title": "Home",
-        "description": "Welcome to Ops Tracker — your operations hub."
+        "title": "Ops Tracker — Issue Tracking & Project Management",
+        "description": "Track bugs, manage tickets, and ship projects faster with Ops Tracker — a professional Kanban-based issue tracker for modern teams."
       },
       "dashboard": {
         "title": "Dashboard",

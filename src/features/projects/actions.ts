@@ -8,7 +8,7 @@ import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
-import { ADMIN_ACCESS_ROLES } from "@/lib/auth/types";
+import { ADMIN_ACCESS_ROLES, SUPER_ADMIN_ROLES } from "@/lib/auth/types";
 import {
   projectBoardPath,
   projectIssuesPath,
@@ -133,6 +133,39 @@ export const updateProject = async (
       metadata: {
         key: result.data.key,
         fields: Object.keys(parsed.data).filter((k) => k !== "projectId"),
+      },
+    });
+    revalidateProjectsSegment(locale, result.data.key);
+  }
+  return result;
+};
+
+export const renameProject = async (
+  locale: string,
+  raw: unknown,
+): Promise<ProjectsActionResult<{ id: string; key: string }>> => {
+  const ctx = await getUserAuthContext();
+  if (!ctx) return unauthorized();
+  try {
+    assertRole(ctx, SUPER_ADMIN_ROLES);
+  } catch (e) {
+    if (e instanceof ForbiddenError) {
+      return { ok: false, errorKey: "errors.forbidden" };
+    }
+    throw e;
+  }
+  const parsed = updateProjectSchema.safeParse(raw);
+  if (!parsed.success) return validationFailure(parsed.error);
+  const result = await projectService.updateProject(parsed.data);
+  if (result.ok) {
+    await logAudit({
+      actorId: ctx.user.id,
+      action: "project.rename",
+      entityType: "project",
+      entityId: parsed.data.projectId,
+      metadata: {
+        key: result.data.key,
+        name: parsed.data.name,
       },
     });
     revalidateProjectsSegment(locale, result.data.key);
