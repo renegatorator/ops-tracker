@@ -1,7 +1,16 @@
+export type ProjectBrief = {
+  id: string;
+  key: string;
+  name: string;
+};
+
 export type Issue = {
   id: string;
   title: string;
   description: string | null;
+  project_id: string;
+  issue_number: number;
+  issue_key: string;
   status_id: string;
   reporter_id: string;
   assignee_id: string | null;
@@ -28,10 +37,12 @@ export type UserProfileBrief = {
 /** Row shape from `issues` list/detail select with embedded status. */
 export type IssueWithStatus = Issue & {
   issue_statuses: IssueStatusRow | null;
+  projects: ProjectBrief | null;
   assignee: UserProfileBrief | null;
 };
 
 export type IssueListFilters = {
+  projectId?: string;
   statusId?: string;
   assigneeId?: string;
   /** Plain-text fragment; `%` / `_` stripped to avoid LIKE metacharacters. */

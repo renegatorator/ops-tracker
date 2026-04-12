@@ -4,17 +4,46 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-_On release, replace this heading with a semver and date (for example `## [2.1.0] - 2026-04-15`), then add a new empty `## [Unreleased]` section above it._
+_On release, replace this heading with a semver and date (for example `## [2.2.0] - 2026-xx-xx`), then add a new empty `## [Unreleased]` section above it._
+
+## [2.1.0] - 2026-04-12
 
 ### Added
 
+- **Projects**: create and manage projects with unique keys (e.g. `OPS`); project membership (lead / member roles); project settings page with member management
+- **Supabase migration** `20260412200000_projects_members_issues_scope.sql`: `projects` table, `project_members` table, `issue_key` / `issue_number` / `project_id` columns on `issues`, triggers, RLS policies, and OPS backfill
+- **Project-scoped issues**: issues are numbered per project (`KEY-123`); Kanban board route (`/projects/[key]/board`) with drag-and-drop status transitions via `@dnd-kit`; project issues list and issue detail routes under `/projects/[key]/issues/[number]`
+- **`CreateIssueModal`**: create issues from the project issues page with project pre-selection
+- **`useUpdateIssue` hook**: inline title and description editing on the issue detail panel
+- **Workspace app shell** (`WorkspaceShellClient` / `WorkspaceRouteLayout`): unified Mantine `AppShell` across all routes (dashboard, issues, projects, admin); responsive — burger menu appears at ≤`md` breakpoint; mobile sidebar contains nav links, project switcher, and header controls
+- **Professional dashboard** (`/dashboard`): server-rendered workspace overview with KPI cards (active projects, open issues, assigned to me), project shortcuts with board/issues links, recently-updated and assigned-to-you issue lists; data fetched in parallel via `getDashboardData`
+- **`fullName` in `UserAuthContext`**: `user_profiles.full_name` fetched alongside role; dashboard welcome line shows full name when available
+- **SVG logo and favicon**: `public/logo-light.svg`, `public/logo-dark.svg`, `public/favicon.svg` (adaptive via embedded `@media (prefers-color-scheme)`); favicon wired via `generateMetadata` in root layout
+- **Theme-aware logo**: CSS `[data-mantine-color-scheme]` selectors swap logos without JS, avoiding hydration mismatches
+- **Admin shell upgrade**: admin pages now use the full `WorkspaceShellClient` (same chrome as the rest of the app); red `ADMIN` badge in the header; styled tab subnav (Overview / Users / Statuses / Audit / Super admin) via `AdminSubnav`
+- **Skeleton loading states**: `DashboardSkeleton`, `IssuesTableSkeleton`, and per-route `loading.tsx` files
+- **OpenGraph and Twitter card** metadata on root layout; improved, content-specific per-route SEO descriptions across all locales
+- **E2E**: dashboard overview KPI visibility assertion added to `critical-path.spec.ts`
 - Phase 0 alignment: feature layout and hook conventions documented in `docs/ARCHITECTURE.md`; `docs/SUPABASE_MIGRATIONS.md` (prerequisites, migration order, RLS, roles, optional signup trigger, env); Phase 0 and Phase 12 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 - Phase 11 email (Resend): `resend` package; `getResendApiKey` / `getResendFrom` in `src/lib/env.ts`; `src/lib/email/send-issue-assigned-email.ts` and `send-issue-created-email.ts` (HTML bodies); sends after successful `assignIssue` (when assignee set) and `createIssue` (reporter confirmation) without failing mutations on errors; `.env.example` entries and README environment table; Phase 11 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 - Phase 13 quality gates: `@playwright/test`, `playwright.config.ts`, `e2e/critical-path.spec.ts` (login → issues list → first issue detail; skips when `E2E_EMAIL` / `E2E_PASSWORD` unset); `npm run test:e2e` and `test:e2e:ui`; README sections for roles, optional e2e, and extra env rows (`OPS_DEMO_RESET_ENABLED`, `E2E_*`, `PLAYWRIGHT_BASE_URL`); `data-testid="issues-table"` on `IssuesVirtualizedTable`; Phase 13 marked complete in `docs/IMPLEMENTATION_PLAN.md`
 
 ### Changed
 
+- Issues are now project-scoped: `project_id` (required after migration), `issue_key` (e.g. `OPS-12`), and `issue_number` fields added; service, schemas, actions, hooks, and UI updated throughout
+- Nav label "All issues" shortened to "Issues" (de: "Tickets", si: "Zadeve") across all locales
+- Admin layout replaced `PagesLayout` with `WorkspaceRouteLayout`; ADMIN badge lives only in the header (removed from page content area)
+- `RouteLoading` spinner is now vertically centred using `--app-shell-header-height` CSS variable
+- `seoUtils.getLocalizedSeoMetadata` returns `"default"` SEO key fallback for unknown routes
+- `resetDemoData` (Super admin) also clears `project_members` and `projects` in correct FK order
 - `docs/ARCHITECTURE.md` database row and audit/email sections updated for implemented schema and Resend helpers; migration apply link now `docs/SUPABASE_MIGRATIONS.md`; README database section points to the same; implementation plan footer notes through Phase 13
+
+### Fixed
+
+- AppShell `navbar.collapsed: { desktop: true }` prevents the 260 px left margin being reserved on desktop when the sidebar is hidden
+- Logo hydration mismatch: switched from `useMantineColorScheme()` (server/client mismatch) to CSS `[data-mantine-color-scheme]` attribute selectors
+- `dashboard/page.tsx` `Anchor component={Link}` serialization error (passing a function across the server→client boundary) replaced with `IntlLinkAnchor`
+- Supabase migration backfill SQL: `UPDATE … FROM … JOIN` used the update-target alias inside the `JOIN ON` clause (PostgreSQL `42P01`); fixed by projecting `project_id` into the CTE and joining on `numbered.project_id`
 
 ## [2.0.0] - 2026-04-05
 

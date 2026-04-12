@@ -39,8 +39,48 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "description": "You are successfully signed in.",
-    "signedInAs": "Signed in as: {email}"
+    "subtitle": "Here's what's happening in your workspace.",
+    "welcome": "Welcome back, {email}",
+    "stats": {
+      "activeProjects": "Active projects",
+      "openIssues": "Open issues",
+      "assignedToMe": "Assigned to me",
+      "viewProjects": "View projects",
+      "viewAllIssues": "All issues",
+      "viewMyIssues": "My issues"
+    },
+    "projects": {
+      "heading": "Your projects",
+      "board": "Board",
+      "issues": "Issues",
+      "empty": "No projects yet.",
+      "createOne": "Create your first project"
+    },
+    "recent": {
+      "heading": "Recently updated",
+      "empty": "No issues found."
+    },
+    "mine": {
+      "heading": "Assigned to you",
+      "empty": "Nothing assigned to you right now."
+    },
+    "columns": {
+      "key": "Key",
+      "title": "Title",
+      "status": "Status",
+      "updated": "Updated"
+    },
+    "error": "Some data could not be loaded. Please refresh the page.",
+    "projectsLink": "Go to projects"
+  },
+  "workspace": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "projects": "Projects",
+      "issues": "Issues",
+      "admin": "Admin",
+      "projectPlaceholder": "Jump to project"
+    }
   },
   "issues": {
     "pageTitle": "Issues",
@@ -48,6 +88,12 @@
     "loading": "Loading…",
     "backToList": "Back to issues",
     "detail": {
+      "titleLabel": "Title",
+      "descriptionLabel": "Description",
+      "save": "Save changes",
+      "saveFailedTitle": "Could not save",
+      "saveSuccessTitle": "Saved",
+      "saveSuccessMessage": "Your changes were saved.",
       "statusLabel": "Status",
       "statusPlaceholder": "Choose status",
       "statusReadOnlyHint": "You cannot change status for this issue.",
@@ -69,6 +115,18 @@
       }
     },
     "empty": "No issues yet.",
+    "create": {
+      "modalTitle": "Create issue",
+      "titleLabel": "Title",
+      "descriptionLabel": "Description (optional)",
+      "statusLabel": "Initial status",
+      "submit": "Create",
+      "titleRequired": "Title is required.",
+      "statusRequired": "Choose a status.",
+      "failedTitle": "Could not create issue",
+      "successTitle": "Issue created",
+      "successMessage": "Opening the new issue…"
+    },
     "unassigned": "Unassigned",
     "table": {
       "title": "Title",
@@ -132,7 +190,74 @@
       "statusNameRequired": "Status name is required.",
       "statusNameTooLong": "Status name is too long.",
       "userIdInvalid": "Invalid user.",
-      "roleInvalid": "Invalid role."
+      "roleInvalid": "Invalid role.",
+      "projectIdInvalid": "Invalid project.",
+      "projectKeyInvalid": "Use 2–10 characters: start with A–Z, then A–Z or 0–9.",
+      "issueLookupInvalid": "Provide an issue id or project key and number."
+    }
+  },
+  "projects": {
+    "errors": {
+      "notFound": "Project not found.",
+      "keyTaken": "That project key is already in use.",
+      "createFailed": "Could not create the project.",
+      "updateFailed": "Could not update the project.",
+      "alreadyMember": "That user is already a member.",
+      "memberAddFailed": "Could not add the member.",
+      "memberRemoveFailed": "Could not remove the member."
+    },
+    "list": {
+      "title": "Projects",
+      "loading": "Loading projects…",
+      "loadFailed": "Could not load projects.",
+      "newProject": "New project",
+      "cancelCreate": "Cancel",
+      "keyLabel": "Key",
+      "keyHint": "Shown before issue numbers (e.g. OPS-12). Uppercase letters and digits.",
+      "nameLabel": "Name",
+      "descriptionLabel": "Description (optional)",
+      "submitCreate": "Create project",
+      "keyRequired": "Key is required.",
+      "nameRequired": "Name is required.",
+      "createFailed": "Create failed",
+      "createSuccess": "Project created",
+      "createSuccessMessage": "Redirecting to the board…",
+      "colKey": "Key",
+      "colName": "Name",
+      "colAction": "",
+      "open": "Open"
+    },
+    "subnav": {
+      "board": "Board",
+      "issues": "Issues",
+      "settings": "Settings"
+    },
+    "board": {
+      "pageTitle": "Board · {key}",
+      "loading": "Loading board…",
+      "loadFailed": "Could not load the board.",
+      "moveFailedTitle": "Move failed"
+    },
+    "issues": {
+      "title": "Issues · {name}",
+      "newIssue": "New issue"
+    },
+    "settings": {
+      "pageTitle": "Settings · {name}",
+      "adminOnly": "Only administrators can manage project members.",
+      "membersTitle": "Members",
+      "addMemberLabel": "Add user",
+      "addMemberPlaceholder": "Select a user",
+      "addMember": "Add",
+      "loading": "Loading members…",
+      "colUser": "User",
+      "colRole": "Role",
+      "colAction": "",
+      "remove": "Remove",
+      "addFailed": "Add failed",
+      "addSuccess": "Member added",
+      "removeFailed": "Remove failed",
+      "removeSuccess": "Member removed"
     }
   },
   "admin": {
@@ -282,28 +407,32 @@
   "seo": {
     "root": {
       "title": "Ops Tracker",
-      "description": "Operations tracking dashboard with multilingual support."
+      "description": "Ops Tracker is a professional issue tracking and project management tool built for modern operations teams."
     },
     "routes": {
       "home": {
         "title": "Home",
-        "description": "Overview of your operations tracker."
+        "description": "Welcome to Ops Tracker — your operations hub."
       },
       "dashboard": {
         "title": "Dashboard",
-        "description": "Key metrics and recent activity."
+        "description": "Get an at-a-glance view of your active projects, open issues, and assignments."
       },
       "issues": {
         "title": "Issues",
-        "description": "Track and manage operations issues."
+        "description": "Browse, filter, and manage all operations issues across your projects."
+      },
+      "projects": {
+        "title": "Projects",
+        "description": "Organise your work into projects with Kanban boards and issue lists."
       },
       "admin": {
         "title": "Administration",
-        "description": "Manage users and workflow configuration."
+        "description": "Manage users, roles, and workflow configuration for your workspace."
       },
       "adminUsers": {
         "title": "Users",
-        "description": "Manage user roles."
+        "description": "View and update user roles across your workspace."
       },
       "adminStatuses": {
         "title": "Issue statuses",

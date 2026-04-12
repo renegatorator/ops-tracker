@@ -5,8 +5,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { transitionIssueStatus } from "@/features/issues/actions";
+import { projectQueryKeys } from "@/features/projects/keys";
 
-import { isIssuesQueryError,IssuesQueryError } from "../issues-query-error";
+import { isIssuesQueryError, IssuesQueryError } from "../issues-query-error";
 import { issueQueryKeys } from "../keys";
 import type { IssueStatusRow, IssueWithStatus } from "../types";
 
@@ -73,6 +74,7 @@ export const useTransitionIssueStatus = (
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: issueQueryKeys.lists() });
       await queryClient.invalidateQueries({ queryKey: detailKey });
+      await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
     },
   });
 };

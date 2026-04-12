@@ -39,8 +39,48 @@
   },
   "dashboard": {
     "title": "Nadzorna plošča",
-    "description": "Uspešno si prijavljen.",
-    "signedInAs": "Prijavljen kot: {email}"
+    "subtitle": "Pregled dogajanja v tvojem delovnem prostoru.",
+    "welcome": "Dobrodošel nazaj, {email}",
+    "stats": {
+      "activeProjects": "Aktivni projekti",
+      "openIssues": "Odprte težave",
+      "assignedToMe": "Dodeljeno meni",
+      "viewProjects": "Poglej projekte",
+      "viewAllIssues": "Vse težave",
+      "viewMyIssues": "Moje težave"
+    },
+    "projects": {
+      "heading": "Tvoji projekti",
+      "board": "Tabla",
+      "issues": "Težave",
+      "empty": "Še ni projektov.",
+      "createOne": "Ustvari prvi projekt"
+    },
+    "recent": {
+      "heading": "Nedavno posodobljeno",
+      "empty": "Ni najdenih težav."
+    },
+    "mine": {
+      "heading": "Dodeljeno tebi",
+      "empty": "Trenutno ti ni dodeljena nobena težava."
+    },
+    "columns": {
+      "key": "Ključ",
+      "title": "Naslov",
+      "status": "Status",
+      "updated": "Posodobljeno"
+    },
+    "error": "Nekaterih podatkov ni bilo mogoče naložiti. Prosim osveži stran.",
+    "projectsLink": "Na projekte"
+  },
+  "workspace": {
+    "nav": {
+      "dashboard": "Nadzorna plošča",
+      "projects": "Projekti",
+      "issues": "Zadeve",
+      "admin": "Skrbnik",
+      "projectPlaceholder": "Skok na projekt"
+    }
   },
   "issues": {
     "pageTitle": "Zadeve",
@@ -48,6 +88,12 @@
     "loading": "Nalaganje…",
     "backToList": "Nazaj na zadeve",
     "detail": {
+      "titleLabel": "Naslov",
+      "descriptionLabel": "Opis",
+      "save": "Shrani spremembe",
+      "saveFailedTitle": "Shranjevanje ni uspelo",
+      "saveSuccessTitle": "Shranjeno",
+      "saveSuccessMessage": "Spremembe so shranjene.",
       "statusLabel": "Status",
       "statusPlaceholder": "Izberi status",
       "statusReadOnlyHint": "Statusa te zadeve ne moreš spremeniti.",
@@ -69,6 +115,18 @@
       }
     },
     "empty": "Ni še zadev.",
+    "create": {
+      "modalTitle": "Nova zadeva",
+      "titleLabel": "Naslov",
+      "descriptionLabel": "Opis (neobvezno)",
+      "statusLabel": "Začetni status",
+      "submit": "Ustvari",
+      "titleRequired": "Naslov je obvezen.",
+      "statusRequired": "Izberi status.",
+      "failedTitle": "Zadve ni bilo mogoče ustvariti",
+      "successTitle": "Zadeva ustvarjena",
+      "successMessage": "Odpiram novo zadevo…"
+    },
     "unassigned": "Nedodeljeno",
     "table": {
       "title": "Naslov",
@@ -132,7 +190,74 @@
       "statusNameRequired": "Ime statusa je obvezno.",
       "statusNameTooLong": "Ime statusa je predolgo.",
       "userIdInvalid": "Neveljaven uporabnik.",
-      "roleInvalid": "Neveljavna vloga."
+      "roleInvalid": "Neveljavna vloga.",
+      "projectIdInvalid": "Neveljaven projekt.",
+      "projectKeyInvalid": "2–10 znakov: začni z A–Z, nato A–Z ali 0–9.",
+      "issueLookupInvalid": "Vnesi ID zadeve ali ključ projekta in številko."
+    }
+  },
+  "projects": {
+    "errors": {
+      "notFound": "Projekt ni najden.",
+      "keyTaken": "Ta ključ projekta je že zaseden.",
+      "createFailed": "Projekta ni bilo mogoče ustvariti.",
+      "updateFailed": "Projekta ni bilo mogoče posodobiti.",
+      "alreadyMember": "Uporabnik je že član.",
+      "memberAddFailed": "Člana ni bilo mogoče dodati.",
+      "memberRemoveFailed": "Člana ni bilo mogoče odstraniti."
+    },
+    "list": {
+      "title": "Projekti",
+      "loading": "Nalaganje projektov…",
+      "loadFailed": "Projektov ni bilo mogoče naložiti.",
+      "newProject": "Nov projekt",
+      "cancelCreate": "Prekliči",
+      "keyLabel": "Ključ",
+      "keyHint": "Pred številko zadeve (npr. OPS-12). Velike črke in številke.",
+      "nameLabel": "Ime",
+      "descriptionLabel": "Opis (neobvezno)",
+      "submitCreate": "Ustvari projekt",
+      "keyRequired": "Ključ je obvezen.",
+      "nameRequired": "Ime je obvezno.",
+      "createFailed": "Ustvarjanje ni uspelo",
+      "createSuccess": "Projekt ustvarjen",
+      "createSuccessMessage": "Preusmerjam na ploščo…",
+      "colKey": "Ključ",
+      "colName": "Ime",
+      "colAction": "",
+      "open": "Odpri"
+    },
+    "subnav": {
+      "board": "Plošča",
+      "issues": "Zadeve",
+      "settings": "Nastavitve"
+    },
+    "board": {
+      "pageTitle": "Plošča · {key}",
+      "loading": "Nalaganje plošče…",
+      "loadFailed": "Plošče ni bilo mogoče naložiti.",
+      "moveFailedTitle": "Premik ni uspel"
+    },
+    "issues": {
+      "title": "Zadeve · {name}",
+      "newIssue": "Nova zadeva"
+    },
+    "settings": {
+      "pageTitle": "Nastavitve · {name}",
+      "adminOnly": "Samo skrbniki upravljajo člane projekta.",
+      "membersTitle": "Člani",
+      "addMemberLabel": "Dodaj uporabnika",
+      "addMemberPlaceholder": "Izberi uporabnika",
+      "addMember": "Dodaj",
+      "loading": "Nalaganje članov…",
+      "colUser": "Uporabnik",
+      "colRole": "Vloga",
+      "colAction": "",
+      "remove": "Odstrani",
+      "addFailed": "Dodajanje ni uspelo",
+      "addSuccess": "Član dodan",
+      "removeFailed": "Odstranjevanje ni uspelo",
+      "removeSuccess": "Član odstranjen"
     }
   },
   "admin": {
@@ -296,6 +421,10 @@
       "issues": {
         "title": "Zadeve",
         "description": "Spremljanje in upravljanje operativnih zadev."
+      },
+      "projects": {
+        "title": "Projekti",
+        "description": "Delo v projektih in ploščah."
       },
       "admin": {
         "title": "Skrbništvo",

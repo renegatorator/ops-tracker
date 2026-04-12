@@ -6,6 +6,7 @@ import type {
   CreateIssueInput,
   CreateIssueStatusInput,
   DeleteIssueStatusInput,
+  GetIssueInput,
   ListIssuesSchemaInput,
   SoftDeleteIssueInput,
   TransitionIssueStatusInput,
@@ -29,6 +30,11 @@ const issueSelect = `
     sort_order,
     is_terminal,
     created_at
+  ),
+  projects!inner (
+    id,
+    key,
+    name
   ),
   assignee:user_profiles!issues_assignee_id_fkey (
     id,
@@ -117,10 +123,14 @@ export const listIssues = async (
   if (input.assigneeId) {
     q = q.eq("assignee_id", input.assigneeId);
   }
+  if (input.projectId) {
+    q = q.eq("project_id", input.projectId);
+  }
   if (input.search?.trim()) {
     const safe = sanitizeSearch(input.search);
     if (safe) {
-      q = q.ilike("title", `%${safe}%`);
+      const pat = `%${safe}%`;
+      q = q.or(`title.ilike.${pat},issue_key.ilike.${pat}`);
     }
   }
 
@@ -168,15 +178,24 @@ export const listIssues = async (
   };
 };
 
-export const getIssueById = async (
-  issueId: string,
+export const getIssue = async (
+  input: GetIssueInput,
 ): Promise<IssuesActionResult<IssueWithStatus>> => {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  let q = supabase
     .from("issues")
     .select(issueSelect)
-    .eq("id", issueId)
-    .maybeSingle();
+    .is("deleted_at", null);
+
+  if ("issueId" in input) {
+    q = q.eq("id", input.issueId);
+  } else {
+    q = q
+      .eq("issue_number", input.issueNumber)
+      .eq("projects.key", input.projectKey.trim().toUpperCase());
+  }
+
+  const { data, error } = await q.maybeSingle();
 
   if (error) {
     return {
@@ -193,7 +212,14 @@ export const getIssueById = async (
 export const createIssue = async (
   userId: string,
   input: CreateIssueInput,
-): Promise<IssuesActionResult<{ id: string }>> => {
+): Promise<
+  IssuesActionResult<{
+    id: string;
+    issue_key: string;
+    issue_number: number;
+    project_key: string;
+  }>
+> => {
   const statusCheck = await statusExists(input.status_id);
   if (!statusCheck.ok) return statusCheck;
 
@@ -201,12 +227,22 @@ export const createIssue = async (
   const { data, error } = await supabase
     .from("issues")
     .insert({
+      project_id: input.project_id,
       title: input.title,
       description: input.description?.length ? input.description : null,
       status_id: input.status_id,
       reporter_id: userId,
     })
-    .select("id")
+    .select(
+      `
+      id,
+      issue_key,
+      issue_number,
+      projects!inner (
+        key
+      )
+    `,
+    )
     .single();
 
   if (error) {
@@ -215,7 +251,22 @@ export const createIssue = async (
       errorKey: supabaseErrorKey(error, "errors.createFailed"),
     };
   }
-  return { ok: true, data: { id: data.id } };
+  const row = data as unknown as {
+    id: string;
+    issue_key: string;
+    issue_number: number;
+    projects: { key: string } | { key: string }[];
+  };
+  const proj = Array.isArray(row.projects) ? row.projects[0] : row.projects;
+  return {
+    ok: true,
+    data: {
+      id: row.id,
+      issue_key: row.issue_key,
+      issue_number: row.issue_number,
+      project_key: proj.key,
+    },
+  };
 };
 
 export const updateIssue = async (

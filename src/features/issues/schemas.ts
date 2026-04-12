@@ -7,6 +7,7 @@ const trimmedTitle = z
   .max(500, { message: "validation.titleTooLong" });
 
 export const createIssueSchema = z.object({
+  project_id: z.uuid({ message: "validation.projectIdInvalid" }),
   title: trimmedTitle,
   description: z
     .string()
@@ -50,9 +51,18 @@ export const softDeleteIssueSchema = z.object({
   issueId: z.uuid({ message: "validation.issueIdInvalid" }),
 });
 
-export const getIssueSchema = z.object({
-  issueId: z.uuid({ message: "validation.issueIdInvalid" }),
-});
+export const getIssueSchema = z
+  .object({
+    issueId: z.uuid({ message: "validation.issueIdInvalid" }).optional(),
+    projectKey: z.string().trim().min(1).max(10).optional(),
+    issueNumber: z.coerce.number().int().positive().optional(),
+  })
+  .refine(
+    (x) =>
+      Boolean(x.issueId) ||
+      (Boolean(x.projectKey?.trim()) && x.issueNumber != null),
+    { message: "validation.issueLookupInvalid", path: ["root"] },
+  );
 
 const statusSlug = z
   .string()
@@ -98,6 +108,7 @@ export const deleteIssueStatusSchema = z.object({
 });
 
 const filterFields = {
+  projectId: z.uuid({ message: "validation.projectIdInvalid" }).optional(),
   statusId: z.uuid({ message: "validation.statusInvalid" }).optional(),
   assigneeId: z
     .uuid({ message: "validation.assigneeInvalid" })
@@ -139,7 +150,16 @@ export type TransitionIssueStatusInput = z.infer<
 export type AssignIssueInput = z.infer<typeof assignIssueSchema>;
 export type SoftDeleteIssueInput = z.infer<typeof softDeleteIssueSchema>;
 export type ListIssuesSchemaInput = z.infer<typeof listIssuesSchema>;
-export type GetIssueInput = z.infer<typeof getIssueSchema>;
+
+export type GetIssueInput =
+  | { issueId: string }
+  | { projectKey: string; issueNumber: number };
+
+export const listAssigneeFiltersSchema = z.object({
+  projectId: z.uuid({ message: "validation.projectIdInvalid" }).optional(),
+});
+
+export type ListAssigneeFiltersInput = z.infer<typeof listAssigneeFiltersSchema>;
 export type CreateIssueStatusInput = z.infer<typeof createIssueStatusSchema>;
 export type UpdateIssueStatusInput = z.infer<typeof updateIssueStatusSchema>;
 export type DeleteIssueStatusInput = z.infer<typeof deleteIssueStatusSchema>;

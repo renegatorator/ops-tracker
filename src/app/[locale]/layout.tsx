@@ -42,13 +42,30 @@ export const generateMetadata = async ({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.root" });
 
+  const title = t("title");
+  const description = t("description");
+
   return {
     metadataBase: new URL(env("NEXT_PUBLIC_SITE_URL")),
     title: {
-      default: t("title"),
-      template: `%s | ${t("title")}`,
+      default: title,
+      template: `%s | ${title}`,
     },
-    description: t("description"),
+    description,
+    icons: {
+      icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    },
+    openGraph: {
+      type: "website",
+      siteName: title,
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
   };
 };
 

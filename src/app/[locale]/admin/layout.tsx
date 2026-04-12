@@ -1,12 +1,11 @@
-import { Container, Group, Stack, Title } from "@mantine/core";
+import { Container, Paper, Stack, Title } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import PagesLayout from "@/components/Layout/PagesLayout";
-import IntlLinkAnchor from "@/components/Navigation/IntlLinkAnchor";
+import AdminSubnav from "@/features/admin/components/AdminSubnav";
+import WorkspaceRouteLayout from "@/components/Layout/WorkspaceRouteLayout";
 import { requireRole } from "@/lib/auth/session";
 import { ADMIN_ACCESS_ROLES, isSuperAdminRole } from "@/lib/auth/types";
-import { routes } from "@/lib/routes";
 
 const AdminLayout = async ({
   children,
@@ -21,33 +20,17 @@ const AdminLayout = async ({
   const showSuperSettings = isSuperAdminRole(role);
 
   return (
-    <PagesLayout>
-      <Container size="lg" py="xl" w="100%">
-        <Stack gap="lg" w="100%" maw={960}>
-          <Title order={2}>{t("title")}</Title>
-          <Group gap="md">
-            <IntlLinkAnchor href={routes.admin} size="sm">
-              {t("nav.overview")}
-            </IntlLinkAnchor>
-            <IntlLinkAnchor href={routes.adminUsers} size="sm">
-              {t("nav.users")}
-            </IntlLinkAnchor>
-            <IntlLinkAnchor href={routes.adminStatuses} size="sm">
-              {t("nav.statuses")}
-            </IntlLinkAnchor>
-            <IntlLinkAnchor href={routes.adminAudit} size="sm">
-              {t("nav.audit")}
-            </IntlLinkAnchor>
-            {showSuperSettings ? (
-              <IntlLinkAnchor href={routes.adminSettings} size="sm">
-                {t("nav.settings")}
-              </IntlLinkAnchor>
-            ) : null}
-          </Group>
-          {children}
-        </Stack>
+    <WorkspaceRouteLayout params={params as Promise<{ locale: string }>}>
+      <Container size="lg" py="xl">
+        <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
+          <Stack gap="md">
+            <Title order={2}>{t("title")}</Title>
+            <AdminSubnav showSuperSettings={showSuperSettings} />
+            {children}
+          </Stack>
+        </Paper>
       </Container>
-    </PagesLayout>
+    </WorkspaceRouteLayout>
   );
 };
 

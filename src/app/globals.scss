@@ -23,3 +23,8 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Theme-aware logo switching (Mantine sets data-mantine-color-scheme on <html>).
+   !important beats the inline display:none default on each <img>. */
+[data-mantine-color-scheme="light"] .ops-logo-light { display: block !important; }
+[data-mantine-color-scheme="dark"]  .ops-logo-dark  { display: block !important; }

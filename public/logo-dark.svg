@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32" fill="none" role="img" aria-label="Ops Tracker">
+  <!-- Icon mark: hexagonal ops symbol -->
+  <g>
+    <!-- Outer hexagon ring -->
+    <path d="M14 2L25.124 8.5V21.5L14 28L2.876 21.5V8.5L14 2Z" stroke="#CBD5E1" stroke-width="1.8" fill="none"/>
+    <!-- Inner circuit-like cross -->
+    <line x1="14" y1="8" x2="14" y2="24" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="7" y1="14.5" x2="21" y2="14.5" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Corner dots (ops nodes) -->
+    <circle cx="14" cy="8" r="1.8" fill="#60A5FA"/>
+    <circle cx="14" cy="21" r="1.8" fill="#60A5FA"/>
+    <circle cx="7.5" cy="14.5" r="1.8" fill="#60A5FA"/>
+    <circle cx="20.5" cy="14.5" r="1.8" fill="#60A5FA"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="34" y="22" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#F1F5F9" letter-spacing="-0.3">Ops</text>
+  <text x="61" y="22" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="400" fill="#94A3B8" letter-spacing="-0.2">Tracker</text>
+</svg>

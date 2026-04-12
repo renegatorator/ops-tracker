@@ -19,3 +19,9 @@ export const canUserTransitionIssueStatus = (
   }
   return false;
 };
+
+/** Title / description edits: same involvement rule as status transitions. */
+export const canEditIssueDetails = (
+  ctx: UserAuthContext,
+  issue: IssueWithStatus,
+): boolean => canUserTransitionIssueStatus(ctx, issue);

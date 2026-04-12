@@ -39,8 +39,48 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "description": "Du bist erfolgreich angemeldet.",
-    "signedInAs": "Angemeldet als: {email}"
+    "subtitle": "Das ist der aktuelle Stand in deinem Workspace.",
+    "welcome": "Willkommen zurück, {email}",
+    "stats": {
+      "activeProjects": "Aktive Projekte",
+      "openIssues": "Offene Issues",
+      "assignedToMe": "Mir zugewiesen",
+      "viewProjects": "Projekte ansehen",
+      "viewAllIssues": "Alle Issues",
+      "viewMyIssues": "Meine Issues"
+    },
+    "projects": {
+      "heading": "Deine Projekte",
+      "board": "Board",
+      "issues": "Issues",
+      "empty": "Noch keine Projekte vorhanden.",
+      "createOne": "Erstes Projekt erstellen"
+    },
+    "recent": {
+      "heading": "Zuletzt aktualisiert",
+      "empty": "Keine Issues gefunden."
+    },
+    "mine": {
+      "heading": "Dir zugewiesen",
+      "empty": "Aktuell sind dir keine Issues zugewiesen."
+    },
+    "columns": {
+      "key": "Schlüssel",
+      "title": "Titel",
+      "status": "Status",
+      "updated": "Aktualisiert"
+    },
+    "error": "Einige Daten konnten nicht geladen werden. Bitte Seite neu laden.",
+    "projectsLink": "Zu Projekten"
+  },
+  "workspace": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "projects": "Projekte",
+      "issues": "Tickets",
+      "admin": "Admin",
+      "projectPlaceholder": "Projekt öffnen"
+    }
   },
   "issues": {
     "pageTitle": "Tickets",
@@ -48,6 +88,12 @@
     "loading": "Wird geladen…",
     "backToList": "Zurück zur Liste",
     "detail": {
+      "titleLabel": "Titel",
+      "descriptionLabel": "Beschreibung",
+      "save": "Speichern",
+      "saveFailedTitle": "Speichern fehlgeschlagen",
+      "saveSuccessTitle": "Gespeichert",
+      "saveSuccessMessage": "Änderungen wurden gespeichert.",
       "statusLabel": "Status",
       "statusPlaceholder": "Status wählen",
       "statusReadOnlyHint": "Du kannst den Status dieses Tickets nicht ändern.",
@@ -69,6 +115,18 @@
       }
     },
     "empty": "Noch keine Tickets.",
+    "create": {
+      "modalTitle": "Ticket erstellen",
+      "titleLabel": "Titel",
+      "descriptionLabel": "Beschreibung (optional)",
+      "statusLabel": "Startstatus",
+      "submit": "Erstellen",
+      "titleRequired": "Titel ist erforderlich.",
+      "statusRequired": "Bitte einen Status wählen.",
+      "failedTitle": "Ticket konnte nicht erstellt werden",
+      "successTitle": "Ticket erstellt",
+      "successMessage": "Öffne das neue Ticket…"
+    },
     "unassigned": "Nicht zugewiesen",
     "table": {
       "title": "Titel",
@@ -132,7 +190,74 @@
       "statusNameRequired": "Der Statusname ist erforderlich.",
       "statusNameTooLong": "Der Statusname ist zu lang.",
       "userIdInvalid": "Ungültiger Benutzer.",
-      "roleInvalid": "Ungültige Rolle."
+      "roleInvalid": "Ungültige Rolle.",
+      "projectIdInvalid": "Ungültiges Projekt.",
+      "projectKeyInvalid": "2–10 Zeichen: beginne mit A–Z, dann A–Z oder 0–9.",
+      "issueLookupInvalid": "Ticket-ID oder Projekt-Key und Nummer angeben."
+    }
+  },
+  "projects": {
+    "errors": {
+      "notFound": "Projekt nicht gefunden.",
+      "keyTaken": "Dieser Projekt-Key ist bereits vergeben.",
+      "createFailed": "Projekt konnte nicht erstellt werden.",
+      "updateFailed": "Projekt konnte nicht aktualisiert werden.",
+      "alreadyMember": "Benutzer ist bereits Mitglied.",
+      "memberAddFailed": "Mitglied konnte nicht hinzugefügt werden.",
+      "memberRemoveFailed": "Mitglied konnte nicht entfernt werden."
+    },
+    "list": {
+      "title": "Projekte",
+      "loading": "Projekte werden geladen…",
+      "loadFailed": "Projekte konnten nicht geladen werden.",
+      "newProject": "Neues Projekt",
+      "cancelCreate": "Abbrechen",
+      "keyLabel": "Key",
+      "keyHint": "Vor Ticketnummern (z. B. OPS-12). Großbuchstaben und Ziffern.",
+      "nameLabel": "Name",
+      "descriptionLabel": "Beschreibung (optional)",
+      "submitCreate": "Projekt erstellen",
+      "keyRequired": "Key ist erforderlich.",
+      "nameRequired": "Name ist erforderlich.",
+      "createFailed": "Erstellen fehlgeschlagen",
+      "createSuccess": "Projekt erstellt",
+      "createSuccessMessage": "Weiterleitung zum Board…",
+      "colKey": "Key",
+      "colName": "Name",
+      "colAction": "",
+      "open": "Öffnen"
+    },
+    "subnav": {
+      "board": "Board",
+      "issues": "Tickets",
+      "settings": "Einstellungen"
+    },
+    "board": {
+      "pageTitle": "Board · {key}",
+      "loading": "Board wird geladen…",
+      "loadFailed": "Board konnte nicht geladen werden.",
+      "moveFailedTitle": "Verschieben fehlgeschlagen"
+    },
+    "issues": {
+      "title": "Tickets · {name}",
+      "newIssue": "Neues Ticket"
+    },
+    "settings": {
+      "pageTitle": "Einstellungen · {name}",
+      "adminOnly": "Nur Administratoren verwalten Projektmitglieder.",
+      "membersTitle": "Mitglieder",
+      "addMemberLabel": "Benutzer hinzufügen",
+      "addMemberPlaceholder": "Benutzer wählen",
+      "addMember": "Hinzufügen",
+      "loading": "Mitglieder werden geladen…",
+      "colUser": "Benutzer",
+      "colRole": "Rolle",
+      "colAction": "",
+      "remove": "Entfernen",
+      "addFailed": "Hinzufügen fehlgeschlagen",
+      "addSuccess": "Mitglied hinzugefügt",
+      "removeFailed": "Entfernen fehlgeschlagen",
+      "removeSuccess": "Mitglied entfernt"
     }
   },
   "admin": {
@@ -296,6 +421,10 @@
       "issues": {
         "title": "Tickets",
         "description": "Operative Tickets verfolgen und verwalten."
+      },
+      "projects": {
+        "title": "Projekte",
+        "description": "Arbeit in Projekten und Boards organisieren."
       },
       "admin": {
         "title": "Administration",

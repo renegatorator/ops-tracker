@@ -39,6 +39,7 @@ Then insert a row for your user after they sign up (see **section 6**), or add a
 | 2 | `20260405120000_user_profiles_admin_rls.sql` | RLS policies on `user_profiles` for admin user management |
 | 3 | `20260411120000_phase12_list_sort_audit_indexes.sql` | Extra indexes for list/filter/sort and audit |
 | 4 | `20260412140000_fix_user_profiles_rls_recursion.sql` | Fixes `42P17` RLS recursion on `user_profiles` (replaces Phase 8 `EXISTS` subqueries with `SECURITY DEFINER` helpers) |
+| 5 | `20260412200000_projects_members_issues_scope.sql` | `projects`, `project_members`, `issues.project_id` / `issue_number` / `issue_key`, triggers, RLS refresh for project-scoped issues |
 
 ---
 

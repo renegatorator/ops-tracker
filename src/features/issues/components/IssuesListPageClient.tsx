@@ -47,6 +47,8 @@ interface IssuesListPageClientProps {
   locale: string;
   currentUserId: string;
   canListAllAssignees: boolean;
+  /** When set, list is always scoped to this project (URL filters still apply). */
+  forcedProjectId?: string;
 }
 
 function loadColumnVisibility(): VisibilityState {
@@ -64,6 +66,7 @@ const IssuesListPageClient = ({
   locale,
   currentUserId,
   canListAllAssignees,
+  forcedProjectId,
 }: IssuesListPageClientProps) => {
   const t = useTranslations("issues");
   const tTable = useTranslations("issues.table");
@@ -72,18 +75,25 @@ const IssuesListPageClient = ({
   const pathname = usePathname();
   const searchParamsKey = searchParams.toString();
 
-  const listParams = useMemo(
-    () => parseIssuesListParams(new URLSearchParams(searchParamsKey)),
-    [searchParamsKey],
-  );
+  const listParams = useMemo(() => {
+    const base = parseIssuesListParams(new URLSearchParams(searchParamsKey));
+    if (forcedProjectId) {
+      return { ...base, projectId: forcedProjectId };
+    }
+    return base;
+  }, [searchParamsKey, forcedProjectId]);
 
   const replaceListUrl = useCallback(
     (next: ListIssuesSchemaInput) => {
-      const qs = issuesListParamsToSearchParams(next);
+      const merged =
+        forcedProjectId && next.mode === "offset"
+          ? { ...next, projectId: forcedProjectId }
+          : next;
+      const qs = issuesListParamsToSearchParams(merged);
       const q = qs.toString();
       router.replace(q ? `${pathname}?${q}` : pathname);
     },
-    [pathname, router],
+    [forcedProjectId, pathname, router],
   );
 
   const { data, isPending, isError, error, isFetching } = useIssuesList(
