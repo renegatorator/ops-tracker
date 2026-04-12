@@ -95,6 +95,7 @@ export const createProject = async (
   });
 
   if (memberErr) {
+    await supabase.from("projects").delete().eq("id", created.id);
     return {
       ok: false,
       errorKey: supabaseErrorKey(memberErr, "projects.errors.createFailed"),

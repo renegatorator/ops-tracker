@@ -65,8 +65,18 @@ export const listProjectMembersSchema = z.object({
   projectId: z.uuid({ message: "validation.projectIdInvalid" }),
 });
 
+export const renameProjectSchema = z.object({
+  projectId: z.uuid({ message: "validation.projectIdInvalid" }),
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "validation.projectNameRequired" })
+    .max(200, { message: "validation.projectNameTooLong" }),
+});
+
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
+export type RenameProjectInput = z.infer<typeof renameProjectSchema>;
 export type GetProjectByKeyInput = z.infer<typeof getProjectByKeySchema>;
 export type AddProjectMemberInput = z.infer<typeof addProjectMemberSchema>;
 export type RemoveProjectMemberInput = z.infer<

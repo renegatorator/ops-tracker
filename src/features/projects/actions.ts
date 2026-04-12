@@ -22,6 +22,7 @@ import {
   getProjectByKeySchema,
   listProjectMembersSchema,
   removeProjectMemberSchema,
+  renameProjectSchema,
   updateProjectSchema,
 } from "./schemas";
 import * as projectService from "./service";
@@ -154,7 +155,7 @@ export const renameProject = async (
     }
     throw e;
   }
-  const parsed = updateProjectSchema.safeParse(raw);
+  const parsed = renameProjectSchema.safeParse(raw);
   if (!parsed.success) return validationFailure(parsed.error);
   const result = await projectService.updateProject(parsed.data);
   if (result.ok) {

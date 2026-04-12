@@ -207,7 +207,7 @@ export const updateIssue = async (
       entityId: parsed.data.issueId,
       metadata: { fields },
     });
-    revalidateIssuesSegment(locale, {});
+    revalidateIssuesSegment(locale, { projectKey: result.data.project_key });
   }
   return result;
 };

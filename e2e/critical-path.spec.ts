@@ -47,6 +47,7 @@ test.describe("critical path", () => {
       timeout: 30_000,
     });
 
+    await page.getByLabel(/edit issue/i).click();
     const titleInput = page.getByLabel(/^title$/i);
     await titleInput.fill(`E2E title ${Date.now()}`);
     await page.getByRole("button", { name: /save/i }).click();

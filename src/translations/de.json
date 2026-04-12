@@ -148,7 +148,17 @@
         "actor": "Akteur",
         "action": "Aktion",
         "issueKey": "Ticket-Key",
-        "summary": "Zusammenfassung"
+        "summaryColumn": "Zusammenfassung",
+        "summary": {
+          "update": "Aktualisiert: {fields}",
+          "updateNoFields": "Ticket aktualisiert",
+          "assign": "Zugewiesen an {id}…",
+          "assigned": "Zugewiesen",
+          "unassign": "Zuweisung aufgehoben",
+          "statusChange": "Status → {id}…",
+          "statusChanged": "Status geändert",
+          "archive": "Ticket archiviert"
+        }
       }
     },
     "empty": "Noch keine Tickets.",

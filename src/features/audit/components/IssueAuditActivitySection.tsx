@@ -8,31 +8,6 @@ import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
 import type { AuditLogRow } from "../types";
 
-const formatSummary = (row: AuditLogRow): string => {
-  const m = row.metadata as Record<string, unknown>;
-  switch (row.action) {
-    case "issue.create":
-      return typeof m.title === "string" ? m.title : "—";
-    case "issue.update": {
-      const fields = Array.isArray(m.fields) ? (m.fields as string[]) : [];
-      return fields.length > 0 ? `Updated: ${fields.join(", ")}` : "Updated issue";
-    }
-    case "issue.assign": {
-      if (m.assignee_id == null) return "Unassigned";
-      return typeof m.assignee_id === "string"
-        ? `Assigned to ${m.assignee_id.slice(0, 8)}…`
-        : "Assigned";
-    }
-    case "issue.status_transition":
-      return typeof m.status_id === "string"
-        ? `Status → ${m.status_id.slice(0, 8)}…`
-        : "Status changed";
-    case "issue.archive":
-      return "Issue archived";
-    default:
-      return row.action;
-  }
-};
 
 const formatIssueKey = (row: AuditLogRow): string => {
   const m = row.metadata as Record<string, unknown>;
@@ -60,6 +35,34 @@ const IssueAuditActivitySection = ({
   const t = useTranslations("issues.detail.activity");
   const tIssues = useTranslations("issues");
   const tAdmin = useTranslations("admin");
+
+  const formatSummary = (row: AuditLogRow): string => {
+    const m = row.metadata as Record<string, unknown>;
+    switch (row.action) {
+      case "issue.create":
+        return typeof m.title === "string" ? m.title : "—";
+      case "issue.update": {
+        const fields = Array.isArray(m.fields) ? (m.fields as string[]) : [];
+        return fields.length > 0
+          ? t("summary.update", { fields: fields.join(", ") })
+          : t("summary.updateNoFields");
+      }
+      case "issue.assign": {
+        if (m.assignee_id == null) return t("summary.unassign");
+        return typeof m.assignee_id === "string"
+          ? t("summary.assign", { id: m.assignee_id.slice(0, 8) })
+          : t("summary.assigned");
+      }
+      case "issue.status_transition":
+        return typeof m.status_id === "string"
+          ? t("summary.statusChange", { id: m.status_id.slice(0, 8) })
+          : t("summary.statusChanged");
+      case "issue.archive":
+        return t("summary.archive");
+      default:
+        return row.action;
+    }
+  };
   const { data = [], isPending, isError, error } = useIssueAuditActivity(
     locale,
     issueId,
@@ -96,7 +99,7 @@ const IssueAuditActivitySection = ({
                 <Table.Th>{t("actor")}</Table.Th>
                 <Table.Th>{t("action")}</Table.Th>
                 <Table.Th>{t("issueKey")}</Table.Th>
-                <Table.Th>{t("summary")}</Table.Th>
+                <Table.Th>{t("summaryColumn")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -104,7 +107,7 @@ const IssueAuditActivitySection = ({
                 <Table.Tr key={row.id}>
                   <Table.Td>
                     <Text size="xs" ff="monospace">
-                      {new Date(row.created_at).toLocaleString()}
+                      {new Date(row.created_at).toLocaleString(locale)}
                     </Text>
                   </Table.Td>
                   <Table.Td>

@@ -148,7 +148,17 @@
         "actor": "Izvajalec",
         "action": "Dejanje",
         "issueKey": "Ključ zadeve",
-        "summary": "Povzetek"
+        "summaryColumn": "Povzetek",
+        "summary": {
+          "update": "Posodobljeno: {fields}",
+          "updateNoFields": "Zadeva posodobljena",
+          "assign": "Dodeljeno {id}…",
+          "assigned": "Dodeljeno",
+          "unassign": "Dodelitev preklicana",
+          "statusChange": "Status → {id}…",
+          "statusChanged": "Status spremenjen",
+          "archive": "Zadeva arhivirana"
+        }
       }
     },
     "empty": "Ni še zadev.",

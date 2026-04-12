@@ -25,6 +25,20 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 - **Email subjects** — Issue-assigned emails now use the subject line `"Assigned to you: <title>"` instead of `"Assigned: <title>"`.
 - **Login page** — Removed the redundant "Sign in" heading and the inline email description hint (`"Use your email address (must include @)."`); the form is cleaner without them.
 
+### Fixed
+- **Migration safety** — Backfill `INSERT` in `20260412200000` now guards against a fresh database with no user profiles, preventing a `NOT NULL` violation on `created_by`.
+- **Error message translations** — Error keys returned by server actions in `ProjectSettingsPageClient` and `CreateIssueModal` now resolve through the correct `projects` / `issues` namespace instead of the local `settings` / `create` namespace.
+- **Assignee query gating** — `useAssigneeFilterOptions` in `IssueDetailPanel` no longer fires before the issue's `project_id` is loaded, preventing an unnecessary unscoped user-list fetch.
+- **Issue update revalidation** — `updateIssue` now returns `project_key` so `revalidateIssuesSegment` can target the correct project route cache.
+- **Search injection** — `sanitizeSearch` now also strips `,`, `(`, `)`, and `/` to prevent PostgREST `or()` filter injection.
+- **Audit log i18n** — Summary strings in the audit activity section are now translated (en/de/si) and dates use `toLocaleString(locale)`.
+- **E2E test reliability** — The critical-path spec now clicks the edit button before attempting to fill the title input.
+- **Nav active state** — Workspace shell nav items now use `pathname.startsWith(href)` so nested routes (e.g. `/projects/OPS/board`) correctly highlight the parent nav link.
+- **reCAPTCHA UX** — The login submit button is disabled until the reCAPTCHA script has finished loading, preventing silent token-less submissions.
+- **`createProject` atomicity** — If the `project_members` insert fails after a project row is created, the orphan project row is now deleted before returning the error.
+- **`renameProject` schema** — A dedicated `renameProjectSchema` (name + projectId only) replaces the wider `updateProjectSchema` in the rename action, narrowing the server action's contract.
+- **Hydration mismatch** — The project-switcher `Select` in `WorkspaceShellClient` is now deferred until after mount, preventing Mantine `useId` counter divergence between SSR and the client.
+
 ### Removed
 - **Legacy workflow statuses "Resolved" and "Closed"** — Deleted from the database via migration (`20260413110000`). Any issues previously on those statuses are automatically reassigned to **Done** before the rows are removed.
 

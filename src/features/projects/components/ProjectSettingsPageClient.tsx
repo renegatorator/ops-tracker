@@ -38,7 +38,14 @@ const ProjectSettingsPageClient = ({
   isSuperAdmin,
 }: ProjectSettingsPageClientProps) => {
   const t = useTranslations("projects.settings");
+  const tProjects = useTranslations("projects");
+  const tIssues = useTranslations("issues");
   const queryClient = useQueryClient();
+
+  const errMsg = (key: string) =>
+    key.startsWith("projects.")
+      ? tProjects(key.slice(9) as Parameters<typeof tProjects>[0])
+      : tIssues(key as Parameters<typeof tIssues>[0]);
   const { data: members = [], isPending } = useProjectMembers(locale, projectId);
   const [addUserId, setAddUserId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -84,7 +91,7 @@ const ProjectSettingsPageClient = ({
     if (!result.ok) {
       notifications.show({
         title: t("addFailed"),
-        message: t(result.errorKey),
+        message: errMsg(result.errorKey),
         color: "red",
       });
       return;
@@ -104,7 +111,7 @@ const ProjectSettingsPageClient = ({
     if (!result.ok) {
       notifications.show({
         title: t("removeFailed"),
-        message: t(result.errorKey),
+        message: errMsg(result.errorKey),
         color: "red",
       });
       return;
@@ -129,7 +136,7 @@ const ProjectSettingsPageClient = ({
     if (!result.ok) {
       notifications.show({
         title: t("renameFailed"),
-        message: t(result.errorKey as Parameters<typeof t>[0]),
+        message: errMsg(result.errorKey),
         color: "red",
       });
       return;

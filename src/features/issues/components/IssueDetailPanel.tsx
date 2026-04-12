@@ -64,7 +64,7 @@ const IssueDetailPanel = ({
     data: assigneeUsers = [],
     isPending: assigneesPending,
     isError: assigneesError,
-  } = useAssigneeFilterOptions(locale, canAssignIssue, data?.project_id);
+  } = useAssigneeFilterOptions(locale, canAssignIssue && !!data?.project_id, data?.project_id);
   const transition = useTransitionIssueStatus(locale, issueId);
   const assignMutation = useAssignIssue(locale);
   const updateMutation = useUpdateIssue(locale, issueId);

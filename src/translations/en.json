@@ -148,7 +148,17 @@
         "actor": "Actor",
         "action": "Action",
         "issueKey": "Issue key",
-        "summary": "Summary"
+        "summaryColumn": "Summary",
+        "summary": {
+          "update": "Updated: {fields}",
+          "updateNoFields": "Updated issue",
+          "assign": "Assigned to {id}…",
+          "assigned": "Assigned",
+          "unassign": "Unassigned",
+          "statusChange": "Status → {id}…",
+          "statusChanged": "Status changed",
+          "archive": "Issue archived"
+        }
       }
     },
     "empty": "No issues yet.",

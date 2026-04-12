@@ -47,6 +47,7 @@ const LoginForm = ({ action, error, siteKey, labels }: LoginFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const tokenInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [captchaReady, setCaptchaReady] = useState(!siteKey);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,6 +81,7 @@ const LoginForm = ({ action, error, siteKey, labels }: LoginFormProps) => {
         <Script
           src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
           strategy="lazyOnload"
+          onLoad={() => setCaptchaReady(true)}
         />
       )}
 
@@ -115,7 +117,7 @@ const LoginForm = ({ action, error, siteKey, labels }: LoginFormProps) => {
             placeholder={labels.passwordPlaceholder}
             required
           />
-          <Button type="submit" fullWidth loading={isSubmitting}>
+          <Button type="submit" fullWidth disabled={!captchaReady} loading={isSubmitting}>
             {labels.submit}
           </Button>
 

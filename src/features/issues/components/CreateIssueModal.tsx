@@ -40,6 +40,7 @@ const CreateIssueModal = ({
   onClose,
 }: CreateIssueModalProps) => {
   const t = useTranslations("issues.create");
+  const tErrors = useTranslations("issues");
   const router = useRouter();
   const { data: statuses = [], isSuccess } = useIssueStatuses(locale);
   const {
@@ -90,7 +91,7 @@ const CreateIssueModal = ({
     if (!result.ok) {
       notifications.show({
         title: t("failedTitle"),
-        message: t(result.errorKey),
+        message: tErrors(result.errorKey as Parameters<typeof tErrors>[0]),
         color: "red",
       });
       return;

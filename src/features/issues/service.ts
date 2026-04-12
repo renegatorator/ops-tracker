@@ -43,7 +43,7 @@ const issueSelect = `
   )
 `;
 
-const sanitizeSearch = (raw: string): string => raw.trim().replace(/[%_]/g, "");
+const sanitizeSearch = (raw: string): string => raw.trim().replace(/[%_,()/]/g, "");
 
 /** Opaque continuation token for `mode: "cursor"` (offset inside JSON + base64url). Keyset pagination can replace this later. */
 const encodeListCursor = (offset: number): string =>
@@ -273,7 +273,7 @@ export const createIssue = async (
 
 export const updateIssue = async (
   input: UpdateIssueInput,
-): Promise<IssuesActionResult<{ id: string }>> => {
+): Promise<IssuesActionResult<{ id: string; project_key: string }>> => {
   const supabase = await createClient();
   const patch: Record<string, string | null> = {};
   if (input.title !== undefined) patch.title = input.title;
@@ -283,7 +283,7 @@ export const updateIssue = async (
     .from("issues")
     .update(patch)
     .eq("id", input.issueId)
-    .select("id")
+    .select("id, projects!inner(key)")
     .maybeSingle();
 
   if (error) {
@@ -295,7 +295,8 @@ export const updateIssue = async (
   if (!data) {
     return { ok: false, errorKey: "errors.notFound" };
   }
-  return { ok: true, data: { id: data.id } };
+  const proj = (data.projects as unknown) as { key: string } | null;
+  return { ok: true, data: { id: data.id, project_key: proj?.key ?? "" } };
 };
 
 export const transitionIssueStatus = async (

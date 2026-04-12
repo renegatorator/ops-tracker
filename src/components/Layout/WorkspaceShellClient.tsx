@@ -15,7 +15,7 @@ import { useDisclosure } from "@mantine/hooks";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useProjectsList } from "@/features/projects/hooks/useProjectsList";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
@@ -65,6 +65,8 @@ const WorkspaceShellClient = ({
   const [opened, { toggle, close }] = useDisclosure();
 
   const isAdmin = pathname.startsWith("/admin");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   const { data: projects = [] } = useProjectsList(locale);
 
@@ -98,14 +100,14 @@ const WorkspaceShellClient = ({
       py={4}
       style={{ borderRadius: 4 }}
     >
-      <Text size="sm" fw={pathname === href ? 700 : 400}>
+      <Text size="sm" fw={pathname.startsWith(href) ? 700 : 400}>
         {label}
       </Text>
     </UnstyledButton>
   );
 
   const projectSwitcher =
-    projectSwitcherData.length > 0 ? (
+    mounted && projectSwitcherData.length > 0 ? (
       <Select
         size="xs"
         maw={220}
@@ -187,7 +189,7 @@ const WorkspaceShellClient = ({
               px="xs"
               style={{ borderRadius: 4 }}
             >
-              <Text size="sm" fw={pathname === routes.dashboard ? 700 : 400}>
+              <Text size="sm" fw={pathname.startsWith(routes.dashboard) ? 700 : 400}>
                 {t("dashboard")}
               </Text>
             </UnstyledButton>
@@ -214,7 +216,7 @@ const WorkspaceShellClient = ({
               px="xs"
               style={{ borderRadius: 4 }}
             >
-              <Text size="sm" fw={pathname === routes.issues ? 700 : 400}>
+              <Text size="sm" fw={pathname.startsWith(routes.issues) ? 700 : 400}>
                 {t("issues")}
               </Text>
             </UnstyledButton>

@@ -86,6 +86,14 @@ where
       public.projects p
     where
       p.key = 'OPS'
+  )
+  and exists (
+    select
+      1
+    from
+      public.user_profiles
+    limit
+      1
   );
 
 insert into
