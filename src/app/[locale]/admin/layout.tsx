@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import PagesLayout from "@/components/Layout/PagesLayout";
 import { Link } from "@/i18n/navigation";
 import { requireRole } from "@/lib/auth/session";
+import { ADMIN_ACCESS_ROLES, isSuperAdminRole } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 
 const AdminLayout = async ({
@@ -15,9 +16,9 @@ const AdminLayout = async ({
   params: Promise<unknown>;
 }) => {
   const { locale } = (await params) as { locale: string };
-  const { role } = await requireRole(locale, ["admin", "super_admin"]);
+  const { role } = await requireRole(locale, ADMIN_ACCESS_ROLES);
   const t = await getTranslations({ locale, namespace: "admin" });
-  const showSuperSettings = role === "super_admin";
+  const showSuperSettings = isSuperAdminRole(role);
 
   return (
     <PagesLayout>

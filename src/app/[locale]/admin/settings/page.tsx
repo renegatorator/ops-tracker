@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { RouteLoading } from "@/components/RouteLoading";
 import { requireRole } from "@/lib/auth/session";
+import { SUPER_ADMIN_ROLES } from "@/lib/auth/types";
 import {
   env,
   getDemoResetEnvRaw,
@@ -34,7 +35,7 @@ export const generateMetadata = async ({ params }: AdminSettingsPageProps) => {
 
 const AdminSettingsPage = async ({ params }: AdminSettingsPageProps) => {
   const { locale } = await params;
-  await requireRole(locale, ["super_admin"]);
+  await requireRole(locale, SUPER_ADMIN_ROLES);
   const t = await getTranslations({ locale, namespace: "admin" });
 
   const demoResetEnabled = isDemoResetEnabled();

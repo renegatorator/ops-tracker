@@ -2,8 +2,7 @@ import { redirect } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
-import type { AppRole, UserAuthContext } from "./types";
-import { parseAppRole } from "./types";
+import { APP_ROLES, type AppRole, parseAppRole, type UserAuthContext } from "./types";
 
 export type { AppRole, UserAuthContext } from "./types";
 
@@ -42,7 +41,7 @@ const fetchProfileRole = async (
   const role = parseAppRole(profile.role);
   if (role == null && process.env.NODE_ENV === "development") {
     console.warn(
-      "[auth] user_profiles.role not recognized (expected user|admin|super_admin):",
+      `[auth] user_profiles.role not recognized (expected ${APP_ROLES.join("|")}):`,
       profile.role,
     );
   }
@@ -59,7 +58,7 @@ export const getSession = async () => {
 
 /**
  * Signed-in user plus `user_profiles.role` from the database. No redirects.
- * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, [...])` for admin paths.
+ * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, ADMIN_ACCESS_ROLES)` (or `SUPER_ADMIN_ROLES`) for gated actions.
  */
 export const getUserAuthContext = async (): Promise<UserAuthContext | null> => {
   const { user } = await getSession();
@@ -81,7 +80,10 @@ export const requireUser = async (locale: string) => {
  * Ensures the user is signed in and their `user_profiles.role` is one of `allowed`.
  * Redirects to login if unauthenticated or profile missing; to dashboard if role not allowed.
  */
-export const requireRole = async (locale: string, allowed: AppRole[]) => {
+export const requireRole = async (
+  locale: string,
+  allowed: readonly AppRole[],
+) => {
   const user = await requireUser(locale);
   const role = await fetchProfileRole(user.id);
 

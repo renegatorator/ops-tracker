@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { RouteLoading } from "@/components/RouteLoading";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { isSuperAdminRole } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
@@ -28,7 +29,7 @@ const AdminUsersPage = async ({ params }: AdminUsersPageProps) => {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "admin" });
   const ctx = await getUserAuthContext();
-  const isSuperAdmin = ctx?.role === "super_admin";
+  const isSuperAdmin = ctx != null && isSuperAdminRole(ctx.role);
 
   return (
     <Stack gap="md" w="100%">

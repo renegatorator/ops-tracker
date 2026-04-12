@@ -14,6 +14,7 @@ import { prefetchIssueDetailPageQueries } from "@/features/issues/prefetch-issue
 import type { IssueWithStatus } from "@/features/issues/types";
 import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { isAdminAccessRole } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
@@ -43,8 +44,7 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
     },
   });
 
-  const canViewIssueAudit =
-    ctx.role === "admin" || ctx.role === "super_admin";
+  const canViewIssueAudit = isAdminAccessRole(ctx.role);
 
   await prefetchIssueDetailPageQueries(queryClient, locale, id, {
     prefetchIssueAudit: canViewIssueAudit,
@@ -55,8 +55,7 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
   );
   const canTransitionStatus =
     issue != null ? canUserTransitionIssueStatus(ctx, issue) : false;
-  const canAssignIssue =
-    ctx.role === "admin" || ctx.role === "super_admin";
+  const canAssignIssue = isAdminAccessRole(ctx.role);
 
   const t = await getTranslations({ locale, namespace: "issues" });
 

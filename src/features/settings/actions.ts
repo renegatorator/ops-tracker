@@ -10,6 +10,7 @@ import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { SUPER_ADMIN_ROLES } from "@/lib/auth/types";
 import { isDemoResetEnabled } from "@/lib/env";
 import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
@@ -27,7 +28,7 @@ export const resetDemoData = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["super_admin"]);
+    assertRole(ctx, SUPER_ADMIN_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };

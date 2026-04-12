@@ -11,6 +11,7 @@ import type {
 import { localizedPath } from "@/i18n/localized-path";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { ADMIN_ACCESS_ROLES } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 
 import { updateUserRoleSchema } from "./schemas";
@@ -34,7 +35,7 @@ export const listUserProfilesForAdmin = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["admin", "super_admin"]);
+    assertRole(ctx, ADMIN_ACCESS_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -52,7 +53,7 @@ export const updateUserRole = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ["admin", "super_admin"]);
+    assertRole(ctx, ADMIN_ACCESS_ROLES);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };

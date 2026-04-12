@@ -1,5 +1,4 @@
 import { Container, Paper, Stack, Text, Title } from "@mantine/core";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
@@ -34,7 +33,6 @@ const DashboardPage = async ({ params }: DashboardPageProps) => {
           </Stack>
         </Paper>
       </Container>
-      <Link href={routes.issues}>Issues</Link>
     </PagesLayout>
   );
 };

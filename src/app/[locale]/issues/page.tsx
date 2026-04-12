@@ -5,6 +5,7 @@ import PagesLayout from "@/components/Layout/PagesLayout";
 import { IssuesListPageClient } from "@/features/issues/components/IssuesListPageClient";
 import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { isAdminAccessRole } from "@/lib/auth/types";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
@@ -24,8 +25,7 @@ const IssuesPage = async ({ params }: IssuesPageProps) => {
     return redirect({ href: routes.login, locale });
   }
   const t = await getTranslations({ locale, namespace: "issues" });
-  const canListAllAssignees =
-    ctx.role === "admin" || ctx.role === "super_admin";
+  const canListAllAssignees = isAdminAccessRole(ctx.role);
 
   return (
     <PagesLayout>

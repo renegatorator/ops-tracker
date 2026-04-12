@@ -1,19 +1,36 @@
 import type { User } from "@supabase/supabase-js";
 
-/**
- * Application roles; literals must match Postgres enum `app_role` in Supabase (`user_profiles.role`).
- *
- * **Source of truth on the server:** `user_profiles.role` loaded per request (see `getUserAuthContext`).
- * You may add JWT custom claims later to avoid an extra read; keep RLS and critical checks aligned with the DB.
- */
-export type AppRole = "user" | "admin" | "super_admin";
+/** Literals must match Postgres enum `app_role` in Supabase (`user_profiles.role`). */
+export const APP_ROLE = {
+  user: "user",
+  admin: "admin",
+  super_admin: "super_admin",
+} as const;
+
+export type AppRole = (typeof APP_ROLE)[keyof typeof APP_ROLE];
 
 export const APP_ROLES: readonly AppRole[] = [
-  "user",
-  "admin",
-  "super_admin",
+  APP_ROLE.user,
+  APP_ROLE.admin,
+  APP_ROLE.super_admin,
 ] as const;
 
+/** `/admin` layout and shared admin server actions (admin or super_admin). */
+export const ADMIN_ACCESS_ROLES = [
+  APP_ROLE.admin,
+  APP_ROLE.super_admin,
+] as const;
+
+/** Super-admin-only routes and mutations. */
+export const SUPER_ADMIN_ROLES = [APP_ROLE.super_admin] as const;
+
+export const isAdminAccessRole = (role: AppRole): boolean =>
+  (ADMIN_ACCESS_ROLES as readonly AppRole[]).includes(role);
+
+export const isSuperAdminRole = (role: AppRole): boolean =>
+  role === APP_ROLE.super_admin;
+
+/** Signed-in user plus `user_profiles.role` from the database (see `getUserAuthContext`). */
 export type UserAuthContext = {
   user: User;
   role: AppRole;
