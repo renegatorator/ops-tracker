@@ -19,6 +19,7 @@ import {
   IconShieldCheck,
   IconUsers,
 } from "@tabler/icons-react";
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 import Typography from "@/components/Typography/Typography";
@@ -79,20 +80,24 @@ const LandingPage = async () => {
         className={classes.hero}
       >
         <div className={classes.logoWrapper}>
-          <img
+          <Image
             src="/logo-light.svg"
             alt="Ops Tracker"
+            width={266}
             height={72}
             className="ops-logo-light"
             style={{ display: "none" }}
+            unoptimized
           />
-          <img
+          <Image
             src="/logo-dark.svg"
             alt=""
             aria-hidden="true"
+            width={266}
             height={72}
             className="ops-logo-dark"
             style={{ display: "none" }}
+            unoptimized
           />
         </div>
 

@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 
 import * as issueService from "../issues/service";
-import * as projectService from "../projects/service";
 import type { IssueStatusRow, IssueWithStatus } from "../issues/types";
+import * as projectService from "../projects/service";
 import type { ProjectRow } from "../projects/types";
 
 export type DashboardData = {

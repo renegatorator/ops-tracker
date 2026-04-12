@@ -1,4 +1,5 @@
 import { Container, Paper, Stack } from "@mantine/core";
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 import { redirect } from "@/i18n/navigation";
@@ -57,20 +58,24 @@ const LoginPage = async ({ locale, error }: LoginPageProps) => {
       <Paper withBorder p="lg" radius="md" miw={400}>
         <Stack gap="md">
           <div style={{ display: "flex", justifyContent: "center", paddingBottom: 4 }}>
-            <img
+            <Image
               src="/logo-light.svg"
               alt="Ops Tracker"
+              width={148}
               height={40}
               className="ops-logo-light"
               style={{ display: "none" }}
+              unoptimized
             />
-            <img
+            <Image
               src="/logo-dark.svg"
               alt=""
               aria-hidden="true"
+              width={148}
               height={40}
               className="ops-logo-dark"
               style={{ display: "none" }}
+              unoptimized
             />
           </div>
           <LoginForm

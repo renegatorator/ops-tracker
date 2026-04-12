@@ -8,7 +8,6 @@ import {
   SegmentedControl,
   Select,
   Stack,
-  Text,
   Textarea,
   TextInput,
 } from "@mantine/core";

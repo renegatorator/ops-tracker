@@ -38,7 +38,6 @@ export const sendIssueCreatedReporterEmailIfConfigured = async (input: {
     `;
 
     const html = buildEmailHtml({
-      siteUrl,
       bodyHtml,
       ctaLabel: "View Issue",
       ctaUrl: issueUrl,

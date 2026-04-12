@@ -62,7 +62,6 @@ export const sendIssueAssignedEmailIfConfigured = async (input: {
     `;
 
     const html = buildEmailHtml({
-      siteUrl,
       bodyHtml,
       ctaLabel: "Open Issue",
       ctaUrl: issueUrl,

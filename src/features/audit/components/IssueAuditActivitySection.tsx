@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
-import type { AuditLogRow } from "../types";
 import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
+import type { AuditLogRow } from "../types";
 
 const formatSummary = (row: AuditLogRow): string => {
   const m = row.metadata as Record<string, unknown>;

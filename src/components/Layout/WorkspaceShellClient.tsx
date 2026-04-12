@@ -12,6 +12,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { useCallback, useMemo } from "react";
@@ -30,20 +31,24 @@ interface WorkspaceShellClientProps {
 const OpsTrackerLogo = () => (
   <span style={{ display: "block", flexShrink: 0, lineHeight: 0 }}>
     {/* Inline display:none; CSS overrides to block for the active scheme */}
-    <img
+    <Image
       src="/logo-light.svg"
       alt="Ops Tracker"
+      width={103}
       height={28}
       className="ops-logo-light"
       style={{ display: "none" }}
+      unoptimized
     />
-    <img
+    <Image
       src="/logo-dark.svg"
       alt=""
       aria-hidden="true"
+      width={103}
       height={28}
       className="ops-logo-dark"
       style={{ display: "none" }}
+      unoptimized
     />
   </span>
 );

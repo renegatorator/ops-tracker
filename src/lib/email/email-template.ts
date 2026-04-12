@@ -8,7 +8,6 @@ export const escapeHtml = (s: string): string =>
     .replace(/"/g, "&quot;");
 
 interface EmailTemplateOptions {
-  siteUrl: string;
   bodyHtml: string;
   ctaLabel: string;
   ctaUrl: string;
@@ -16,17 +15,15 @@ interface EmailTemplateOptions {
 
 /**
  * Builds a branded, email-client-safe HTML layout.
- * Uses a light logo (black on white) so it renders well in both light and dark email clients.
+ * Uses a text wordmark in the header (SVG/images are not supported by most email clients).
  */
 export const buildEmailHtml = ({
-  siteUrl,
   bodyHtml,
   ctaLabel,
   ctaUrl,
 }: EmailTemplateOptions): string => {
   const safeCtaUrl = escapeHtml(ctaUrl);
   const safeCtaLabel = escapeHtml(ctaLabel);
-  const logoUrl = escapeHtml(`${siteUrl}/logo-light.svg`);
   const year = new Date().getFullYear();
 
   return `<!DOCTYPE html>
@@ -45,7 +42,7 @@ export const buildEmailHtml = ({
           <!-- Header -->
           <tr>
             <td align="center" style="background:#ffffff;padding:28px 32px 20px;border-bottom:1px solid #e9ecef;">
-              <img src="${logoUrl}" alt="Ops Tracker" height="36" style="display:block;height:36px;" />
+              <span style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:20px;line-height:1;display:inline-block;"><span style="font-weight:800;color:#1C2A3A;letter-spacing:-0.3px;">Ops</span><span style="font-weight:400;color:#475569;letter-spacing:-0.2px;">Tracker</span></span>
             </td>
           </tr>
 

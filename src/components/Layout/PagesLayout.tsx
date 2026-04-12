@@ -7,6 +7,7 @@ import ThemeToggle from "../Theme/ThemeToggle";
 import AdminNavLink from "./AdminNavLink";
 import LogoutSection from "./LogoutSection";
 import classes from "./PagesLayout.module.scss";
+import SignInNavLink from "./SignInNavLink";
 
 interface PagesLayoutProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ const PagesLayout = async ({ children }: PagesLayoutProps) => {
     <div className={classes.layout}>
       <Container className={classes.header} size="lg">
         <Flex justify="flex-end" align="flex-end" className={classes.controls}>
+          <SignInNavLink />
           <AdminNavLink />
           <LogoutSection />
           <LanguageSwitcher />

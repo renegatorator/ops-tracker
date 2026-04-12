@@ -2,8 +2,8 @@ import { Container, Paper, Stack, Title } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import AdminSubnav from "@/features/admin/components/AdminSubnav";
 import WorkspaceRouteLayout from "@/components/Layout/WorkspaceRouteLayout";
+import AdminSubnav from "@/features/admin/components/AdminSubnav";
 import { requireRole } from "@/lib/auth/session";
 import { ADMIN_ACCESS_ROLES, isSuperAdminRole } from "@/lib/auth/types";
 
