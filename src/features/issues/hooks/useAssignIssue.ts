@@ -5,8 +5,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { assignIssue } from "@/features/issues/actions";
+import { projectQueryKeys } from "@/features/projects/keys";
 
-import { isIssuesQueryError,IssuesQueryError } from "../issues-query-error";
+import { isIssuesQueryError, IssuesQueryError } from "../issues-query-error";
 import { issueQueryKeys } from "../keys";
 import type { IssueWithStatus } from "../types";
 
@@ -67,6 +68,7 @@ export const useAssignIssue = (locale: string) => {
       await queryClient.invalidateQueries({
         queryKey: issueQueryKeys.detail(locale, input.issueId),
       });
+      await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
     },
   });
 };

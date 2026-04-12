@@ -27,7 +27,7 @@ import { useTranslations } from "next-intl";
 import { useMemo, useRef } from "react";
 
 import { Link } from "@/i18n/navigation";
-import { issueDetailPath } from "@/lib/routes";
+import { issueDetailPath, projectIssueDetailPath } from "@/lib/routes";
 
 import type { IssuesListSortField } from "../list-url-params";
 import type { IssueWithStatus } from "../types";
@@ -114,7 +114,7 @@ function sortableHeader(
   );
 }
 
-export const IssuesVirtualizedTable = ({
+const IssuesVirtualizedTable = ({
   locale,
   data,
   sortBy,
@@ -138,15 +138,23 @@ export const IssuesVirtualizedTable = ({
         accessorKey: "title",
         header: () =>
           sortableHeader(t("title"), "title", sortBy, sortDir, onSortChange),
-        cell: ({ row }) => (
-          <Anchor
-            component={Link}
-            href={issueDetailPath(row.original.id)}
-            fw={600}
-          >
-            {row.original.title}
-          </Anchor>
-        ),
+        cell: ({ row }) => {
+          const pk = row.original.projects?.key;
+          const href =
+            pk != null
+              ? projectIssueDetailPath(pk, row.original.issue_number)
+              : issueDetailPath(row.original.id);
+          return (
+            <Group gap="xs" wrap="nowrap">
+              <Text size="xs" c="dimmed" ff="monospace">
+                {row.original.issue_key}
+              </Text>
+              <Anchor component={Link} href={href} fw={600}>
+                {row.original.title}
+              </Anchor>
+            </Group>
+          );
+        },
       },
       {
         id: "status",
@@ -385,3 +393,5 @@ export const IssuesVirtualizedTable = ({
     </Table.ScrollContainer>
   );
 };
+
+export default IssuesVirtualizedTable;

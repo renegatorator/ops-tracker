@@ -8,11 +8,24 @@ type RouteLoadingProps = {
   loaderProps?: LoaderProps;
 };
 
-export const RouteLoading = ({
+const RouteLoading = ({
   compact = false,
   loaderProps,
 }: RouteLoadingProps) => (
-  <Center py={compact ? "md" : "xl"} aria-busy="true" aria-live="polite">
+  <Center
+    aria-busy="true"
+    aria-live="polite"
+    style={
+      compact
+        ? { padding: "var(--mantine-spacing-md) 0" }
+        : {
+            minHeight:
+              "calc(100dvh - var(--app-shell-header-height, 56px) - 2 * var(--mantine-spacing-md))",
+          }
+    }
+  >
     <Loader type="oval" size="md" {...loaderProps} />
   </Center>
 );
+
+export default RouteLoading;

@@ -6,13 +6,13 @@ import { APP_ROLES, type AppRole, parseAppRole, type UserAuthContext } from "./t
 
 export type { AppRole, UserAuthContext } from "./types";
 
-const fetchProfileRole = async (
-  userId: string,
-): Promise<AppRole | null> => {
+type ProfileData = { role: AppRole; fullName: string | null };
+
+const fetchProfile = async (userId: string): Promise<ProfileData | null> => {
   const supabase = await createClient();
   const { data: profile, error } = await supabase
     .from("user_profiles")
-    .select("role")
+    .select("role, full_name")
     .eq("id", userId)
     .maybeSingle();
 
@@ -39,13 +39,19 @@ const fetchProfileRole = async (
   }
 
   const role = parseAppRole(profile.role);
-  if (role == null && process.env.NODE_ENV === "development") {
-    console.warn(
-      `[auth] user_profiles.role not recognized (expected ${APP_ROLES.join("|")}):`,
-      profile.role,
-    );
+  if (role == null) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        `[auth] user_profiles.role not recognized (expected ${APP_ROLES.join("|")}):`,
+        profile.role,
+      );
+    }
+    return null;
   }
-  return role;
+  return {
+    role,
+    fullName: (profile.full_name as string | null) ?? null,
+  };
 };
 
 export const getSession = async () => {
@@ -57,15 +63,15 @@ export const getSession = async () => {
 };
 
 /**
- * Signed-in user plus `user_profiles.role` from the database. No redirects.
+ * Signed-in user plus `user_profiles.role` and `full_name` from the database. No redirects.
  * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, ADMIN_ACCESS_ROLES)` (or `SUPER_ADMIN_ROLES`) for gated actions.
  */
 export const getUserAuthContext = async (): Promise<UserAuthContext | null> => {
   const { user } = await getSession();
   if (!user) return null;
-  const role = await fetchProfileRole(user.id);
-  if (role == null) return null;
-  return { user, role };
+  const profile = await fetchProfile(user.id);
+  if (profile == null) return null;
+  return { user, role: profile.role, fullName: profile.fullName };
 };
 
 export const requireUser = async (locale: string) => {
@@ -85,15 +91,15 @@ export const requireRole = async (
   allowed: readonly AppRole[],
 ) => {
   const user = await requireUser(locale);
-  const role = await fetchProfileRole(user.id);
+  const profile = await fetchProfile(user.id);
 
-  if (role == null) {
+  if (profile == null) {
     return redirect({ href: routes.login, locale });
   }
 
-  if (!allowed.includes(role)) {
+  if (!allowed.includes(profile.role)) {
     return redirect({ href: routes.dashboard, locale });
   }
 
-  return { user, role };
+  return { user, role: profile.role, fullName: profile.fullName };
 };

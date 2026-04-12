@@ -6,10 +6,12 @@ import {
 } from "@tanstack/react-query";
 import { getTranslations } from "next-intl/server";
 
-import PagesLayout from "@/components/Layout/PagesLayout";
-import { IssueDetailPanel } from "@/features/issues/components/IssueDetailPanel";
+import IssueDetailPanel from "@/features/issues/components/IssueDetailPanel";
 import { issueQueryKeys } from "@/features/issues/keys";
-import { canUserTransitionIssueStatus } from "@/features/issues/permissions";
+import {
+  canEditIssueDetails,
+  canUserTransitionIssueStatus,
+} from "@/features/issues/permissions";
 import { prefetchIssueDetailPageQueries } from "@/features/issues/prefetch-issue-queries";
 import type { IssueWithStatus } from "@/features/issues/types";
 import { redirect } from "@/i18n/navigation";
@@ -56,28 +58,29 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
   const canTransitionStatus =
     issue != null ? canUserTransitionIssueStatus(ctx, issue) : false;
   const canAssignIssue = isAdminAccessRole(ctx.role);
+  const canEditDetails =
+    issue != null ? canEditIssueDetails(ctx, issue) : false;
 
   const t = await getTranslations({ locale, namespace: "issues" });
 
   return (
-    <PagesLayout>
-      <Container size="md" py="xl">
-        <Paper withBorder p="lg" radius="md">
-          <Stack gap="md">
-            <Title order={2}>{t("detailTitle")}</Title>
-            <HydrationBoundary state={dehydrate(queryClient)}>
-              <IssueDetailPanel
-                locale={locale}
-                issueId={id}
-                canTransitionStatus={canTransitionStatus}
-                canAssignIssue={canAssignIssue}
-                canViewIssueAudit={canViewIssueAudit}
-              />
-            </HydrationBoundary>
-          </Stack>
-        </Paper>
-      </Container>
-    </PagesLayout>
+    <Container size="md" py="xl">
+      <Paper withBorder p="lg" radius="md">
+        <Stack gap="md">
+          <Title order={2}>{t("detailTitle")}</Title>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <IssueDetailPanel
+              locale={locale}
+              issueId={id}
+              canTransitionStatus={canTransitionStatus}
+              canAssignIssue={canAssignIssue}
+              canEditDetails={canEditDetails}
+              canViewIssueAudit={canViewIssueAudit}
+            />
+          </HydrationBoundary>
+        </Stack>
+      </Paper>
+    </Container>
   );
 };
 

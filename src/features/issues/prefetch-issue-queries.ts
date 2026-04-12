@@ -18,7 +18,7 @@ export const prefetchIssueDetailPageQueries = async (
   const detailPromise = queryClient.prefetchQuery({
     queryKey: issueQueryKeys.detail(locale, issueId),
     queryFn: async () => {
-      const result = await getIssue(locale, { issueId });
+      const result = await getIssue(locale, { issueId: issueId });
       if (!result.ok) {
         throw new IssuesQueryError(result.errorKey, result.fieldErrors);
       }

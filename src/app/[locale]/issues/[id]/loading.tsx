@@ -1,5 +1,11 @@
-import { RouteLoading } from "@/components/RouteLoading";
+import { Container } from "@mantine/core";
 
-const IssueDetailLoading = () => <RouteLoading />;
+import IssueDetailSkeleton from "@/components/skeletons/IssueDetailSkeleton";
+
+const IssueDetailLoading = () => (
+  <Container size="md" py="xl">
+    <IssueDetailSkeleton />
+  </Container>
+);
 
 export default IssueDetailLoading;

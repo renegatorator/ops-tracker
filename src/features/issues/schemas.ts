@@ -6,14 +6,34 @@ const trimmedTitle = z
   .min(1, { message: "validation.titleRequired" })
   .max(500, { message: "validation.titleTooLong" });
 
-export const createIssueSchema = z.object({
-  title: trimmedTitle,
-  description: z
-    .string()
-    .max(20_000, { message: "validation.descriptionTooLong" })
-    .optional(),
-  status_id: z.uuid({ message: "validation.statusInvalid" }),
+export const issueTypeSchema = z.enum(["bug", "ticket"], {
+  message: "validation.issueTypeInvalid",
 });
+
+export const createIssueSchema = z
+  .object({
+    project_id: z.uuid({ message: "validation.projectIdInvalid" }),
+    title: trimmedTitle,
+    description: z
+      .string()
+      .max(20_000, { message: "validation.descriptionTooLong" })
+      .optional(),
+    status_id: z.uuid({ message: "validation.statusInvalid" }),
+    issue_type: issueTypeSchema.default("ticket"),
+    assignee_id: z
+      .uuid({ message: "validation.assigneeInvalid" })
+      .optional()
+      .nullable(),
+  })
+  .superRefine((val, ctx) => {
+    if (val.issue_type === "ticket" && !val.description?.trim()) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["description"],
+        message: "validation.descriptionRequiredForTicket",
+      });
+    }
+  });
 
 export const updateIssueSchema = z
   .object({
@@ -50,9 +70,18 @@ export const softDeleteIssueSchema = z.object({
   issueId: z.uuid({ message: "validation.issueIdInvalid" }),
 });
 
-export const getIssueSchema = z.object({
-  issueId: z.uuid({ message: "validation.issueIdInvalid" }),
-});
+export const getIssueSchema = z
+  .object({
+    issueId: z.uuid({ message: "validation.issueIdInvalid" }).optional(),
+    projectKey: z.string().trim().min(1).max(10).optional(),
+    issueNumber: z.coerce.number().int().positive().optional(),
+  })
+  .refine(
+    (x) =>
+      Boolean(x.issueId) ||
+      (Boolean(x.projectKey?.trim()) && x.issueNumber != null),
+    { message: "validation.issueLookupInvalid", path: ["root"] },
+  );
 
 const statusSlug = z
   .string()
@@ -98,6 +127,7 @@ export const deleteIssueStatusSchema = z.object({
 });
 
 const filterFields = {
+  projectId: z.uuid({ message: "validation.projectIdInvalid" }).optional(),
   statusId: z.uuid({ message: "validation.statusInvalid" }).optional(),
   assigneeId: z
     .uuid({ message: "validation.assigneeInvalid" })
@@ -131,6 +161,7 @@ export const listIssuesSchema = z.discriminatedUnion("mode", [
   }),
 ]);
 
+export type IssueType = z.infer<typeof issueTypeSchema>;
 export type CreateIssueInput = z.infer<typeof createIssueSchema>;
 export type UpdateIssueInput = z.infer<typeof updateIssueSchema>;
 export type TransitionIssueStatusInput = z.infer<
@@ -139,7 +170,16 @@ export type TransitionIssueStatusInput = z.infer<
 export type AssignIssueInput = z.infer<typeof assignIssueSchema>;
 export type SoftDeleteIssueInput = z.infer<typeof softDeleteIssueSchema>;
 export type ListIssuesSchemaInput = z.infer<typeof listIssuesSchema>;
-export type GetIssueInput = z.infer<typeof getIssueSchema>;
+
+export type GetIssueInput =
+  | { issueId: string }
+  | { projectKey: string; issueNumber: number };
+
+export const listAssigneeFiltersSchema = z.object({
+  projectId: z.uuid({ message: "validation.projectIdInvalid" }).optional(),
+});
+
+export type ListAssigneeFiltersInput = z.infer<typeof listAssigneeFiltersSchema>;
 export type CreateIssueStatusInput = z.infer<typeof createIssueStatusSchema>;
 export type UpdateIssueStatusInput = z.infer<typeof updateIssueStatusSchema>;
 export type DeleteIssueStatusInput = z.infer<typeof deleteIssueStatusSchema>;

@@ -45,23 +45,47 @@ export const resetDemoData = async (
 
   const supabase = await createClient();
 
-  const { error: deleteError, count } = await supabase
+  const { error: issuesErr, count: issuesCount } = await supabase
     .from("issues")
     .delete({ count: "exact" })
     .neq("id", NIL_UUID);
 
-  if (deleteError) {
+  if (issuesErr) {
     return { ok: false, errorKey: "settings.errors.resetFailed" };
   }
 
-  const issuesDeleted = count ?? 0;
+  const { error: membersErr, count: membersCount } = await supabase
+    .from("project_members")
+    .delete({ count: "exact" })
+    .gte("created_at", "1970-01-01T00:00:00Z");
+
+  if (membersErr) {
+    return { ok: false, errorKey: "settings.errors.resetFailed" };
+  }
+
+  const { error: projectsErr, count: projectsCount } = await supabase
+    .from("projects")
+    .delete({ count: "exact" })
+    .gte("created_at", "1970-01-01T00:00:00Z");
+
+  if (projectsErr) {
+    return { ok: false, errorKey: "settings.errors.resetFailed" };
+  }
+
+  const issuesDeleted = issuesCount ?? 0;
+  const projectMembersDeleted = membersCount ?? 0;
+  const projectsDeleted = projectsCount ?? 0;
 
   const auditOk = await logAudit({
     actorId: ctx.user.id,
     action: "demo.reset",
     entityType: "system",
     entityId: null,
-    metadata: { issues_deleted: issuesDeleted },
+    metadata: {
+      issues_deleted: issuesDeleted,
+      project_members_deleted: projectMembersDeleted,
+      projects_deleted: projectsDeleted,
+    },
   });
 
   if (!auditOk) {
@@ -70,6 +94,7 @@ export const resetDemoData = async (
 
   revalidatePath(localizedPath(locale, routes.issues), "layout");
   revalidatePath(localizedPath(locale, routes.dashboard), "layout");
+  revalidatePath(localizedPath(locale, routes.projects), "layout");
 
   return { ok: true, data: { issuesDeleted } };
 };

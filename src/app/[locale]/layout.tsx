@@ -17,8 +17,8 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 
-import { AppNotifications } from "@/components/Providers/AppNotifications";
-import { QueryProvider } from "@/components/Providers/QueryProvider";
+import AppNotifications from "@/components/Providers/AppNotifications";
+import QueryProvider from "@/components/Providers/QueryProvider";
 import { routing } from "@/i18n/routing";
 import { env } from "@/lib/env";
 
@@ -42,20 +42,34 @@ export const generateMetadata = async ({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "seo.root" });
 
+  const title = t("title");
+  const description = t("description");
+
   return {
     metadataBase: new URL(env("NEXT_PUBLIC_SITE_URL")),
     title: {
-      default: t("title"),
-      template: `%s | ${t("title")}`,
+      default: title,
+      template: `%s | ${title}`,
     },
-    description: t("description"),
+    description,
+    icons: {
+      icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    },
+    openGraph: {
+      type: "website",
+      siteName: title,
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
   };
 };
 
-export default async function LocaleLayout({
-  children,
-  params,
-}: LocaleLayoutProps) {
+const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) {
@@ -83,4 +97,6 @@ export default async function LocaleLayout({
       </body>
     </html>
   );
-}
+};
+
+export default LocaleLayout;

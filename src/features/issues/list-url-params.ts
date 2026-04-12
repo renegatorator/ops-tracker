@@ -45,6 +45,10 @@ export const parseIssuesListParams = (
   const assigneeId =
     assigneeRaw && isUuid(assigneeRaw) ? assigneeRaw : undefined;
 
+  const projectRaw = searchParams.get("project")?.trim();
+  const projectId =
+    projectRaw && isUuid(projectRaw) ? projectRaw : undefined;
+
   const search = searchParams.get("q")?.trim() || undefined;
 
   const { sortBy, sortDir } = parseSort(searchParams.get("sort"));
@@ -53,6 +57,7 @@ export const parseIssuesListParams = (
     mode: "offset",
     offset,
     limit,
+    projectId,
     statusId,
     assigneeId,
     search,
@@ -71,6 +76,7 @@ export const issuesListParamsToSearchParams = (
   const page = Math.floor(params.offset / params.limit);
   if (page > 0) sp.set("page", String(page));
   if (params.limit !== 20) sp.set("perPage", String(params.limit));
+  if (params.projectId) sp.set("project", params.projectId);
   if (params.statusId) sp.set("status", params.statusId);
   if (params.assigneeId) sp.set("assignee", params.assigneeId);
   if (params.search?.trim()) sp.set("q", params.search.trim());
@@ -85,6 +91,7 @@ export const issuesListParamsToSearchParams = (
 export const patchIssuesListParams = (
   base: IssuesListOffsetParams,
   patch: Partial<{
+    projectId: string | undefined;
     statusId: string | undefined;
     assigneeId: string | undefined;
     search: string | undefined;

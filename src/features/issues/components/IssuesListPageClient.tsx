@@ -31,7 +31,7 @@ import {
   patchIssuesListParams,
 } from "../list-url-params";
 import type { ListIssuesSchemaInput } from "../schemas";
-import { IssuesVirtualizedTable } from "./IssuesVirtualizedTable";
+import IssuesVirtualizedTable from "./IssuesVirtualizedTable";
 
 const COLUMN_STORAGE_KEY = "ops-issues-table-columns-v1";
 
@@ -47,6 +47,8 @@ interface IssuesListPageClientProps {
   locale: string;
   currentUserId: string;
   canListAllAssignees: boolean;
+  /** When set, list is always scoped to this project (URL filters still apply). */
+  forcedProjectId?: string;
 }
 
 function loadColumnVisibility(): VisibilityState {
@@ -60,10 +62,11 @@ function loadColumnVisibility(): VisibilityState {
   }
 }
 
-export const IssuesListPageClient = ({
+const IssuesListPageClient = ({
   locale,
   currentUserId,
   canListAllAssignees,
+  forcedProjectId,
 }: IssuesListPageClientProps) => {
   const t = useTranslations("issues");
   const tTable = useTranslations("issues.table");
@@ -72,18 +75,25 @@ export const IssuesListPageClient = ({
   const pathname = usePathname();
   const searchParamsKey = searchParams.toString();
 
-  const listParams = useMemo(
-    () => parseIssuesListParams(new URLSearchParams(searchParamsKey)),
-    [searchParamsKey],
-  );
+  const listParams = useMemo(() => {
+    const base = parseIssuesListParams(new URLSearchParams(searchParamsKey));
+    if (forcedProjectId) {
+      return { ...base, projectId: forcedProjectId };
+    }
+    return base;
+  }, [searchParamsKey, forcedProjectId]);
 
   const replaceListUrl = useCallback(
     (next: ListIssuesSchemaInput) => {
-      const qs = issuesListParamsToSearchParams(next);
+      const merged =
+        forcedProjectId && next.mode === "offset"
+          ? { ...next, projectId: forcedProjectId }
+          : next;
+      const qs = issuesListParamsToSearchParams(merged);
       const q = qs.toString();
       router.replace(q ? `${pathname}?${q}` : pathname);
     },
-    [pathname, router],
+    [forcedProjectId, pathname, router],
   );
 
   const { data, isPending, isError, error, isFetching } = useIssuesList(
@@ -361,3 +371,5 @@ export const IssuesListPageClient = ({
     </Stack>
   );
 };
+
+export default IssuesListPageClient;

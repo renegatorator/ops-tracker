@@ -8,13 +8,13 @@ const ENV = {
 
 export type EnvName = keyof typeof ENV;
 
-export function env(name: EnvName): string {
+export const env = (name: EnvName): string => {
   const value = ENV[name];
   if (value === undefined || value === "") {
     throw new Error(`Missing or empty environment variable: ${name}`);
   }
   return value;
-}
+};
 
 const parseOptionalBool = (
   raw: string | undefined,

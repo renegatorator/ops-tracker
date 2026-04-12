@@ -1,19 +1,26 @@
 "use client";
 
-import { Stack, Table, Text, Title } from "@mantine/core";
+import { Badge, Stack, Table, Text, Title } from "@mantine/core";
 import { useTranslations } from "next-intl";
 
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
 import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
+import type { AuditLogRow } from "../types";
 
-const metadataPreview = (meta: Record<string, unknown>): string => {
-  try {
-    const s = JSON.stringify(meta);
-    return s.length > 160 ? `${s.slice(0, 160)}…` : s;
-  } catch {
-    return "—";
-  }
+
+const formatIssueKey = (row: AuditLogRow): string => {
+  const m = row.metadata as Record<string, unknown>;
+  if (typeof m.issue_key === "string" && m.issue_key) return m.issue_key;
+  return "—";
+};
+
+const actionColor = (action: string): string => {
+  if (action === "issue.create") return "green";
+  if (action === "issue.archive") return "red";
+  if (action.includes("assign")) return "blue";
+  if (action.includes("status")) return "violet";
+  return "gray";
 };
 
 interface IssueAuditActivitySectionProps {
@@ -21,13 +28,41 @@ interface IssueAuditActivitySectionProps {
   issueId: string;
 }
 
-export const IssueAuditActivitySection = ({
+const IssueAuditActivitySection = ({
   locale,
   issueId,
 }: IssueAuditActivitySectionProps) => {
   const t = useTranslations("issues.detail.activity");
   const tIssues = useTranslations("issues");
   const tAdmin = useTranslations("admin");
+
+  const formatSummary = (row: AuditLogRow): string => {
+    const m = row.metadata as Record<string, unknown>;
+    switch (row.action) {
+      case "issue.create":
+        return typeof m.title === "string" ? m.title : "—";
+      case "issue.update": {
+        const fields = Array.isArray(m.fields) ? (m.fields as string[]) : [];
+        return fields.length > 0
+          ? t("summary.update", { fields: fields.join(", ") })
+          : t("summary.updateNoFields");
+      }
+      case "issue.assign": {
+        if (m.assignee_id == null) return t("summary.unassign");
+        return typeof m.assignee_id === "string"
+          ? t("summary.assign", { id: m.assignee_id.slice(0, 8) })
+          : t("summary.assigned");
+      }
+      case "issue.status_transition":
+        return typeof m.status_id === "string"
+          ? t("summary.statusChange", { id: m.status_id.slice(0, 8) })
+          : t("summary.statusChanged");
+      case "issue.archive":
+        return t("summary.archive");
+      default:
+        return row.action;
+    }
+  };
   const { data = [], isPending, isError, error } = useIssueAuditActivity(
     locale,
     issueId,
@@ -63,7 +98,8 @@ export const IssueAuditActivitySection = ({
                 <Table.Th>{t("when")}</Table.Th>
                 <Table.Th>{t("actor")}</Table.Th>
                 <Table.Th>{t("action")}</Table.Th>
-                <Table.Th>{t("details")}</Table.Th>
+                <Table.Th>{t("issueKey")}</Table.Th>
+                <Table.Th>{t("summaryColumn")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -71,7 +107,7 @@ export const IssueAuditActivitySection = ({
                 <Table.Tr key={row.id}>
                   <Table.Td>
                     <Text size="xs" ff="monospace">
-                      {new Date(row.created_at).toLocaleString()}
+                      {new Date(row.created_at).toLocaleString(locale)}
                     </Text>
                   </Table.Td>
                   <Table.Td>
@@ -82,14 +118,17 @@ export const IssueAuditActivitySection = ({
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Text size="xs" ff="monospace">
+                    <Badge size="xs" color={actionColor(row.action)} variant="light">
                       {row.action}
+                    </Badge>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="xs" ff="monospace">
+                      {formatIssueKey(row)}
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Text size="xs" ff="monospace" truncate maw={240}>
-                      {metadataPreview(row.metadata as Record<string, unknown>)}
-                    </Text>
+                    <Text size="xs">{formatSummary(row)}</Text>
                   </Table.Td>
                 </Table.Tr>
               ))}
@@ -100,3 +139,5 @@ export const IssueAuditActivitySection = ({
     </Stack>
   );
 };
+
+export default IssueAuditActivitySection;

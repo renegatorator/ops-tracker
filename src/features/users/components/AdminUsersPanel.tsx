@@ -23,7 +23,7 @@ const canEditUserRow = (
   return targetRole === APP_ROLE.user;
 };
 
-export const AdminUsersPanel = ({
+const AdminUsersPanel = ({
   locale,
   isSuperAdmin,
 }: AdminUsersPanelProps) => {
@@ -100,3 +100,5 @@ export const AdminUsersPanel = ({
     </Table.ScrollContainer>
   );
 };
+
+export default AdminUsersPanel;

@@ -1,5 +1,11 @@
-import { RouteLoading } from "@/components/RouteLoading";
+import { Container } from "@mantine/core";
 
-const IssuesLoading = () => <RouteLoading />;
+import IssuesTableSkeleton from "@/components/skeletons/IssuesTableSkeleton";
+
+const IssuesLoading = () => (
+  <Container size="xl" px={{ base: "xs", sm: "md" }} py="xl">
+    <IssuesTableSkeleton />
+  </Container>
+);
 
 export default IssuesLoading;

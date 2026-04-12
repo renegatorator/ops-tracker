@@ -2,17 +2,12 @@ import { Stack, Title } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { RouteLoading } from "@/components/RouteLoading";
+import RouteLoading from "@/components/RouteLoading";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const AdminIssueStatusesPanel = dynamic(
-  () =>
-    import("@/features/issues/components/AdminIssueStatusesPanel").then(
-      (m) => ({
-        default: m.AdminIssueStatusesPanel,
-      }),
-    ),
+  () => import("@/features/issues/components/AdminIssueStatusesPanel"),
   { loading: () => <RouteLoading compact /> },
 );
 

@@ -1,8 +1,7 @@
 import { Container, Paper, Stack, Title } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 
-import PagesLayout from "@/components/Layout/PagesLayout";
-import { IssuesListPageClient } from "@/features/issues/components/IssuesListPageClient";
+import IssuesListPageClient from "@/features/issues/components/IssuesListPageClient";
 import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { isAdminAccessRole } from "@/lib/auth/types";
@@ -28,20 +27,18 @@ const IssuesPage = async ({ params }: IssuesPageProps) => {
   const canListAllAssignees = isAdminAccessRole(ctx.role);
 
   return (
-    <PagesLayout>
-      <Container size="xl" px={{ base: "xs", sm: "md" }} py="xl">
-        <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
-          <Stack gap="md">
-            <Title order={2}>{t("pageTitle")}</Title>
-            <IssuesListPageClient
-              locale={locale}
-              currentUserId={ctx.user.id}
-              canListAllAssignees={canListAllAssignees}
-            />
-          </Stack>
-        </Paper>
-      </Container>
-    </PagesLayout>
+    <Container size="xl" px={{ base: "xs", sm: "md" }} py="xl">
+      <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
+        <Stack gap="md">
+          <Title order={2}>{t("pageTitle")}</Title>
+          <IssuesListPageClient
+            locale={locale}
+            currentUserId={ctx.user.id}
+            canListAllAssignees={canListAllAssignees}
+          />
+        </Stack>
+      </Paper>
+    </Container>
   );
 };
 

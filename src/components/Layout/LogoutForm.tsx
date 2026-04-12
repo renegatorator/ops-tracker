@@ -7,12 +7,12 @@ interface LogoutFormProps {
   formAction: (formData: FormData) => void | Promise<void>;
 }
 
-export function LogoutForm({ label, formAction }: LogoutFormProps) {
-  return (
-    <form action={formAction}>
-      <Button type="submit" variant="subtle" size="sm">
-        {label}
-      </Button>
-    </form>
-  );
-}
+const LogoutForm = ({ label, formAction }: LogoutFormProps) => (
+  <form action={formAction}>
+    <Button type="submit" variant="subtle" size="sm">
+      {label}
+    </Button>
+  </form>
+);
+
+export default LogoutForm;

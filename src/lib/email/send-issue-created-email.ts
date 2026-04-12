@@ -6,12 +6,7 @@ import { localizedPath } from "@/i18n/localized-path";
 import { env, getResendApiKey, getResendFrom } from "@/lib/env";
 import { issueDetailPath } from "@/lib/routes";
 
-const escapeHtml = (s: string): string =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+import { buildEmailHtml, escapeHtml } from "./email-template";
 
 /**
  * Confirms to the reporter that their issue was created (link to detail).
@@ -31,13 +26,22 @@ export const sendIssueCreatedReporterEmailIfConfigured = async (input: {
     const siteUrl = env("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
     const issueUrl = `${siteUrl}${localizedPath(input.locale, issueDetailPath(input.issueId))}`;
     const title = escapeHtml(input.title);
-    const url = escapeHtml(issueUrl);
 
-    const html = `
-    <p>Your issue was created:</p>
-    <p><strong>${title}</strong></p>
-    <p><a href="${url}">View issue</a></p>
-  `.trim();
+    const bodyHtml = `
+      <p style="margin:0 0 16px;">Your issue has been created successfully.</p>
+      <p style="margin:0 0 24px;padding:16px;background:#f8f9fa;border-left:4px solid #6741d9;border-radius:4px;font-weight:600;">
+        ${title}
+      </p>
+      <p style="margin:0 0 24px;color:#495057;">
+        You can track progress, update the description, and manage assignees from the issue page.
+      </p>
+    `;
+
+    const html = buildEmailHtml({
+      bodyHtml,
+      ctaLabel: "View Issue",
+      ctaUrl: issueUrl,
+    });
 
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({

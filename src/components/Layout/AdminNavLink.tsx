@@ -1,7 +1,6 @@
-import { Anchor } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 
-import { Link } from "@/i18n/navigation";
+import IntlLinkAnchor from "@/components/Navigation/IntlLinkAnchor";
 import { hasRole } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { ADMIN_ACCESS_ROLES } from "@/lib/auth/types";
@@ -14,9 +13,9 @@ const AdminNavLink = async () => {
   }
   const t = await getTranslations("admin.nav");
   return (
-    <Anchor component={Link} href={routes.admin} size="sm" fw={500}>
+    <IntlLinkAnchor href={routes.admin} size="sm" fw={500}>
       {t("link")}
-    </Anchor>
+    </IntlLinkAnchor>
   );
 };
 

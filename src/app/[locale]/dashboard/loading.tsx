@@ -1,5 +1,11 @@
-import { RouteLoading } from "@/components/RouteLoading";
+import { Container } from "@mantine/core";
 
-const DashboardLoading = () => <RouteLoading />;
+import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
+
+const DashboardLoading = () => (
+  <Container size="sm" py="xl">
+    <DashboardSkeleton />
+  </Container>
+);
 
 export default DashboardLoading;

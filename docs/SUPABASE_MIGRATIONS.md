@@ -39,6 +39,7 @@ Then insert a row for your user after they sign up (see **section 6**), or add a
 | 2 | `20260405120000_user_profiles_admin_rls.sql` | RLS policies on `user_profiles` for admin user management |
 | 3 | `20260411120000_phase12_list_sort_audit_indexes.sql` | Extra indexes for list/filter/sort and audit |
 | 4 | `20260412140000_fix_user_profiles_rls_recursion.sql` | Fixes `42P17` RLS recursion on `user_profiles` (replaces Phase 8 `EXISTS` subqueries with `SECURITY DEFINER` helpers) |
+| 5 | `20260412200000_projects_members_issues_scope.sql` | `projects`, `project_members`, `issues.project_id` / `issue_number` / `issue_key`, triggers, RLS refresh for project-scoped issues |
 
 ---
 
@@ -180,3 +181,27 @@ Use the same command pattern for other checks (for example `relrowsecurity` on `
 ## 11. Replacing the old doc name
 
 Earlier plan text referenced `SUPABASE_PHASE1.md`. Use **this file** as the single place for apply order and manual steps for Phases **1–12** migrations in this repo.
+
+---
+
+## 12. `20260413100000_issue_type_and_default_statuses.sql`
+
+**What it does:**
+
+1. Creates a new Postgres enum `public.issue_type` with values `'bug'` and `'ticket'` (idempotent — skips if already exists).
+2. Adds column `issue_type public.issue_type NOT NULL DEFAULT 'ticket'` to `public.issues`. Existing rows get `'ticket'`.
+3. Upserts the canonical workflow statuses into `issue_statuses` by slug (safe to run multiple times):
+
+| Name | Slug | Sort order | Terminal |
+|---|---|---|---|
+| Open | `open` | 0 | No |
+| In Progress | `in_progress` | 10 | No |
+| Ready for Deployment | `ready_for_deployment` | 20 | No |
+| Testing | `testing` | 30 | No |
+| Done | `done` | 40 | Yes |
+
+**Apply in the Supabase SQL Editor or via CLI:**
+
+```bash
+npx supabase db push --linked
+```
