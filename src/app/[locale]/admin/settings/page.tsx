@@ -2,7 +2,7 @@ import { Stack, Title } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { RouteLoading } from "@/components/RouteLoading";
+import RouteLoading from "@/components/RouteLoading";
 import { requireRole } from "@/lib/auth/session";
 import { SUPER_ADMIN_ROLES } from "@/lib/auth/types";
 import {
@@ -15,12 +15,7 @@ import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const SuperAdminSettingsPanel = dynamic(
-  () =>
-    import("@/features/settings/components/SuperAdminSettingsPanel").then(
-      (m) => ({
-        default: m.SuperAdminSettingsPanel,
-      }),
-    ),
+  () => import("@/features/settings/components/SuperAdminSettingsPanel"),
   { loading: () => <RouteLoading compact /> },
 );
 

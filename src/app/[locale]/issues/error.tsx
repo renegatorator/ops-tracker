@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteSegmentError } from "@/components/RouteSegmentError";
+import RouteSegmentError from "@/components/RouteSegmentError";
 
 type IssuesErrorProps = {
   error: Error & { digest?: string };

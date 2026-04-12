@@ -11,7 +11,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
-import { IssueAuditActivitySection } from "@/features/audit/components/IssueAuditActivitySection";
+import IssueAuditActivitySection from "@/features/audit/components/IssueAuditActivitySection";
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
 
@@ -32,7 +32,7 @@ interface IssueDetailPanelProps {
   canViewIssueAudit: boolean;
 }
 
-export const IssueDetailPanel = ({
+const IssueDetailPanel = ({
   locale,
   issueId,
   canTransitionStatus,
@@ -184,3 +184,5 @@ export const IssueDetailPanel = ({
     </Stack>
   );
 };
+
+export default IssueDetailPanel;

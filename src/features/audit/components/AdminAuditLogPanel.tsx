@@ -33,7 +33,7 @@ interface AdminAuditLogPanelProps {
   locale: string;
 }
 
-export const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
+const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
   const t = useTranslations("admin.audit");
   const tAdmin = useTranslations("admin");
   const tIssues = useTranslations("issues");
@@ -213,3 +213,5 @@ export const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
     </Stack>
   );
 };
+
+export default AdminAuditLogPanel;

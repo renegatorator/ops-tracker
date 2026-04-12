@@ -10,7 +10,7 @@ import { IconMoonStars, IconSun } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-export default function ThemeToggle() {
+const ThemeToggle = () => {
   const t = useTranslations("ui.themeToggle");
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light");
@@ -45,4 +45,6 @@ export default function ThemeToggle() {
       </ActionIcon>
     </Tooltip>
   );
-}
+};
+
+export default ThemeToggle;

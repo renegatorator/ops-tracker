@@ -29,7 +29,7 @@ const routeToSeoKey: Record<KnownRoute, string> = {
   [routes.adminAudit]: "adminAudit",
 };
 
-function stripLocaleFromPath(pathname: string): string {
+const stripLocaleFromPath = (pathname: string): string => {
   const segments = pathname.split("/").filter(Boolean);
   const first = segments[0];
 
@@ -39,16 +39,15 @@ function stripLocaleFromPath(pathname: string): string {
   }
 
   return pathname || "/";
-}
+};
 
-function getLocalizedPath(locale: string, pathname: string): string {
-  return localizedPath(locale, pathname);
-}
+const getLocalizedPath = (locale: string, pathname: string): string =>
+  localizedPath(locale, pathname);
 
-export async function getLocalizedSeoMetadata(
+export const getLocalizedSeoMetadata = async (
   locale: string,
   pathname: string,
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const normalizedPath = stripLocaleFromPath(pathname);
   const seoKey = routeToSeoKey[normalizedPath as KnownRoute] ?? "default";
   const t = await getTranslations({
@@ -56,13 +55,13 @@ export async function getLocalizedSeoMetadata(
     namespace: `seo.routes.${seoKey}`,
   });
 
-  const localizedPath = getLocalizedPath(locale, normalizedPath);
+  const canonicalPath = getLocalizedPath(locale, normalizedPath);
 
   return {
     title: t("title"),
     description: t("description"),
     alternates: {
-      canonical: localizedPath,
+      canonical: canonicalPath,
       languages: Object.fromEntries(
         routing.locales.map((item) => [
           item,
@@ -71,4 +70,4 @@ export async function getLocalizedSeoMetadata(
       ),
     },
   };
-}
+};

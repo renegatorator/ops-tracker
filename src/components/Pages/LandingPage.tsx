@@ -8,7 +8,7 @@ import { routes } from "@/lib/routes";
 
 import classes from "./LandingPage.module.scss";
 
-export default async function LandingPage() {
+const LandingPage = async () => {
   const t = await getTranslations("landing");
 
   return (
@@ -40,4 +40,6 @@ export default async function LandingPage() {
       </Stack>
     </Container>
   );
-}
+};
+
+export default LandingPage;

@@ -1,4 +1,4 @@
-import { RouteLoading } from "@/components/RouteLoading";
+import RouteLoading from "@/components/RouteLoading";
 
 const DashboardLoading = () => <RouteLoading />;
 

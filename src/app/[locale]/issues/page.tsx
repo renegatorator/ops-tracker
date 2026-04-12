@@ -2,7 +2,7 @@ import { Container, Paper, Stack, Title } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
-import { IssuesListPageClient } from "@/features/issues/components/IssuesListPageClient";
+import IssuesListPageClient from "@/features/issues/components/IssuesListPageClient";
 import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { isAdminAccessRole } from "@/lib/auth/types";

@@ -12,10 +12,10 @@ export async function generateMetadata({ params }: HomeProps) {
   return getLocalizedSeoMetadata(locale, routes.home);
 }
 
-export default async function Home() {
-  return (
-    <PagesLayout>
-      <LandingPage />
-    </PagesLayout>
-  );
-}
+const Home = async () => (
+  <PagesLayout>
+    <LandingPage />
+  </PagesLayout>
+);
+
+export default Home;

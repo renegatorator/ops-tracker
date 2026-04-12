@@ -114,7 +114,7 @@ function sortableHeader(
   );
 }
 
-export const IssuesVirtualizedTable = ({
+const IssuesVirtualizedTable = ({
   locale,
   data,
   sortBy,
@@ -385,3 +385,5 @@ export const IssuesVirtualizedTable = ({
     </Table.ScrollContainer>
   );
 };
+
+export default IssuesVirtualizedTable;

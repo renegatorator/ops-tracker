@@ -7,7 +7,7 @@ import {
 import { getTranslations } from "next-intl/server";
 
 import PagesLayout from "@/components/Layout/PagesLayout";
-import { IssueDetailPanel } from "@/features/issues/components/IssueDetailPanel";
+import IssueDetailPanel from "@/features/issues/components/IssueDetailPanel";
 import { issueQueryKeys } from "@/features/issues/keys";
 import { canUserTransitionIssueStatus } from "@/features/issues/permissions";
 import { prefetchIssueDetailPageQueries } from "@/features/issues/prefetch-issue-queries";

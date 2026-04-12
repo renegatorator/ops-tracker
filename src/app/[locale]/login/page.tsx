@@ -6,7 +6,7 @@ interface LoginProps {
   searchParams: Promise<{ error?: LoginError }>;
 }
 
-export default async function Login({ params, searchParams }: LoginProps) {
+const Login = async ({ params, searchParams }: LoginProps) => {
   const { locale } = await params;
   const { error } = await searchParams;
 
@@ -15,4 +15,6 @@ export default async function Login({ params, searchParams }: LoginProps) {
       <LoginPage locale={locale} error={error} />
     </PagesLayout>
   );
-}
+};
+
+export default Login;

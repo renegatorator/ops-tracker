@@ -17,8 +17,8 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 
-import { AppNotifications } from "@/components/Providers/AppNotifications";
-import { QueryProvider } from "@/components/Providers/QueryProvider";
+import AppNotifications from "@/components/Providers/AppNotifications";
+import QueryProvider from "@/components/Providers/QueryProvider";
 import { routing } from "@/i18n/routing";
 import { env } from "@/lib/env";
 
@@ -52,10 +52,7 @@ export const generateMetadata = async ({
   };
 };
 
-export default async function LocaleLayout({
-  children,
-  params,
-}: LocaleLayoutProps) {
+const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) {
@@ -83,4 +80,6 @@ export default async function LocaleLayout({
       </body>
     </html>
   );
-}
+};
+
+export default LocaleLayout;

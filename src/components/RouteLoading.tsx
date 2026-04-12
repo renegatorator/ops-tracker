@@ -8,7 +8,7 @@ type RouteLoadingProps = {
   loaderProps?: LoaderProps;
 };
 
-export const RouteLoading = ({
+const RouteLoading = ({
   compact = false,
   loaderProps,
 }: RouteLoadingProps) => (
@@ -16,3 +16,5 @@ export const RouteLoading = ({
     <Loader type="oval" size="md" {...loaderProps} />
   </Center>
 );
+
+export default RouteLoading;

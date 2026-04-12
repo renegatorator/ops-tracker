@@ -2,15 +2,12 @@ import { Stack, Title } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { getTranslations } from "next-intl/server";
 
-import { RouteLoading } from "@/components/RouteLoading";
+import RouteLoading from "@/components/RouteLoading";
 import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 const AdminAuditLogPanel = dynamic(
-  () =>
-    import("@/features/audit/components/AdminAuditLogPanel").then((m) => ({
-      default: m.AdminAuditLogPanel,
-    })),
+  () => import("@/features/audit/components/AdminAuditLogPanel"),
   { loading: () => <RouteLoading compact /> },
 );
 

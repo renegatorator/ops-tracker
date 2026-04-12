@@ -31,7 +31,7 @@ const translateErrorKey = (
   tIssues: (k: string) => string,
 ) => (key.startsWith("settings.") ? tAdmin(key) : tIssues(key));
 
-export const SuperAdminSettingsPanel = ({
+const SuperAdminSettingsPanel = ({
   locale,
   demoResetEnabled,
   demoResetEnvRaw,
@@ -149,3 +149,5 @@ export const SuperAdminSettingsPanel = ({
     </Stack>
   );
 };
+
+export default SuperAdminSettingsPanel;
