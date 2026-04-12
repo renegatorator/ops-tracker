@@ -8,10 +8,10 @@ import type {
 } from "@/features/issues/types";
 import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
-import { routes } from "@/lib/routes";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { isDemoResetEnabled } from "@/lib/env";
+import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 const NIL_UUID = "00000000-0000-0000-0000-000000000000";

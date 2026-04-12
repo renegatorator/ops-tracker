@@ -10,8 +10,8 @@ import type {
 } from "@/features/issues/types";
 import { localizedPath } from "@/i18n/localized-path";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
-import { routes } from "@/lib/routes";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { routes } from "@/lib/routes";
 
 import { updateUserRoleSchema } from "./schemas";
 import * as userService from "./service";

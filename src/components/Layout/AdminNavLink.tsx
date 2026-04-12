@@ -3,8 +3,8 @@ import { getTranslations } from "next-intl/server";
 
 import { Link } from "@/i18n/navigation";
 import { hasRole } from "@/lib/auth/rbac";
-import { routes } from "@/lib/routes";
 import { getUserAuthContext } from "@/lib/auth/session";
+import { routes } from "@/lib/routes";
 
 const AdminNavLink = async () => {
   const ctx = await getUserAuthContext();

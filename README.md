@@ -113,7 +113,7 @@ Auth-linked profiles use the **`user_profiles`** table and Postgres enum **`app_
 | `RESEND_FROM` | **server only** | Sender address (use a verified domain in production; Resend’s `onboarding@resend.dev` works for tests) |
 | `OPS_DEMO_RESET_ENABLED` | **server only** | Super-admin demo reset gate; see `src/lib/env.ts` for default behaviour |
 | `E2E_EMAIL`, `E2E_PASSWORD` | local / CI | Optional Playwright credentials; see **End-to-end tests** below |
-| `PLAYWRIGHT_BASE_URL` | local / CI | Optional; Playwright defaults to `http://127.0.0.1:3000` |
+| `PLAYWRIGHT_BASE_URL` | local / CI | Optional; Playwright defaults to `http://127.0.0.1:3000`. When Playwright starts the dev server, the port in this URL is passed to `next dev` so the server matches `use.baseURL`. If you reuse an existing dev process, run it on the same port (for example `npm run dev -- -p 3001` when this URL uses `:3001`). |
 
 See `.env.example` for a starter list.
 

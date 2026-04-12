@@ -5,12 +5,12 @@ import type { ZodError } from "zod";
 
 import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
-import { issueDetailPath, routes } from "@/lib/routes";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import type { UserAuthContext } from "@/lib/auth/types";
 import { sendIssueAssignedEmailIfConfigured } from "@/lib/email/send-issue-assigned-email";
 import { sendIssueCreatedReporterEmailIfConfigured } from "@/lib/email/send-issue-created-email";
+import { issueDetailPath, routes } from "@/lib/routes";
 
 import { ISSUES_CACHE_TAG } from "./cache";
 import { zodToFieldErrors } from "./map-errors";

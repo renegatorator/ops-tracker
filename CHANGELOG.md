@@ -16,7 +16,7 @@ _On release, replace this heading with a semver and date (for example `## [2.1.0
 
 - `docs/ARCHITECTURE.md` database row and audit/email sections updated for implemented schema and Resend helpers; migration apply link now `docs/SUPABASE_MIGRATIONS.md`; README database section points to the same; implementation plan footer notes through Phase 13
 
-## [2.0.0] - 2026-04-5
+## [2.0.0] - 2026-04-05
 
 ### Added
 
