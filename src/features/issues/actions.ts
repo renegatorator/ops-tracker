@@ -198,14 +198,15 @@ export const updateIssue = async (
       [
         parsed.data.title !== undefined ? "title" : null,
         parsed.data.description !== undefined ? "description" : null,
+        parsed.data.issue_type !== undefined ? "issue_type" : null,
       ] as const
-    ).filter((x): x is "title" | "description" => x != null);
+    ).filter((x): x is "title" | "description" | "issue_type" => x != null);
     await logAudit({
       actorId: ctx.user.id,
       action: "issue.update",
       entityType: "issue",
       entityId: parsed.data.issueId,
-      metadata: { fields },
+      metadata: { fields, issue_key: result.data.issue_key },
     });
     revalidateIssuesSegment(locale, { projectKey: result.data.project_key });
   }
@@ -227,7 +228,7 @@ export const transitionIssueStatus = async (
       action: "issue.status_transition",
       entityType: "issue",
       entityId: parsed.data.issueId,
-      metadata: { status_id: parsed.data.statusId },
+      metadata: { status_id: parsed.data.statusId, issue_key: result.data.issue_key },
     });
     revalidateIssuesSegment(locale, { issueId: parsed.data.issueId });
   }
@@ -257,7 +258,7 @@ export const assignIssue = async (
       action: "issue.assign",
       entityType: "issue",
       entityId: parsed.data.issueId,
-      metadata: { assignee_id: parsed.data.assigneeId },
+      metadata: { assignee_id: parsed.data.assigneeId, issue_key: result.data.issue_key },
     });
     if (parsed.data.assigneeId) {
       await sendIssueAssignedEmailIfConfigured({

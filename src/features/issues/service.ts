@@ -273,17 +273,18 @@ export const createIssue = async (
 
 export const updateIssue = async (
   input: UpdateIssueInput,
-): Promise<IssuesActionResult<{ id: string; project_key: string }>> => {
+): Promise<IssuesActionResult<{ id: string; issue_key: string; project_key: string }>> => {
   const supabase = await createClient();
   const patch: Record<string, string | null> = {};
   if (input.title !== undefined) patch.title = input.title;
   if (input.description !== undefined) patch.description = input.description;
+  if (input.issue_type !== undefined) patch.issue_type = input.issue_type;
 
   const { data, error } = await supabase
     .from("issues")
     .update(patch)
     .eq("id", input.issueId)
-    .select("id, projects!inner(key)")
+    .select("id, issue_key, projects!inner(key)")
     .maybeSingle();
 
   if (error) {
@@ -296,12 +297,12 @@ export const updateIssue = async (
     return { ok: false, errorKey: "errors.notFound" };
   }
   const proj = (data.projects as unknown) as { key: string } | null;
-  return { ok: true, data: { id: data.id, project_key: proj?.key ?? "" } };
+  return { ok: true, data: { id: data.id, issue_key: data.issue_key as string, project_key: proj?.key ?? "" } };
 };
 
 export const transitionIssueStatus = async (
   input: TransitionIssueStatusInput,
-): Promise<IssuesActionResult<{ id: string }>> => {
+): Promise<IssuesActionResult<{ id: string; issue_key: string }>> => {
   const statusCheck = await statusExists(input.statusId);
   if (!statusCheck.ok) return statusCheck;
 
@@ -310,7 +311,7 @@ export const transitionIssueStatus = async (
     .from("issues")
     .update({ status_id: input.statusId })
     .eq("id", input.issueId)
-    .select("id")
+    .select("id, issue_key")
     .maybeSingle();
 
   if (error) {
@@ -322,12 +323,12 @@ export const transitionIssueStatus = async (
   if (!data) {
     return { ok: false, errorKey: "errors.notFound" };
   }
-  return { ok: true, data: { id: data.id } };
+  return { ok: true, data: { id: data.id, issue_key: data.issue_key as string } };
 };
 
 export const assignIssue = async (
   input: AssignIssueInput,
-): Promise<IssuesActionResult<{ id: string }>> => {
+): Promise<IssuesActionResult<{ id: string; issue_key: string }>> => {
   const supabase = await createClient();
 
   if (input.assigneeId) {
@@ -351,7 +352,7 @@ export const assignIssue = async (
     .from("issues")
     .update({ assignee_id: input.assigneeId })
     .eq("id", input.issueId)
-    .select("id")
+    .select("id, issue_key")
     .maybeSingle();
 
   if (error) {
@@ -363,7 +364,7 @@ export const assignIssue = async (
   if (!data) {
     return { ok: false, errorKey: "errors.notFound" };
   }
-  return { ok: true, data: { id: data.id } };
+  return { ok: true, data: { id: data.id, issue_key: data.issue_key as string } };
 };
 
 export const softDeleteIssue = async (

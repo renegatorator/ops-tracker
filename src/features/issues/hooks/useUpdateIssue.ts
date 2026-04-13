@@ -20,6 +20,7 @@ export const useUpdateIssue = (locale: string, issueId: string) => {
     mutationFn: async (input: {
       title?: string;
       description?: string | null;
+      issue_type?: "bug" | "ticket";
     }) => {
       const result = await updateIssue(locale, {
         issueId,
@@ -41,6 +42,9 @@ export const useUpdateIssue = (locale: string, issueId: string) => {
           ...(input.title !== undefined ? { title: input.title } : {}),
           ...(input.description !== undefined
             ? { description: input.description }
+            : {}),
+          ...(input.issue_type !== undefined
+            ? { issue_type: input.issue_type }
             : {}),
         };
       });

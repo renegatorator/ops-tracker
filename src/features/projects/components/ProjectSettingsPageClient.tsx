@@ -12,6 +12,7 @@ import {
   Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
+import { IconPlus } from "@tabler/icons-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
@@ -180,7 +181,7 @@ const ProjectSettingsPageClient = ({
           comboboxProps={{ withinPortal: true }}
           maw={360}
         />
-        <Button onClick={onAdd} disabled={!addUserId || busy} loading={busy}>
+        <Button onClick={onAdd} disabled={!addUserId || busy} loading={busy} leftSection={<IconPlus size={16} />}>
           {t("addMember")}
         </Button>
       </Group>
@@ -193,7 +194,7 @@ const ProjectSettingsPageClient = ({
               <Table.Tr>
                 <Table.Th>{t("colUser")}</Table.Th>
                 <Table.Th>{t("colRole")}</Table.Th>
-                <Table.Th>{t("colAction")}</Table.Th>
+                <Table.Th style={{ textAlign: "right" }}>{t("colAction")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -207,7 +208,7 @@ const ProjectSettingsPageClient = ({
                   <Table.Tr key={m.user_id}>
                     <Table.Td>{label}</Table.Td>
                     <Table.Td>{m.role}</Table.Td>
-                    <Table.Td>
+                    <Table.Td style={{ textAlign: "right" }}>
                       <Button
                         size="xs"
                         color="red"

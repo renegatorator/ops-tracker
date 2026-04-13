@@ -1,10 +1,9 @@
-import { Container, Paper, Stack, Title } from "@mantine/core";
+import { Container, Paper } from "@mantine/core";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { getTranslations } from "next-intl/server";
 
 import IssueDetailPanel from "@/features/issues/components/IssueDetailPanel";
 import { issueQueryKeys } from "@/features/issues/keys";
@@ -61,24 +60,19 @@ const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
   const canEditDetails =
     issue != null ? canEditIssueDetails(ctx, issue) : false;
 
-  const t = await getTranslations({ locale, namespace: "issues" });
-
   return (
     <Container size="md" py="xl">
       <Paper withBorder p="lg" radius="md">
-        <Stack gap="md">
-          <Title order={2}>{t("detailTitle")}</Title>
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <IssueDetailPanel
-              locale={locale}
-              issueId={id}
-              canTransitionStatus={canTransitionStatus}
-              canAssignIssue={canAssignIssue}
-              canEditDetails={canEditDetails}
-              canViewIssueAudit={canViewIssueAudit}
-            />
-          </HydrationBoundary>
-        </Stack>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <IssueDetailPanel
+            locale={locale}
+            issueId={id}
+            canTransitionStatus={canTransitionStatus}
+            canAssignIssue={canAssignIssue}
+            canEditDetails={canEditDetails}
+            canViewIssueAudit={canViewIssueAudit}
+          />
+        </HydrationBoundary>
       </Paper>
     </Container>
   );
