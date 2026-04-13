@@ -10,11 +10,6 @@ import { useAuditTranslations } from "../hooks/useAuditTranslations";
 import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
 import type { AuditLogRow } from "../types";
 
-const formatIssueKey = (row: AuditLogRow): string => {
-  const m = row.metadata as Record<string, unknown>;
-  if (typeof m.issue_key === "string" && m.issue_key) return m.issue_key;
-  return "—";
-};
 
 interface IssueAuditActivitySectionProps {
   locale: string;
@@ -94,7 +89,6 @@ const IssueAuditActivitySection = ({
                 <Table.Th>{t("when")}</Table.Th>
                 <Table.Th>{t("actor")}</Table.Th>
                 <Table.Th>{t("action")}</Table.Th>
-                <Table.Th>{t("issueKey")}</Table.Th>
                 <Table.Th>{t("summaryColumn")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -121,11 +115,6 @@ const IssueAuditActivitySection = ({
                     >
                       {translateAction(row.action)}
                     </Badge>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text size="xs" ff="monospace">
-                      {formatIssueKey(row)}
-                    </Text>
                   </Table.Td>
                   <Table.Td>
                     <Text size="xs">{formatSummary(row)}</Text>

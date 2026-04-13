@@ -25,6 +25,7 @@ import {
   isIssuesQueryError,
   IssuesQueryError,
 } from "@/features/issues/issues-query-error";
+import { isIssueBug } from "@/features/issues/issueTypeUtils";
 import { issueQueryKeys } from "@/features/issues/keys";
 import type { IssueWithStatus } from "@/features/issues/types";
 import { Link } from "@/i18n/navigation";
@@ -73,11 +74,11 @@ const IssueCard = ({
       >
         <Group gap={4} align="center">
           <Tooltip
-            label={issue.issue_type === "bug" ? "Bug" : "Ticket"}
+            label={isIssueBug(issue.issue_type) ? "Bug" : "Task"}
             position="top"
             withArrow
           >
-            {issue.issue_type === "bug" ? (
+            {isIssueBug(issue.issue_type) ? (
               <IconBug size={14} color="var(--mantine-color-red-6)" />
             ) : (
               <IconClipboardList

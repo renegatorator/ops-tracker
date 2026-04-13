@@ -2,12 +2,12 @@
 
 import {
   ActionIcon,
-  Anchor,
   Button,
   Group,
   Loader,
   SegmentedControl,
   Select,
+  SimpleGrid,
   Stack,
   Text,
   Textarea,
@@ -20,8 +20,6 @@ import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
 import IssueAuditActivitySection from "@/features/audit/components/IssueAuditActivitySection";
-import { Link } from "@/i18n/navigation";
-import { routes } from "@/lib/routes";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
 import { useAssignIssue } from "../hooks/useAssignIssue";
@@ -30,6 +28,7 @@ import { useIssueStatuses } from "../hooks/useIssueStatuses";
 import { useTransitionIssueStatus } from "../hooks/useTransitionIssueStatus";
 import { useUpdateIssue } from "../hooks/useUpdateIssue";
 import { isIssuesQueryError } from "../issues-query-error";
+import { isIssueBug } from "../issueTypeUtils";
 
 const UNASSIGNED_VALUE = "__unassigned__";
 
@@ -40,7 +39,6 @@ interface IssueDetailPanelProps {
   canAssignIssue: boolean;
   canEditDetails: boolean;
   canViewIssueAudit: boolean;
-  backHref?: string;
 }
 
 const IssueDetailPanel = ({
@@ -50,11 +48,9 @@ const IssueDetailPanel = ({
   canAssignIssue,
   canEditDetails,
   canViewIssueAudit,
-  backHref,
 }: IssueDetailPanelProps) => {
   const t = useTranslations("issues");
   const tDetail = useTranslations("issues.detail");
-  const listHref = backHref ?? routes.issues;
   const { data, isPending, isError, error } = useIssueDetail(locale, issueId);
   const {
     data: statuses = [],
@@ -124,9 +120,6 @@ const IssueDetailPanel = ({
 
   return (
     <Stack gap="md">
-      <Anchor component={Link} href={listHref} size="sm">
-        {t("backToList")}
-      </Anchor>
       {isPending ? (
         <Text c="dimmed">{t("loading")}</Text>
       ) : isError ? (
@@ -139,11 +132,11 @@ const IssueDetailPanel = ({
         <>
           <Group gap={6} align="center">
             <Tooltip
-              label={data.issue_type === "bug" ? tDetail("typeBug") : tDetail("typeTicket")}
+              label={isIssueBug(data.issue_type) ? tDetail("typeBug") : tDetail("typeTask")}
               position="top"
               withArrow
             >
-              {data.issue_type === "bug" ? (
+              {isIssueBug(data.issue_type) ? (
                 <IconBug size={16} color="var(--mantine-color-red-6)" />
               ) : (
                 <IconClipboardList size={16} color="var(--mantine-color-blue-6)" />
@@ -220,43 +213,74 @@ const IssueDetailPanel = ({
             </>
           )}
 
-          {canTransitionStatus ? (
-            statusesError ? (
-              <Text c="dimmed" size="sm">
-                {data.issue_statuses?.name ?? "—"}
-              </Text>
-            ) : statusesPending ? (
-              <Loader size="sm" type="dots" />
+          <SimpleGrid cols={{ base: 1, sm: 2 }}>
+            {canTransitionStatus ? (
+              statusesError ? (
+                <Text c="dimmed" size="sm">
+                  {data.issue_statuses?.name ?? "—"}
+                </Text>
+              ) : statusesPending ? (
+                <Loader size="sm" type="dots" />
+              ) : (
+                <Select
+                  label={tDetail("statusLabel")}
+                  placeholder={tDetail("statusPlaceholder")}
+                  data={statusSelectData}
+                  value={data.status_id}
+                  onChange={(value) => {
+                    if (!value || value === data.status_id) return;
+                    transition.mutate(value);
+                  }}
+                  disabled={transition.isPending}
+                  aria-label={tDetail("statusLabel")}
+                />
+              )
             ) : (
-              <Select
-                label={tDetail("statusLabel")}
-                placeholder={tDetail("statusPlaceholder")}
-                data={statusSelectData}
-                value={data.status_id}
-                onChange={(value) => {
-                  if (!value || value === data.status_id) return;
-                  transition.mutate(value);
-                }}
-                disabled={transition.isPending}
-                aria-label={tDetail("statusLabel")}
-              />
-            )
-          ) : (
-            <Stack gap={4}>
-              <Text size="sm" fw={600}>
-                {tDetail("statusLabel")}
-              </Text>
-              <Text c="dimmed" size="sm">
-                {data.issue_statuses?.name ?? "—"}
-              </Text>
-              <Text size="xs" c="dimmed">
-                {tDetail("statusReadOnlyHint")}
-              </Text>
-            </Stack>
-          )}
+              <Stack gap={4}>
+                <Text size="sm" fw={600}>
+                  {tDetail("statusLabel")}
+                </Text>
+                <Text c="dimmed" size="sm">
+                  {data.issue_statuses?.name ?? "—"}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {tDetail("statusReadOnlyHint")}
+                </Text>
+              </Stack>
+            )}
 
-          {canAssignIssue ? (
-            assigneesError ? (
+            {canAssignIssue ? (
+              assigneesError ? (
+                <Stack gap={4}>
+                  <Text size="sm" fw={600}>
+                    {tDetail("assigneeLabel")}
+                  </Text>
+                  <Text c="dimmed" size="sm">
+                    {data.assignee?.full_name?.trim() ||
+                      data.assignee?.email?.trim() ||
+                      t("unassigned")}
+                  </Text>
+                </Stack>
+              ) : assigneesPending ? (
+                <Loader size="sm" type="dots" />
+              ) : (
+                <Select
+                  label={tDetail("assigneeLabel")}
+                  placeholder={tDetail("assignPlaceholder")}
+                  data={assigneeSelectData}
+                  value={data.assignee_id ?? UNASSIGNED_VALUE}
+                  onChange={(value) => {
+                    const next =
+                      value === UNASSIGNED_VALUE || !value ? null : value;
+                    if (next === data.assignee_id) return;
+                    assignMutation.mutate({ issueId, assigneeId: next });
+                  }}
+                  disabled={assignMutation.isPending}
+                  comboboxProps={{ withinPortal: true }}
+                  aria-label={tDetail("assigneeLabel")}
+                />
+              )
+            ) : (
               <Stack gap={4}>
                 <Text size="sm" fw={600}>
                   {tDetail("assigneeLabel")}
@@ -266,41 +290,12 @@ const IssueDetailPanel = ({
                     data.assignee?.email?.trim() ||
                     t("unassigned")}
                 </Text>
+                <Text size="xs" c="dimmed">
+                  {tDetail("assignReadOnlyHint")}
+                </Text>
               </Stack>
-            ) : assigneesPending ? (
-              <Loader size="sm" type="dots" />
-            ) : (
-              <Select
-                label={tDetail("assigneeLabel")}
-                placeholder={tDetail("assignPlaceholder")}
-                data={assigneeSelectData}
-                value={data.assignee_id ?? UNASSIGNED_VALUE}
-                onChange={(value) => {
-                  const next =
-                    value === UNASSIGNED_VALUE || !value ? null : value;
-                  if (next === data.assignee_id) return;
-                  assignMutation.mutate({ issueId, assigneeId: next });
-                }}
-                disabled={assignMutation.isPending}
-                comboboxProps={{ withinPortal: true }}
-                aria-label={tDetail("assigneeLabel")}
-              />
-            )
-          ) : (
-            <Stack gap={4}>
-              <Text size="sm" fw={600}>
-                {tDetail("assigneeLabel")}
-              </Text>
-              <Text c="dimmed" size="sm">
-                {data.assignee?.full_name?.trim() ||
-                  data.assignee?.email?.trim() ||
-                  t("unassigned")}
-              </Text>
-              <Text size="xs" c="dimmed">
-                {tDetail("assignReadOnlyHint")}
-              </Text>
-            </Stack>
-          )}
+            )}
+          </SimpleGrid>
 
           {canEditDetails ? (
             <Stack gap={4}>
@@ -309,8 +304,24 @@ const IssueDetailPanel = ({
               </Text>
               <SegmentedControl
                 data={[
-                  { value: "ticket", label: tDetail("typeTicket") },
-                  { value: "bug", label: tDetail("typeBug") },
+                  {
+                    value: "ticket",
+                    label: (
+                      <Group gap={6} justify="center" align="center" wrap="nowrap">
+                        <IconClipboardList size={14} color="var(--mantine-color-blue-6)" />
+                        {tDetail("typeTask")}
+                      </Group>
+                    ),
+                  },
+                  {
+                    value: "bug",
+                    label: (
+                      <Group gap={6} justify="center" align="center" wrap="nowrap">
+                        <IconBug size={14} color="var(--mantine-color-red-6)" />
+                        {tDetail("typeBug")}
+                      </Group>
+                    ),
+                  },
                 ]}
                 value={data.issue_type}
                 onChange={(value) => {
@@ -328,15 +339,15 @@ const IssueDetailPanel = ({
                 {tDetail("issueTypeLabel")}
               </Text>
               <Group gap={6} align="center">
-                {data.issue_type === "bug" ? (
+                {isIssueBug(data.issue_type) ? (
                   <IconBug size={14} color="var(--mantine-color-red-6)" />
                 ) : (
                   <IconClipboardList size={14} color="var(--mantine-color-blue-6)" />
                 )}
                 <Text c="dimmed" size="sm">
-                  {data.issue_type === "bug"
+                  {isIssueBug(data.issue_type)
                     ? tDetail("typeBug")
-                    : tDetail("typeTicket")}
+                    : tDetail("typeTask")}
                 </Text>
               </Group>
             </Stack>

@@ -166,7 +166,7 @@
       "modalTitle": "Nova zadeva",
       "typeLabel": "Vrsta",
       "typeBug": "Hrošč",
-      "typeTicket": "Vstopnica",
+      "typeTask": "Naloga",
       "titleLabel": "Naslov",
       "descriptionLabel": "Opis",
       "descriptionLabelOptional": "Opis (neobvezno)",
@@ -177,7 +177,7 @@
       "cancel": "Prekliči",
       "titleRequired": "Naslov je obvezen.",
       "statusRequired": "Izberi status.",
-      "descriptionRequired": "Opis je obvezen za vstopnice.",
+      "descriptionRequired": "Opis je obvezen za naloge.",
       "failedTitle": "Zadeve ni bilo mogoče ustvariti",
       "successTitle": "Zadeva ustvarjena",
       "successMessage": "Odpiram novo zadevo…"
@@ -249,8 +249,8 @@
       "projectIdInvalid": "Neveljaven projekt.",
       "projectKeyInvalid": "2–10 znakov: začni z A–Z, nato A–Z ali 0–9.",
       "issueLookupInvalid": "Vnesi ID zadeve ali ključ projekta in številko.",
-      "issueTypeInvalid": "Izberi veljavno vrsto zadeve (hrošč ali vstopnica).",
-      "descriptionRequiredForTicket": "Opis je obvezen za vstopnice."
+      "issueTypeInvalid": "Izberi veljavno vrsto zadeve (hrošč ali naloga).",
+      "descriptionRequiredForTask": "Opis je obvezen za naloge."
     }
   },
   "projects": {
