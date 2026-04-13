@@ -7,6 +7,23 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 
 ## [Unreleased]
 
+## [2.1.2] — 2026-04-13
+
+### Added
+
+- **README redesign** — Root `README.md` restructured to match the portfolio project README style: emoji heading, blockquote summary, shields.io version badges, emoji `##`/`###` section hierarchy, and consistent horizontal-rule separators between all major sections.
+
+### Changed
+
+- **README section order** — Content reorganised into canonical sections (Features, Tech Stack, Quick Start, Available Scripts, Project Structure, Environment Variables, Database, Architecture Notes, Roles, E2E Tests, Deployment, Author) mirroring the cross-project doc standard.
+- **ARCHITECTURE.md updated** — Architecture documentation refreshed to reflect current project structure and conventions.
+
+### Fixed
+
+- **Board UI stale after issue creation** — Creating a new issue on the Kanban board or the project issues page no longer requires a manual refresh. `CreateIssueModal` now invalidates `issueQueryKeys.lists()` and `projectQueryKeys.all` on success, matching the behaviour of drag-and-drop status transitions.
+
+---
+
 ## [2.1.1] — 2026-04-13
 
 ### Added
