@@ -12,6 +12,7 @@ import {
   Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
+import { IconPlus } from "@tabler/icons-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
@@ -180,7 +181,7 @@ const ProjectSettingsPageClient = ({
           comboboxProps={{ withinPortal: true }}
           maw={360}
         />
-        <Button onClick={onAdd} disabled={!addUserId || busy} loading={busy}>
+        <Button onClick={onAdd} disabled={!addUserId || busy} loading={busy} leftSection={<IconPlus size={16} />}>
           {t("addMember")}
         </Button>
       </Group>

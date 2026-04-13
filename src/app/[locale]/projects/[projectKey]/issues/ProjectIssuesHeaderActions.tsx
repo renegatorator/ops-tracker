@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -20,7 +21,7 @@ export const ProjectIssuesHeaderActions = ({
 
   return (
     <>
-      <Button onClick={() => setOpened(true)} size="sm">
+      <Button onClick={() => setOpened(true)} size="sm" leftSection={<IconPlus size={16} />}>
         {t("newIssue")}
       </Button>
       <CreateIssueModal

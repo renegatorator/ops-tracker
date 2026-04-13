@@ -446,6 +446,23 @@
         "next": "Next",
         "pageOf": "Page {page} of {totalPages}"
       },
+      "actions": {
+        "issue_create": "Create Issue",
+        "issue_update": "Update Issue",
+        "issue_status_transition": "Status Transition",
+        "issue_assign": "Assign Issue",
+        "issue_archive": "Archive Issue",
+        "issue_status_create": "Create Status",
+        "issue_status_update": "Update Status",
+        "issue_status_delete": "Delete Status",
+        "project_create": "Create Project",
+        "project_update": "Update Project",
+        "project_rename": "Rename Project",
+        "project_member_add": "Add Member",
+        "project_member_remove": "Remove Member",
+        "user_role_change": "Change User Role",
+        "demo_reset": "Demo Data Reset"
+      },
       "errors": {
         "listFailed": "Could not load audit log."
       }

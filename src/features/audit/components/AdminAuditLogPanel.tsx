@@ -15,19 +15,12 @@ import { useEffect, useMemo, useState } from "react";
 
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
+import { auditMetadataPreview } from "../auditUtils";
 import { useAdminAuditLogList } from "../hooks/useAdminAuditLogList";
+import { useAuditTranslations } from "../hooks/useAuditTranslations";
 import type { ListAuditLogsInput } from "../schemas";
 
 const LIMIT = 25;
-
-const metadataPreview = (meta: Record<string, unknown>): string => {
-  try {
-    const s = JSON.stringify(meta);
-    return s.length > 200 ? `${s.slice(0, 200)}…` : s;
-  } catch {
-    return "—";
-  }
-};
 
 interface AdminAuditLogPanelProps {
   locale: string;
@@ -37,6 +30,8 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
   const t = useTranslations("admin.audit");
   const tAdmin = useTranslations("admin");
   const tIssues = useTranslations("issues");
+
+  const { translateAction, translateEntityType } = useAuditTranslations();
 
   const [actionFilter, setActionFilter] = useState("");
   const [debouncedAction] = useDebouncedValue(actionFilter.trim(), 350);
@@ -158,11 +153,11 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
                       </Text>
                     </Table.Td>
                     <Table.Td>
-                      <Text size="sm" ff="monospace">
-                        {row.action}
+                      <Text size="sm">
+                        {translateAction(row.action)}
                       </Text>
                     </Table.Td>
-                    <Table.Td>{row.entity_type}</Table.Td>
+                    <Table.Td>{translateEntityType(row.entity_type)}</Table.Td>
                     <Table.Td>
                       <Text size="xs" ff="monospace" maw={120} truncate>
                         {row.entity_id ?? "—"}
@@ -170,7 +165,7 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
                     </Table.Td>
                     <Table.Td>
                       <Text size="xs" ff="monospace" maw={280} truncate>
-                        {metadataPreview(row.metadata)}
+                        {auditMetadataPreview(row.metadata)}
                       </Text>
                     </Table.Td>
                   </Table.Tr>

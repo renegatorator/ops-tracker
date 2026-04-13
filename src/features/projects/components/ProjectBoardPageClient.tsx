@@ -12,7 +12,7 @@ import {
 import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconBug, IconClipboardList } from "@tabler/icons-react";
+import { IconBug, IconClipboardList, IconPlus } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -233,7 +233,7 @@ const ProjectBoardPageClient = ({
           {projectKey} · {projectName}
         </Title>
         {isAdmin && (
-          <Button onClick={openModal} size="sm">
+          <Button onClick={openModal} size="sm" leftSection={<IconPlus size={16} />}>
             {t("newIssue")}
           </Button>
         )}

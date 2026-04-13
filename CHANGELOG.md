@@ -8,28 +8,37 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 ## [Unreleased]
 
 ### Added
+
 - **Issue type icons** — Bug and Ticket issues now display a coloured icon (bug/clipboard) on Kanban board cards and on the issue detail page next to the issue key.
 - **Editable issue type** — The issue type (Bug / Ticket) can be changed on the issue detail page via a segmented control (admins only). The change is persisted, audited, and reflected immediately via optimistic update.
 - **Assignee name on board cards** — Kanban cards now show the assignee's full name (or email if no name is set) below the issue title.
 - **Settings gear in projects table** — Admins see a gear icon button per project row in the projects list, linking directly to that project's settings page.
 - **SVG flag language switcher** — The language selector now renders actual SVG country flags (via `react-country-flag`) instead of emoji sequences, fixing invisible flags on Windows. The trigger button shows the active flag; the dropdown lists flag + language name.
+- **Button plus icons** — New Project, New Issue, Add Member, and Create Project buttons now show a leading plus icon (`@tabler/icons-react`). The icon is hidden on the New Project button when it switches to its Cancel label.
+- **Audit action translations** — All known action keys (e.g. `issue.status_transition`, `issue.assign`) are now mapped to human-readable labels in English, Slovenian, and German via a new `admin.audit.actions` translation block.
 
 ### Changed
+
 - **No redirect after issue creation** — Creating an issue no longer navigates to the new issue page; the modal closes and a success notification is shown instead.
 - **Project subnav replaced with icon buttons** — The Board / Issues / Settings text-button strip is replaced with icon-only `ActionIcon` buttons. The active view gets a filled blue background and a soft glow. The Settings gear is pushed to the far right.
 - **Board page header** — The title now reads `{KEY} · {Project Name}` and the "New issue" button sits in the same row, aligned to the right.
 - **Kanban column height** — All status columns now stretch to the same height regardless of how many cards they contain.
 - **Action columns right-aligned** — The action button columns in the projects table and the project members table are now right-aligned.
 - **Project subnav constrained to container width** — The subnav is now wrapped in the same `Container size="xl"` as the board and issues pages so the icons line up with the content below.
+- **New Project button style** — Matches the New Issue button (filled blue, `variant="light"` removed) for visual consistency.
+- **Audit shared utilities** — Pure helpers (`auditActionKey`, `auditActionColor`, `auditMetadataPreview`) and the translation hook (`useAuditTranslations`) extracted into `audit-utils.ts` and `hooks/useAuditTranslations.ts` and reused across `AdminAuditLogPanel` and `IssueAuditActivitySection`.
 
 ### Fixed
+
 - **Settings button active state** — The settings icon was incorrectly highlighted as the board view when on the settings page; active-state logic now checks settings first.
+- **Raw action keys in audit views** — The Action column in the admin audit log and the Action badge in the issue activity section now display translated labels instead of raw strings like `ISSUE.STATUS_TRANSITION`. Entity type labels in the admin audit log are also translated.
 
 ---
 
 ## [2.1.0] — 2026-04-12
 
 ### Added
+
 - **Issue types** — Issues can now be classified as **Bug** or **Ticket** at creation time. A new `issue_type` column (Postgres enum) is stored on the `issues` table.
 - **Create issue on board** — Administrators now see a **"New issue"** button directly on the project Kanban board, opening the create-issue modal without navigating away.
 - **Assignee field in create modal** — The create-issue modal now includes an **Assignee** selector so issues can be assigned at creation time.
@@ -45,12 +54,14 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 - **Dashboard** — Overview page showing active projects, open issues, and personal assignments.
 
 ### Changed
+
 - **Issue detail page is now read-only by default** — Title and description are displayed as plain text. A pencil icon button reveals the edit form; a Cancel button reverts changes without saving.
 - **Audit activity section** — The raw truncated JSON "Details" column was replaced with two meaningful columns: **Issue key** and **Summary** (e.g. "Updated: title, description", "Assigned to …", "Status → …"). Action labels are colour-coded badges.
 - **Board column appearance** — Kanban columns now use consistent backgrounds in both light (`gray-1`) and dark (`dark-6`) themes with visible borders.
 - **Login page** — Removed the redundant "Sign in" heading and the inline email description hint; the form is cleaner without them.
 
 ### Fixed
+
 - **Migration safety** — Backfill `INSERT` in `20260412200000` now guards against a fresh database with no user profiles, preventing a `NOT NULL` violation on `created_by`.
 - **Error message translations** — Error keys returned by server actions in `ProjectSettingsPageClient` and `CreateIssueModal` now resolve through the correct `projects` / `issues` namespace.
 - **Assignee query gating** — `useAssigneeFilterOptions` in `IssueDetailPanel` no longer fires before the issue's `project_id` is loaded.
@@ -64,6 +75,7 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 - **Logo whitespace** — Fixed extra whitespace in the logo component.
 
 ### Removed
+
 - **Legacy workflow statuses "Resolved" and "Closed"** — Deleted from the database via migration. Any issues previously on those statuses are automatically reassigned to **Done** before the rows are removed.
 
 ---
@@ -71,6 +83,7 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 ## [2.0.1] — 2026-04-12
 
 ### Added
+
 - **Branded email templates** — Transactional emails (issue created, issue assigned) now use a professional HTML layout with the Ops Tracker logo, a highlighted issue title card, a CTA button, and a footer.
 - **Issue list improvements** — Sortable columns, offset + cursor pagination, search by title/key, status and assignee filters.
 - **Issue assignment** — Administrators can assign issues to project members. An email notification is sent via Resend.
@@ -82,10 +95,12 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 - **Supabase migration guide** — Developer documentation for running and writing migrations added to the repo.
 
 ### Changed
+
 - **Email subjects** — Issue-assigned emails now use the subject line `"Assigned to you: <title>"` instead of `"Assigned: <title>"`.
 - **App roles centralised** — Role constants and type guards extracted into a single shared module.
 
 ### Fixed
+
 - **Resend email helpers hardened** — Added null-checks and error boundaries around email sending so a failed delivery never crashes a server action.
 - **Admin dynamic imports** — Fixed missing `dynamic()` wrappers causing SSR errors in the admin area on certain routes.
 - **Playwright CI config** — Fixed dev-server port and browser download skip flag for CI environments.
@@ -97,6 +112,7 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 ## [2.0.0] — 2026-04-05
 
 ### Added
+
 - **Full application rewrite** — Complete rebuild of the app as a production-grade Next.js 15 App Router project with Supabase, Mantine UI, and `next-intl`.
 - **Supabase Phase 1 migrations** — Database schema for users, issues, issue statuses, and audit logs established via versioned migrations.
 - **Role-based access control** — Three roles: `user`, `admin`, `super_admin`. RLS policies enforced at the database layer.
@@ -111,9 +127,11 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 - **SEO** — `generateMetadata` on all route segments with per-locale titles and descriptions.
 
 ### Changed
+
 - **Environment variable structure** — Consolidated and documented all required env vars; split public vs. server-only variables.
 
 ### Fixed
+
 - **Node version and lockfile** — Raised minimum Node version and aligned `package-lock.json` with `npm ci`.
 
 ---
@@ -121,6 +139,7 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 ## [1.0.2] — 2026-02-24
 
 ### Added
+
 - **Supabase integration** — Supabase client configured; project linked to a live Supabase instance.
 - **Authentication** — Email/password login flow using Supabase Auth; session stored in cookies.
 - **Theme switcher** — Light/dark mode toggle in the workspace header, persisted across page loads.
@@ -130,6 +149,7 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 ## [1.0.1] — 2026-02-22
 
 ### Added
+
 - **Initial release** — Next.js 15 App Router project scaffolded with TypeScript, ESLint, and Prettier.
 - **Multilingual support** — `next-intl` configured for English, German, and Slovenian with locale-prefixed routing.
 - **CI workflow** — GitHub Actions pipeline for lint and build checks on every push.

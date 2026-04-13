@@ -442,6 +442,23 @@
         "next": "Naprej",
         "pageOf": "Stran {page} od {totalPages}"
       },
+      "actions": {
+        "issue_create": "Ustvari zadevo",
+        "issue_update": "Posodobi zadevo",
+        "issue_status_transition": "Prehod statusa",
+        "issue_assign": "Dodeli zadevo",
+        "issue_archive": "Arhiviraj zadevo",
+        "issue_status_create": "Ustvari status",
+        "issue_status_update": "Posodobi status",
+        "issue_status_delete": "Izbriši status",
+        "project_create": "Ustvari projekt",
+        "project_update": "Posodobi projekt",
+        "project_rename": "Preimenuj projekt",
+        "project_member_add": "Dodaj člana",
+        "project_member_remove": "Odstrani člana",
+        "user_role_change": "Sprememba vloge",
+        "demo_reset": "Ponastavitev demo podatkov"
+      },
       "errors": {
         "listFailed": "Revizijskega dnevnika ni bilo mogoče naložiti."
       }

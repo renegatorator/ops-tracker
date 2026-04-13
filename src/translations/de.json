@@ -442,6 +442,23 @@
         "next": "Weiter",
         "pageOf": "Seite {page} von {totalPages}"
       },
+      "actions": {
+        "issue_create": "Ticket erstellen",
+        "issue_update": "Ticket aktualisieren",
+        "issue_status_transition": "Statuswechsel",
+        "issue_assign": "Ticket zuweisen",
+        "issue_archive": "Ticket archivieren",
+        "issue_status_create": "Status erstellen",
+        "issue_status_update": "Status aktualisieren",
+        "issue_status_delete": "Status löschen",
+        "project_create": "Projekt erstellen",
+        "project_update": "Projekt aktualisieren",
+        "project_rename": "Projekt umbenennen",
+        "project_member_add": "Mitglied hinzufügen",
+        "project_member_remove": "Mitglied entfernen",
+        "user_role_change": "Rolle ändern",
+        "demo_reset": "Demo-Daten zurücksetzen"
+      },
       "errors": {
         "listFailed": "Audit-Protokoll konnte nicht geladen werden."
       }

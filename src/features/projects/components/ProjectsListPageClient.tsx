@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { IconSettings } from "@tabler/icons-react";
+import { IconPlus, IconSettings } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -92,7 +92,10 @@ const ProjectsListPageClient = ({
           {t("title")}
         </Title>
         {canManage ? (
-          <Button onClick={() => setCreating((v) => !v)} variant="light">
+          <Button
+            onClick={() => setCreating((v) => !v)}
+            leftSection={creating ? undefined : <IconPlus size={16} />}
+          >
             {creating ? t("cancelCreate") : t("newProject")}
           </Button>
         ) : null}
@@ -115,7 +118,9 @@ const ProjectsListPageClient = ({
                 label={t("descriptionLabel")}
                 {...form.getInputProps("description")}
               />
-              <Button type="submit">{t("submitCreate")}</Button>
+              <Button type="submit" leftSection={<IconPlus size={16} />}>
+                {t("submitCreate")}
+              </Button>
             </Stack>
           </form>
         </Paper>

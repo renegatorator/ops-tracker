@@ -5,22 +5,15 @@ import { useTranslations } from "next-intl";
 
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
+import { auditActionColor } from "../auditUtils";
 import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
+import { useAuditTranslations } from "../hooks/useAuditTranslations";
 import type { AuditLogRow } from "../types";
-
 
 const formatIssueKey = (row: AuditLogRow): string => {
   const m = row.metadata as Record<string, unknown>;
   if (typeof m.issue_key === "string" && m.issue_key) return m.issue_key;
   return "—";
-};
-
-const actionColor = (action: string): string => {
-  if (action === "issue.create") return "green";
-  if (action === "issue.archive") return "red";
-  if (action.includes("assign")) return "blue";
-  if (action.includes("status")) return "violet";
-  return "gray";
 };
 
 interface IssueAuditActivitySectionProps {
@@ -35,6 +28,7 @@ const IssueAuditActivitySection = ({
   const t = useTranslations("issues.detail.activity");
   const tIssues = useTranslations("issues");
   const tAdmin = useTranslations("admin");
+  const { translateAction } = useAuditTranslations();
 
   const formatSummary = (row: AuditLogRow): string => {
     const m = row.metadata as Record<string, unknown>;
@@ -118,8 +112,8 @@ const IssueAuditActivitySection = ({
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Badge size="xs" color={actionColor(row.action)} variant="light">
-                      {row.action}
+                    <Badge size="xs" color={auditActionColor(row.action)} variant="light">
+                      {translateAction(row.action)}
                     </Badge>
                   </Table.Td>
                   <Table.Td>
