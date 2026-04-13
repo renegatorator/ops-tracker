@@ -7,6 +7,8 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 
 ## [Unreleased]
 
+## [2.1.1] — 2026-04-13
+
 ### Added
 
 - **Issue type icons** — Bug and Ticket issues now display a coloured icon (bug/clipboard) on Kanban board cards and on the issue detail page next to the issue key.
