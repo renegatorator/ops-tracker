@@ -14,6 +14,7 @@ import {
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconBug, IconClipboardList } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
 
@@ -21,6 +22,8 @@ import { createIssue } from "@/features/issues/actions";
 import { useAssigneeFilterOptions } from "@/features/issues/hooks/useAssigneeFilterOptions";
 import { useIssueStatuses } from "@/features/issues/hooks/useIssueStatuses";
 import { isIssueTask } from "@/features/issues/issueTypeUtils";
+import { issueQueryKeys } from "@/features/issues/keys";
+import { projectQueryKeys } from "@/features/projects/keys";
 
 const UNASSIGNED_VALUE = "__unassigned__";
 
@@ -39,6 +42,7 @@ const CreateIssueModal = ({
 }: CreateIssueModalProps) => {
   const t = useTranslations("issues.create");
   const tErrors = useTranslations("issues");
+  const queryClient = useQueryClient();
   const { data: statuses = [], isSuccess } = useIssueStatuses(locale);
   const { data: assigneeUsers = [], isPending: assigneesPending } =
     useAssigneeFilterOptions(locale, true, projectId);
@@ -91,6 +95,10 @@ const CreateIssueModal = ({
       });
       return;
     }
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: issueQueryKeys.lists() }),
+      queryClient.invalidateQueries({ queryKey: projectQueryKeys.all }),
+    ]);
     notifications.show({
       title: t("successTitle"),
       message: t("successMessage"),
