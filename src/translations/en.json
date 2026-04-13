@@ -138,6 +138,9 @@
       "cancelEdit": "Cancel",
       "editTooltip": "Edit issue",
       "noDescription": "No description provided.",
+      "issueTypeLabel": "Issue type",
+      "typeBug": "Bug",
+      "typeTicket": "Ticket",
       "activity": {
         "title": "Activity (audit)",
         "hint": "Visible to administrators only. Recent actions recorded for this issue.",
@@ -282,7 +285,8 @@
       "colKey": "Key",
       "colName": "Name",
       "colAction": "",
-      "open": "Open"
+      "open": "Open",
+      "settings": "Settings"
     },
     "subnav": {
       "board": "Board",

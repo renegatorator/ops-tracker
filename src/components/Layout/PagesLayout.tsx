@@ -2,7 +2,7 @@ import { Container, Flex, Stack } from "@mantine/core";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import LanguageSwitcher from "../Language/LanguageSwitcher";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 import ThemeToggle from "../Theme/ThemeToggle";
 import AdminNavLink from "./AdminNavLink";
 import LogoutSection from "./LogoutSection";

@@ -9,13 +9,11 @@ import CreateIssueModal from "@/features/issues/components/CreateIssueModal";
 interface ProjectIssuesHeaderActionsProps {
   locale: string;
   projectId: string;
-  projectKey: string;
 }
 
 export const ProjectIssuesHeaderActions = ({
   locale,
   projectId,
-  projectKey,
 }: ProjectIssuesHeaderActionsProps) => {
   const t = useTranslations("projects.issues");
   const [opened, setOpened] = useState(false);
@@ -28,7 +26,6 @@ export const ProjectIssuesHeaderActions = ({
       <CreateIssueModal
         locale={locale}
         projectId={projectId}
-        projectKey={projectKey}
         opened={opened}
         onClose={() => setOpened(false)}
       />

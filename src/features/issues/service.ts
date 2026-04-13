@@ -278,6 +278,7 @@ export const updateIssue = async (
   const patch: Record<string, string | null> = {};
   if (input.title !== undefined) patch.title = input.title;
   if (input.description !== undefined) patch.description = input.description;
+  if (input.issue_type !== undefined) patch.issue_type = input.issue_type;
 
   const { data, error } = await supabase
     .from("issues")

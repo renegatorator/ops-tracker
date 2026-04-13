@@ -19,15 +19,12 @@ import { useEffect, useMemo } from "react";
 import { createIssue } from "@/features/issues/actions";
 import { useAssigneeFilterOptions } from "@/features/issues/hooks/useAssigneeFilterOptions";
 import { useIssueStatuses } from "@/features/issues/hooks/useIssueStatuses";
-import { useRouter } from "@/i18n/navigation";
-import { projectIssueDetailPath } from "@/lib/routes";
 
 const UNASSIGNED_VALUE = "__unassigned__";
 
 interface CreateIssueModalProps {
   locale: string;
   projectId: string;
-  projectKey: string;
   opened: boolean;
   onClose: () => void;
 }
@@ -35,13 +32,11 @@ interface CreateIssueModalProps {
 const CreateIssueModal = ({
   locale,
   projectId,
-  projectKey,
   opened,
   onClose,
 }: CreateIssueModalProps) => {
   const t = useTranslations("issues.create");
   const tErrors = useTranslations("issues");
-  const router = useRouter();
   const { data: statuses = [], isSuccess } = useIssueStatuses(locale);
   const {
     data: assigneeUsers = [],
@@ -103,9 +98,6 @@ const CreateIssueModal = ({
     });
     form.reset();
     onClose();
-    router.push(
-      projectIssueDetailPath(projectKey, result.data.issue_number),
-    );
   });
 
   const statusData = statuses.map((s) => ({ value: s.id, label: s.name }));

@@ -1,6 +1,5 @@
-import { Container, Paper, Stack, Title } from "@mantine/core";
+import { Container, Paper, Stack } from "@mantine/core";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
 
 import ProjectBoardPageClient from "@/features/projects/components/ProjectBoardPageClient";
 import * as projectService from "@/features/projects/service";
@@ -32,18 +31,17 @@ const ProjectBoardPage = async ({ params }: ProjectBoardPageProps) => {
     notFound();
   }
 
-  const t = await getTranslations({ locale, namespace: "projects.board" });
   const isAdmin = isAdminAccessRole(ctx.role);
 
   return (
     <Container size="xl" py="md">
       <Paper withBorder p="md" radius="md">
         <Stack gap="md">
-          <Title order={3}>{t("pageTitle", { key: proj.data.key })}</Title>
           <ProjectBoardPageClient
             locale={locale}
             projectId={proj.data.id}
             projectKey={proj.data.key}
+            projectName={proj.data.name}
             isAdmin={isAdmin}
           />
         </Stack>
