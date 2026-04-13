@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
 import { auditActionColor } from "../auditUtils";
-import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
 import { useAuditTranslations } from "../hooks/useAuditTranslations";
+import { useIssueAuditActivity } from "../hooks/useIssueAuditActivity";
 import type { AuditLogRow } from "../types";
 
 const formatIssueKey = (row: AuditLogRow): string => {
@@ -57,10 +57,12 @@ const IssueAuditActivitySection = ({
         return row.action;
     }
   };
-  const { data = [], isPending, isError, error } = useIssueAuditActivity(
-    locale,
-    issueId,
-  );
+  const {
+    data = [],
+    isPending,
+    isError,
+    error,
+  } = useIssueAuditActivity(locale, issueId);
 
   return (
     <Stack gap="sm" mt="lg">
@@ -112,7 +114,11 @@ const IssueAuditActivitySection = ({
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Badge size="xs" color={auditActionColor(row.action)} variant="light">
+                    <Badge
+                      size="xs"
+                      color={auditActionColor(row.action)}
+                      variant="light"
+                    >
                       {translateAction(row.action)}
                     </Badge>
                   </Table.Td>
