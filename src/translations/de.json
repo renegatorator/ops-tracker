@@ -166,7 +166,7 @@
       "modalTitle": "Ticket erstellen",
       "typeLabel": "Typ",
       "typeBug": "Bug",
-      "typeTicket": "Ticket",
+      "typeTask": "Aufgabe",
       "titleLabel": "Titel",
       "descriptionLabel": "Beschreibung",
       "descriptionLabelOptional": "Beschreibung (optional)",
@@ -177,7 +177,7 @@
       "cancel": "Abbrechen",
       "titleRequired": "Titel ist erforderlich.",
       "statusRequired": "Bitte einen Status wählen.",
-      "descriptionRequired": "Beschreibung ist für Tickets erforderlich.",
+      "descriptionRequired": "Beschreibung ist für Aufgaben erforderlich.",
       "failedTitle": "Ticket konnte nicht erstellt werden",
       "successTitle": "Ticket erstellt",
       "successMessage": "Öffne das neue Ticket…"
@@ -249,8 +249,8 @@
       "projectIdInvalid": "Ungültiges Projekt.",
       "projectKeyInvalid": "2–10 Zeichen: beginne mit A–Z, dann A–Z oder 0–9.",
       "issueLookupInvalid": "Ticket-ID oder Projekt-Key und Nummer angeben.",
-      "issueTypeInvalid": "Gültigen Ticket-Typ wählen (Bug oder Ticket).",
-      "descriptionRequiredForTicket": "Beschreibung ist für Tickets erforderlich."
+      "issueTypeInvalid": "Gültigen Aufgabentyp wählen (Bug oder Aufgabe).",
+      "descriptionRequiredForTask": "Beschreibung ist für Aufgaben erforderlich."
     }
   },
   "projects": {
@@ -441,6 +441,23 @@
         "prev": "Zurück",
         "next": "Weiter",
         "pageOf": "Seite {page} von {totalPages}"
+      },
+      "actions": {
+        "issue_create": "Ticket erstellen",
+        "issue_update": "Ticket aktualisieren",
+        "issue_status_transition": "Statuswechsel",
+        "issue_assign": "Ticket zuweisen",
+        "issue_archive": "Ticket archivieren",
+        "issue_status_create": "Status erstellen",
+        "issue_status_update": "Status aktualisieren",
+        "issue_status_delete": "Status löschen",
+        "project_create": "Projekt erstellen",
+        "project_update": "Projekt aktualisieren",
+        "project_rename": "Projekt umbenennen",
+        "project_member_add": "Mitglied hinzufügen",
+        "project_member_remove": "Mitglied entfernen",
+        "user_role_change": "Rolle ändern",
+        "demo_reset": "Demo-Daten zurücksetzen"
       },
       "errors": {
         "listFailed": "Audit-Protokoll konnte nicht geladen werden."

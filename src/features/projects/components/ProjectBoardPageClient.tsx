@@ -12,7 +12,7 @@ import {
 import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconBug, IconClipboardList } from "@tabler/icons-react";
+import { IconBug, IconClipboardList, IconPlus } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -25,6 +25,7 @@ import {
   isIssuesQueryError,
   IssuesQueryError,
 } from "@/features/issues/issues-query-error";
+import { isIssueBug } from "@/features/issues/issueTypeUtils";
 import { issueQueryKeys } from "@/features/issues/keys";
 import type { IssueWithStatus } from "@/features/issues/types";
 import { Link } from "@/i18n/navigation";
@@ -73,11 +74,11 @@ const IssueCard = ({
       >
         <Group gap={4} align="center">
           <Tooltip
-            label={issue.issue_type === "bug" ? "Bug" : "Ticket"}
+            label={isIssueBug(issue.issue_type) ? "Bug" : "Task"}
             position="top"
             withArrow
           >
-            {issue.issue_type === "bug" ? (
+            {isIssueBug(issue.issue_type) ? (
               <IconBug size={14} color="var(--mantine-color-red-6)" />
             ) : (
               <IconClipboardList
@@ -233,7 +234,7 @@ const ProjectBoardPageClient = ({
           {projectKey} · {projectName}
         </Title>
         {isAdmin && (
-          <Button onClick={openModal} size="sm">
+          <Button onClick={openModal} size="sm" leftSection={<IconPlus size={16} />}>
             {t("newIssue")}
           </Button>
         )}

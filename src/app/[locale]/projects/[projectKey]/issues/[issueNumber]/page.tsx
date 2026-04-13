@@ -1,11 +1,10 @@
-import { Container, Paper, Stack, Title } from "@mantine/core";
+import { Container, Paper } from "@mantine/core";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
 
 import { getIssue } from "@/features/issues/actions";
 import IssueDetailPanel from "@/features/issues/components/IssueDetailPanel";
@@ -20,10 +19,7 @@ import * as projectService from "@/features/projects/service";
 import { redirect } from "@/i18n/navigation";
 import { getUserAuthContext } from "@/lib/auth/session";
 import { isAdminAccessRole } from "@/lib/auth/types";
-import {
-  projectIssuesPath,
-  routes,
-} from "@/lib/routes";
+import { routes } from "@/lib/routes";
 import { getLocalizedSeoMetadata } from "@/utils/seoUtils";
 
 interface ProjectIssueDetailPageProps {
@@ -89,26 +85,19 @@ const ProjectIssueDetailPage = async ({
   const canEditDetails =
     issue != null ? canEditIssueDetails(ctx, issue) : false;
 
-  const t = await getTranslations({ locale, namespace: "issues" });
-  const backHref = projectIssuesPath(proj.data.key);
-
   return (
     <Container size="md" py="xl">
       <Paper withBorder p="lg" radius="md">
-        <Stack gap="md">
-          <Title order={2}>{t("detailTitle")}</Title>
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <IssueDetailPanel
-              locale={locale}
-              issueId={issueId}
-              canTransitionStatus={canTransitionStatus}
-              canAssignIssue={canAssignIssue}
-              canEditDetails={canEditDetails}
-              canViewIssueAudit={canViewIssueAudit}
-              backHref={backHref}
-            />
-          </HydrationBoundary>
-        </Stack>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <IssueDetailPanel
+            locale={locale}
+            issueId={issueId}
+            canTransitionStatus={canTransitionStatus}
+            canAssignIssue={canAssignIssue}
+            canEditDetails={canEditDetails}
+            canViewIssueAudit={canViewIssueAudit}
+          />
+        </HydrationBoundary>
       </Paper>
     </Container>
   );

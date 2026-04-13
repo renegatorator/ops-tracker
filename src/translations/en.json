@@ -140,7 +140,7 @@
       "noDescription": "No description provided.",
       "issueTypeLabel": "Issue type",
       "typeBug": "Bug",
-      "typeTicket": "Ticket",
+      "typeTask": "Task",
       "activity": {
         "title": "Activity (audit)",
         "hint": "Visible to administrators only. Recent actions recorded for this issue.",
@@ -169,7 +169,7 @@
       "modalTitle": "Create issue",
       "typeLabel": "Type",
       "typeBug": "Bug",
-      "typeTicket": "Ticket",
+      "typeTask": "Task",
       "titleLabel": "Title",
       "descriptionLabel": "Description",
       "descriptionLabelOptional": "Description (optional)",
@@ -180,7 +180,7 @@
       "cancel": "Cancel",
       "titleRequired": "Title is required.",
       "statusRequired": "Choose a status.",
-      "descriptionRequired": "Description is required for tickets.",
+      "descriptionRequired": "Description is required for tasks.",
       "failedTitle": "Could not create issue",
       "successTitle": "Issue created",
       "successMessage": "Opening the new issue…"
@@ -252,8 +252,8 @@
       "projectIdInvalid": "Invalid project.",
       "projectKeyInvalid": "Use 2–10 characters: start with A–Z, then A–Z or 0–9.",
       "issueLookupInvalid": "Provide an issue id or project key and number.",
-      "issueTypeInvalid": "Choose a valid issue type (bug or ticket).",
-      "descriptionRequiredForTicket": "Description is required for tickets."
+      "issueTypeInvalid": "Choose a valid issue type (bug or task).",
+      "descriptionRequiredForTask": "Description is required for tasks."
     }
   },
   "projects": {
@@ -445,6 +445,23 @@
         "prev": "Previous",
         "next": "Next",
         "pageOf": "Page {page} of {totalPages}"
+      },
+      "actions": {
+        "issue_create": "Create Issue",
+        "issue_update": "Update Issue",
+        "issue_status_transition": "Status Transition",
+        "issue_assign": "Assign Issue",
+        "issue_archive": "Archive Issue",
+        "issue_status_create": "Create Status",
+        "issue_status_update": "Update Status",
+        "issue_status_delete": "Delete Status",
+        "project_create": "Create Project",
+        "project_update": "Update Project",
+        "project_rename": "Rename Project",
+        "project_member_add": "Add Member",
+        "project_member_remove": "Remove Member",
+        "user_role_change": "Change User Role",
+        "demo_reset": "Demo Data Reset"
       },
       "errors": {
         "listFailed": "Could not load audit log."

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { isIssueTask } from "./issueTypeUtils";
+
 const trimmedTitle = z
   .string()
   .trim()
@@ -26,11 +28,11 @@ export const createIssueSchema = z
       .nullable(),
   })
   .superRefine((val, ctx) => {
-    if (val.issue_type === "ticket" && !val.description?.trim()) {
+    if (isIssueTask(val.issue_type) && !val.description?.trim()) {
       ctx.addIssue({
         code: "custom",
         path: ["description"],
-        message: "validation.descriptionRequiredForTicket",
+        message: "validation.descriptionRequiredForTask",
       });
     }
   });

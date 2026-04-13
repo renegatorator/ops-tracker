@@ -95,11 +95,13 @@ The app implements three roles stored in `user_profiles.role` (Postgres enum `ap
 ## Core Features
 
 ### Projects & Kanban
+
 - Create projects with unique keys (e.g. `OPS`, `RKP`)
 - Drag-and-drop Kanban board per project, columns driven by workflow statuses
 - Project sub-navigation: Board / Issues / Settings
 
 ### Issues
+
 - Issue types: **Bug** or **Ticket**
 - Human-readable issue keys (e.g. `RKP-1`)
 - Description required for tickets, optional for bugs
@@ -109,24 +111,29 @@ The app implements three roles stored in `user_profiles.role` (Postgres enum `ap
 - Issue detail page: read-only by default, pencil button unlocks editing
 
 ### Dashboard
+
 - Overview of active projects, open issues, personal assignments
 
 ### Admin Area (`/admin`)
+
 - User list with role management
 - Issue status CRUD (name, slug, sort order, terminal flag)
 - Global audit log with filters
 - Super-admin settings & demo reset
 
 ### Audit Trail
+
 - Every mutating action (create, update, assign, status transition, archive) is logged to `audit_logs`
 - Per-issue activity section (admin only) with colour-coded action badges, issue key, and meaningful summary
 
 ### Email Notifications
+
 - Issue created → confirmation email to reporter
 - Issue assigned → notification email to assignee
 - Branded HTML templates with logo, highlighted title card, CTA button, and footer
 
 ### Internationalisation
+
 - English (default, no URL prefix), German (`/de/…`), Slovenian (`/si/…`)
 - All UI strings, validation messages, and error text localised
 
@@ -171,19 +178,19 @@ Or paste each file from `supabase/migrations/` into the **Supabase SQL Editor** 
 
 ## Environment Variables
 
-| Variable | Scope | Purpose |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | client + server | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | client + server | Supabase anon/publishable key |
-| `SUPABASE_DB_PASSWORD` | CLI only | Postgres password for `db:push` / `db:pull` |
-| `NEXT_PUBLIC_SITE_URL` | public | Canonical site URL used in emails and metadata. Defaults to `http://localhost:3000` |
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | client | reCAPTCHA v3 site key (public). When unset, reCAPTCHA is skipped. |
-| `RECAPTCHA_SECRET_KEY` | **server only** | reCAPTCHA v3 secret key — never expose publicly |
-| `RESEND_API_KEY` | **server only** | [Resend](https://resend.com) API key for transactional email |
-| `RESEND_FROM` | **server only** | Sender address (e.g. `Ops Tracker <mail@yourdomain.com>`). Defaults to Resend's test address. |
-| `OPS_DEMO_RESET_ENABLED` | **server only** | Enables super-admin demo data reset. Defaults to `true` outside production. |
-| `E2E_EMAIL`, `E2E_PASSWORD` | local / CI | Playwright test credentials |
-| `PLAYWRIGHT_BASE_URL` | local / CI | Playwright base URL. Defaults to `http://127.0.0.1:3000`. |
+| Variable                               | Scope           | Purpose                                                                                       |
+| -------------------------------------- | --------------- | --------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`             | client + server | Supabase project URL                                                                          |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | client + server | Supabase anon/publishable key                                                                 |
+| `SUPABASE_DB_PASSWORD`                 | CLI only        | Postgres password for `db:push` / `db:pull`                                                   |
+| `NEXT_PUBLIC_SITE_URL`                 | public          | Canonical site URL used in emails and metadata. Defaults to `http://localhost:3000`           |
+| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`       | client          | reCAPTCHA v3 site key (public). When unset, reCAPTCHA is skipped.                             |
+| `RECAPTCHA_SECRET_KEY`                 | **server only** | reCAPTCHA v3 secret key — never expose publicly                                               |
+| `RESEND_API_KEY`                       | **server only** | [Resend](https://resend.com) API key for transactional email                                  |
+| `RESEND_FROM`                          | **server only** | Sender address (e.g. `Ops Tracker <mail@yourdomain.com>`). Defaults to Resend's test address. |
+| `OPS_DEMO_RESET_ENABLED`               | **server only** | Enables super-admin demo data reset. Defaults to `true` outside production.                   |
+| `E2E_EMAIL`, `E2E_PASSWORD`            | local / CI      | Playwright test credentials                                                                   |
+| `PLAYWRIGHT_BASE_URL`                  | local / CI      | Playwright base URL. Defaults to `http://127.0.0.1:3000`.                                     |
 
 Copy `.env.example` to `.env.local` and fill in the required values.
 
@@ -255,7 +262,7 @@ If `E2E_EMAIL` or `E2E_PASSWORD` is unset, the critical-path spec **skips** auto
 ## Author
 
 **Rene Krajnc**
-Software Engineer — Maribor, Slovenia
+Senior React/Next.js Developer — Maribor, Slovenia
 [https://www.renekrajnc.com](https://www.renekrajnc.com)
 
 ---
