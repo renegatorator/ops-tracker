@@ -1,3 +1,4 @@
+import { Container } from "@mantine/core";
 import type { ReactNode } from "react";
 
 import ProjectSubnav from "@/features/projects/components/ProjectSubnav";
@@ -16,7 +17,9 @@ const ProjectKeyLayout = async ({ children, params }: ProjectKeyLayoutProps) => 
 
   return (
     <>
-      <ProjectSubnav projectKey={key} />
+      <Container size="xl" pt="md" px="md">
+        <ProjectSubnav projectKey={key} />
+      </Container>
       {children}
     </>
   );

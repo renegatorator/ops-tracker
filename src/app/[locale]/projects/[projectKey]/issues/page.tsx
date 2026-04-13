@@ -46,7 +46,6 @@ const ProjectIssuesPage = async ({ params }: ProjectIssuesPageProps) => {
             <ProjectIssuesHeaderActions
               locale={locale}
               projectId={proj.data.id}
-              projectKey={proj.data.key}
             />
           </Group>
           <IssuesListPageClient

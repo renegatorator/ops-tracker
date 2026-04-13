@@ -47,11 +47,18 @@ export const updateIssueSchema = z
         z.null(),
       ])
       .optional(),
+    issue_type: issueTypeSchema.optional(),
   })
-  .refine((v) => v.title !== undefined || v.description !== undefined, {
-    message: "validation.noChanges",
-    path: ["root"],
-  });
+  .refine(
+    (v) =>
+      v.title !== undefined ||
+      v.description !== undefined ||
+      v.issue_type !== undefined,
+    {
+      message: "validation.noChanges",
+      path: ["root"],
+    },
+  );
 
 export const transitionIssueStatusSchema = z.object({
   issueId: z.uuid({ message: "validation.issueIdInvalid" }),

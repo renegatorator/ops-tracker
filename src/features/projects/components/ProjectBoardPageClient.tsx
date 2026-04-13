@@ -9,9 +9,10 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Anchor, Button, Group, Text } from "@mantine/core";
+import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import { IconBug, IconClipboardList } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -35,6 +36,7 @@ interface ProjectBoardPageClientProps {
   locale: string;
   projectId: string;
   projectKey: string;
+  projectName: string;
   isAdmin?: boolean;
 }
 
@@ -69,19 +71,40 @@ const IssueCard = ({
           cursor: "grab",
         }}
       >
-        <Anchor
-          component={Link}
-          href={href}
-          size="xs"
-          ff="monospace"
-          onClick={(e) => e.stopPropagation()}
-          data-testid="kanban-issue-link"
-        >
-          {issue.issue_key}
-        </Anchor>
+        <Group gap={4} align="center">
+          <Tooltip
+            label={issue.issue_type === "bug" ? "Bug" : "Ticket"}
+            position="top"
+            withArrow
+          >
+            {issue.issue_type === "bug" ? (
+              <IconBug size={14} color="var(--mantine-color-red-6)" />
+            ) : (
+              <IconClipboardList
+                size={14}
+                color="var(--mantine-color-blue-6)"
+              />
+            )}
+          </Tooltip>
+          <Anchor
+            component={Link}
+            href={href}
+            size="xs"
+            ff="monospace"
+            onClick={(e) => e.stopPropagation()}
+            data-testid="kanban-issue-link"
+          >
+            {issue.issue_key}
+          </Anchor>
+        </Group>
         <Text size="sm" fw={600} mt={4}>
           {issue.title}
         </Text>
+        {issue.assignee && (
+          <Text size="xs" c="dimmed" mt={2}>
+            {issue.assignee.full_name?.trim() || issue.assignee.email?.trim()}
+          </Text>
+        )}
       </div>
     </div>
   );
@@ -122,24 +145,25 @@ const ProjectBoardPageClient = ({
   locale,
   projectId,
   projectKey,
+  projectName,
   isAdmin = false,
 }: ProjectBoardPageClientProps) => {
   const t = useTranslations("projects.board");
   const tIssues = useTranslations("issues");
   const queryClient = useQueryClient();
-  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const [modalOpened, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
 
   const listParams = useMemo(
-    () =>
-      ({
-        mode: "offset" as const,
-        offset: 0,
-        limit: 100,
-        projectId,
-      }),
+    () => ({
+      mode: "offset" as const,
+      offset: 0,
+      limit: 100,
+      projectId,
+    }),
     [projectId],
   );
 
@@ -197,22 +221,23 @@ const ProjectBoardPageClient = ({
   if (isError) {
     return (
       <div style={{ color: "var(--mantine-color-red-text)" }}>
-        {isIssuesQueryError(error)
-          ? tIssues(error.errorKey)
-          : t("loadFailed")}
+        {isIssuesQueryError(error) ? tIssues(error.errorKey) : t("loadFailed")}
       </div>
     );
   }
 
   return (
     <>
-      {isAdmin && (
-        <Group justify="flex-end" mb="sm">
+      <Group justify="space-between" align="center" mb="sm">
+        <Title order={3}>
+          {projectKey} · {projectName}
+        </Title>
+        {isAdmin && (
           <Button onClick={openModal} size="sm">
             {t("newIssue")}
           </Button>
-        </Group>
-      )}
+        )}
+      </Group>
 
       <DndContext sensors={sensors} onDragEnd={onDragEnd}>
         <div
@@ -220,7 +245,7 @@ const ProjectBoardPageClient = ({
             display: "flex",
             gap: 12,
             flexWrap: "wrap",
-            alignItems: "flex-start",
+            alignItems: "stretch",
           }}
         >
           {statuses.map((s) => (
@@ -241,7 +266,6 @@ const ProjectBoardPageClient = ({
         <CreateIssueModal
           locale={locale}
           projectId={projectId}
-          projectKey={projectKey}
           opened={modalOpened}
           onClose={closeModal}
         />

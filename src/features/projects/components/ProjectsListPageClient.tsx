@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ActionIcon,
   Button,
   Group,
   Paper,
@@ -9,9 +10,11 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
+import { IconSettings } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -21,7 +24,7 @@ import { useProjectsList } from "@/features/projects/hooks/useProjectsList";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { AppRole } from "@/lib/auth/types";
 import { isAdminAccessRole } from "@/lib/auth/types";
-import { projectBoardPath } from "@/lib/routes";
+import { projectBoardPath, projectSettingsPath } from "@/lib/routes";
 
 interface ProjectsListPageClientProps {
   locale: string;
@@ -37,8 +40,13 @@ const ProjectsListPageClient = ({
   const tProjErrors = useTranslations("projects.errors");
   const router = useRouter();
   const canManage = isAdminAccessRole(userRole);
-  const { data: projects = [], isPending, isError, error, refetch } =
-    useProjectsList(locale);
+  const {
+    data: projects = [],
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useProjectsList(locale);
   const [creating, setCreating] = useState(false);
 
   const form = useForm({
@@ -99,7 +107,10 @@ const ProjectsListPageClient = ({
                 description={t("keyHint")}
                 {...form.getInputProps("key")}
               />
-              <TextInput label={t("nameLabel")} {...form.getInputProps("name")} />
+              <TextInput
+                label={t("nameLabel")}
+                {...form.getInputProps("name")}
+              />
               <TextInput
                 label={t("descriptionLabel")}
                 {...form.getInputProps("description")}
@@ -125,7 +136,9 @@ const ProjectsListPageClient = ({
               <Table.Tr>
                 <Table.Th>{t("colKey")}</Table.Th>
                 <Table.Th>{t("colName")}</Table.Th>
-                <Table.Th>{t("colAction")}</Table.Th>
+                <Table.Th style={{ textAlign: "right" }}>
+                  {t("colAction")}
+                </Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -138,14 +151,30 @@ const ProjectsListPageClient = ({
                   </Table.Td>
                   <Table.Td>{p.name}</Table.Td>
                   <Table.Td>
-                    <Button
-                      component={Link}
-                      href={projectBoardPath(p.key)}
-                      size="xs"
-                      variant="light"
-                    >
-                      {t("open")}
-                    </Button>
+                    <Group gap="xs" wrap="nowrap" justify="flex-end">
+                      <Button
+                        component={Link}
+                        href={projectBoardPath(p.key)}
+                        size="xs"
+                        variant="light"
+                      >
+                        {t("open")}
+                      </Button>
+                      {canManage && (
+                        <Tooltip label={t("settings")} position="top" withArrow>
+                          <ActionIcon
+                            component={Link}
+                            href={projectSettingsPath(p.key)}
+                            variant="subtle"
+                            color="gray"
+                            size="sm"
+                            aria-label={t("settings")}
+                          >
+                            <IconSettings size={14} />
+                          </ActionIcon>
+                        </Tooltip>
+                      )}
+                    </Group>
                   </Table.Td>
                 </Table.Tr>
               ))}

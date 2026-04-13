@@ -6,6 +6,7 @@ import {
   Button,
   Group,
   Loader,
+  SegmentedControl,
   Select,
   Stack,
   Text,
@@ -14,7 +15,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconPencil } from "@tabler/icons-react";
+import { IconBug, IconClipboardList, IconPencil } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
@@ -136,9 +137,22 @@ const IssueDetailPanel = ({
         </Text>
       ) : (
         <>
-          <Text size="sm" c="dimmed" ff="monospace">
-            {data.issue_key}
-          </Text>
+          <Group gap={6} align="center">
+            <Tooltip
+              label={data.issue_type === "bug" ? tDetail("typeBug") : tDetail("typeTicket")}
+              position="top"
+              withArrow
+            >
+              {data.issue_type === "bug" ? (
+                <IconBug size={16} color="var(--mantine-color-red-6)" />
+              ) : (
+                <IconClipboardList size={16} color="var(--mantine-color-blue-6)" />
+              )}
+            </Tooltip>
+            <Text size="sm" c="dimmed" ff="monospace">
+              {data.issue_key}
+            </Text>
+          </Group>
 
           {canEditDetails ? (
             isEditing ? (
@@ -285,6 +299,46 @@ const IssueDetailPanel = ({
               <Text size="xs" c="dimmed">
                 {tDetail("assignReadOnlyHint")}
               </Text>
+            </Stack>
+          )}
+
+          {canEditDetails ? (
+            <Stack gap={4}>
+              <Text size="sm" fw={600}>
+                {tDetail("issueTypeLabel")}
+              </Text>
+              <SegmentedControl
+                data={[
+                  { value: "ticket", label: tDetail("typeTicket") },
+                  { value: "bug", label: tDetail("typeBug") },
+                ]}
+                value={data.issue_type}
+                onChange={(value) => {
+                  if (!value || value === data.issue_type) return;
+                  updateMutation.mutate({
+                    issue_type: value as "bug" | "ticket",
+                  });
+                }}
+                disabled={updateMutation.isPending}
+              />
+            </Stack>
+          ) : (
+            <Stack gap={4}>
+              <Text size="sm" fw={600}>
+                {tDetail("issueTypeLabel")}
+              </Text>
+              <Group gap={6} align="center">
+                {data.issue_type === "bug" ? (
+                  <IconBug size={14} color="var(--mantine-color-red-6)" />
+                ) : (
+                  <IconClipboardList size={14} color="var(--mantine-color-blue-6)" />
+                )}
+                <Text c="dimmed" size="sm">
+                  {data.issue_type === "bug"
+                    ? tDetail("typeBug")
+                    : tDetail("typeTicket")}
+                </Text>
+              </Group>
             </Stack>
           )}
 

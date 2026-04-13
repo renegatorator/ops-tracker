@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import LanguageSwitcher from "@/components/Language/LanguageSwitcher";
+import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
 import LogoutSection from "@/components/Layout/LogoutSection";
 import ThemeToggle from "@/components/Theme/ThemeToggle";
 import { getUserAuthContext } from "@/lib/auth/session";

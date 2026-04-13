@@ -193,7 +193,7 @@ const ProjectSettingsPageClient = ({
               <Table.Tr>
                 <Table.Th>{t("colUser")}</Table.Th>
                 <Table.Th>{t("colRole")}</Table.Th>
-                <Table.Th>{t("colAction")}</Table.Th>
+                <Table.Th style={{ textAlign: "right" }}>{t("colAction")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -207,7 +207,7 @@ const ProjectSettingsPageClient = ({
                   <Table.Tr key={m.user_id}>
                     <Table.Td>{label}</Table.Td>
                     <Table.Td>{m.role}</Table.Td>
-                    <Table.Td>
+                    <Table.Td style={{ textAlign: "right" }}>
                       <Button
                         size="xs"
                         color="red"

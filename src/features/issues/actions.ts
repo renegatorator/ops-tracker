@@ -198,8 +198,9 @@ export const updateIssue = async (
       [
         parsed.data.title !== undefined ? "title" : null,
         parsed.data.description !== undefined ? "description" : null,
+        parsed.data.issue_type !== undefined ? "issue_type" : null,
       ] as const
-    ).filter((x): x is "title" | "description" => x != null);
+    ).filter((x): x is "title" | "description" | "issue_type" => x != null);
     await logAudit({
       actorId: ctx.user.id,
       action: "issue.update",
