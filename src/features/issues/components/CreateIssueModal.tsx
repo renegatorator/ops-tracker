@@ -11,9 +11,9 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { IconBug, IconClipboardList } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
+import { IconBug, IconClipboardList } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
 
@@ -40,10 +40,8 @@ const CreateIssueModal = ({
   const t = useTranslations("issues.create");
   const tErrors = useTranslations("issues");
   const { data: statuses = [], isSuccess } = useIssueStatuses(locale);
-  const {
-    data: assigneeUsers = [],
-    isPending: assigneesPending,
-  } = useAssigneeFilterOptions(locale, true, projectId);
+  const { data: assigneeUsers = [], isPending: assigneesPending } =
+    useAssigneeFilterOptions(locale, true, projectId);
 
   const form = useForm({
     initialValues: {
@@ -118,12 +116,7 @@ const CreateIssueModal = ({
   const isTask = isIssueTask(form.values.issue_type);
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={t("modalTitle")}
-      size="lg"
-    >
+    <Modal opened={opened} onClose={onClose} title={t("modalTitle")} size="lg">
       <form onSubmit={onSubmit}>
         <Stack gap="md">
           <SegmentedControl
@@ -132,7 +125,10 @@ const CreateIssueModal = ({
                 value: "ticket",
                 label: (
                   <Group gap={6} justify="center" align="center" wrap="nowrap">
-                    <IconClipboardList size={14} color="var(--mantine-color-blue-6)" />
+                    <IconClipboardList
+                      size={14}
+                      color="var(--mantine-color-blue-6)"
+                    />
                     {t("typeTask")}
                   </Group>
                 ),
@@ -159,9 +155,7 @@ const CreateIssueModal = ({
 
           <Textarea
             label={
-              isTask
-                ? t("descriptionLabel")
-                : t("descriptionLabelOptional")
+              isTask ? t("descriptionLabel") : t("descriptionLabelOptional")
             }
             minRows={6}
             autosize

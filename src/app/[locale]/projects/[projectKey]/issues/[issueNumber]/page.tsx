@@ -5,7 +5,6 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
 
 import { getIssue } from "@/features/issues/actions";
 import IssueDetailPanel from "@/features/issues/components/IssueDetailPanel";
