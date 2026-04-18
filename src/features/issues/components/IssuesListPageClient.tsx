@@ -18,6 +18,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import IssuesTableSkeleton from "@/components/skeletons/IssuesTableSkeleton";
 import { usePathname, useRouter } from "@/i18n/navigation";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
@@ -108,7 +109,11 @@ const IssuesListPageClient = ({
     locale,
     canListAllAssignees,
   );
-  const assignIssue = useAssignIssue(locale);
+  const {
+    mutate: assignIssue,
+    isPending: assignPending,
+    variables: assignVariables,
+  } = useAssignIssue(locale);
 
   const assignColumnOptions = useMemo(
     () =>
@@ -120,9 +125,7 @@ const IssuesListPageClient = ({
   );
 
   const assignPendingIssueId =
-    assignIssue.isPending && assignIssue.variables
-      ? assignIssue.variables.issueId
-      : null;
+    assignPending && assignVariables ? assignVariables.issueId : null;
 
   const qFromUrl = searchParams.get("q") ?? "";
   const [searchDraft, setSearchDraft] = useState(qFromUrl);
@@ -309,7 +312,7 @@ const IssuesListPageClient = ({
       </SimpleGrid>
 
       {isPending ? (
-        <Text c="dimmed">{t("issues.loading")}</Text>
+        <IssuesTableSkeleton />
       ) : isError ? (
         <Text c="red">
           {t(
@@ -336,7 +339,7 @@ const IssuesListPageClient = ({
             canAssignIssues={canListAllAssignees}
             assigneeSelectOptions={assignColumnOptions}
             onAssignIssue={(issueId, assigneeId) =>
-              assignIssue.mutate({ issueId, assigneeId })
+              assignIssue({ issueId, assigneeId })
             }
             assignPendingIssueId={assignPendingIssueId}
           />

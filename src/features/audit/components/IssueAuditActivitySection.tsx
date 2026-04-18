@@ -3,6 +3,7 @@
 import { Badge, Stack, Table, Text, Title } from "@mantine/core";
 import { useTranslations } from "next-intl";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
 import { auditActionColor } from "../auditUtils";
@@ -71,9 +72,11 @@ const IssueAuditActivitySection = ({
         {t("issues.detail.activity.hint")}
       </Text>
       {isPending ? (
-        <Text c="dimmed" size="sm">
-          {t("issues.detail.activity.loading")}
-        </Text>
+        <TableSkeleton
+          columnWidths={["20%", "25%", "25%", "30%"]}
+          rows={3}
+          ariaLabel={t("issues.detail.activity.loading")}
+        />
       ) : isError ? (
         <Text c="red" size="sm">
           {isIssuesQueryError(error)

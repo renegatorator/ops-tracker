@@ -4,7 +4,7 @@ import type {
   IssuesActionResult,
 } from "@/features/issues/types";
 import { logAudit } from "@/lib/audit/log-audit";
-import { APP_ROLE, type AppRole,parseAppRole } from "@/lib/auth/types";
+import { type AppRole, AppRoles, parseAppRole } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
 
 import type { UpdateUserRoleInput } from "./schemas";
@@ -63,14 +63,14 @@ export const updateUserRole = async (
     return { ok: false, errorKey: "errors.readUserFailed" };
   }
 
-  if (actorRole === APP_ROLE.admin) {
-    if (input.role === APP_ROLE.super_admin) {
+  if (actorRole === AppRoles.ADMIN) {
+    if (input.role === AppRoles.SUPER_ADMIN) {
       return { ok: false, errorKey: "errors.cannotAssignSuperAdmin" };
     }
-    if (targetRole !== APP_ROLE.user) {
+    if (targetRole !== AppRoles.USER) {
       return forbidden();
     }
-    if (input.role !== APP_ROLE.user && input.role !== APP_ROLE.admin) {
+    if (input.role !== AppRoles.USER && input.role !== AppRoles.ADMIN) {
       return forbidden();
     }
   }

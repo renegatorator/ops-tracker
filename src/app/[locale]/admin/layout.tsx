@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import WorkspaceRouteLayout from "@/components/Layout/WorkspaceRouteLayout";
 import AdminSubnav from "@/features/admin/components/AdminSubnav";
 import { requireRole } from "@/lib/auth/session";
-import { ADMIN_ACCESS_ROLES, isSuperAdminRole } from "@/lib/auth/types";
+import { AdminAccessRoles, isSuperAdminRole } from "@/lib/auth/types";
 
 const AdminLayout = async ({
   children,
@@ -15,7 +15,7 @@ const AdminLayout = async ({
   params: Promise<unknown>;
 }) => {
   const { locale } = (await params) as { locale: string };
-  const { role } = await requireRole(locale, ADMIN_ACCESS_ROLES);
+  const { role } = await requireRole(locale, AdminAccessRoles);
   const t = await getTranslations({ locale });
   const showSuperSettings = isSuperAdminRole(role);
 

@@ -9,7 +9,7 @@ import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
 import type { UserAuthContext } from "@/lib/auth/types";
-import { ADMIN_ACCESS_ROLES } from "@/lib/auth/types";
+import { AdminAccessRoles } from "@/lib/auth/types";
 import { sendIssueAssignedEmailIfConfigured } from "@/lib/email/send-issue-assigned-email";
 import { sendIssueCreatedReporterEmailIfConfigured } from "@/lib/email/send-issue-created-email";
 import {
@@ -110,7 +110,7 @@ export const listUserProfilesForIssueFilters = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -242,7 +242,7 @@ export const assignIssue = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -280,7 +280,7 @@ const requireAdminOrSuperCtx = async (): Promise<AdminAuthResult> => {
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -371,7 +371,7 @@ export const softDeleteIssue = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };

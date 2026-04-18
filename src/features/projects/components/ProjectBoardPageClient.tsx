@@ -9,7 +9,18 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Anchor, Button, Group, Modal, Stack, Text, Title, Tooltip } from "@mantine/core";
+import {
+  Anchor,
+  Box,
+  Button,
+  Group,
+  LoadingOverlay,
+  Modal,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconBug, IconClipboardList, IconPlus } from "@tabler/icons-react";
@@ -218,31 +229,37 @@ const ProjectBoardPageClient = ({
     return map;
   }, [data?.items, sortedStatuses]);
 
-  const transition = useMutation({
-    mutationFn: async (input: { issueId: string; statusId: string }) => {
-      const result = await transitionIssueStatus(locale, input);
-      if (!result.ok) {
-        throw new IssuesQueryError(result.errorKey, result.fieldErrors);
-      }
-      return result.data;
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: issueQueryKeys.lists() });
-      await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
-    },
-    onError: (err) => {
-      const key = isIssuesQueryError(err)
-        ? err.errorKey
-        : "errors.transitionFailed";
-      notifications.show({
-        title: t("projects.board.moveFailedTitle"),
-        message: t(`issues.${key}` as Parameters<typeof t>[0]),
-        color: "red",
-      });
-    },
-  });
+  const { mutate: transitionStatus, isPending: transitionPending } =
+    useMutation({
+      mutationFn: async (input: { issueId: string; statusId: string }) => {
+        const result = await transitionIssueStatus(locale, input);
+        if (!result.ok) {
+          throw new IssuesQueryError(result.errorKey, result.fieldErrors);
+        }
+        return result.data;
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: issueQueryKeys.lists(),
+        });
+        await queryClient.invalidateQueries({
+          queryKey: projectQueryKeys.all,
+        });
+      },
+      onError: (err) => {
+        const key = isIssuesQueryError(err)
+          ? err.errorKey
+          : "errors.transitionFailed";
+        notifications.show({
+          title: t("projects.board.moveFailedTitle"),
+          message: t(`issues.${key}` as Parameters<typeof t>[0]),
+          color: "red",
+        });
+      },
+    });
 
-  const closeIssue = useSoftDeleteIssue(locale);
+  const { mutate: softDeleteIssue, isPending: softDeletePending } =
+    useSoftDeleteIssue(locale);
 
   const onDragEnd = (event: DragEndEvent) => {
     const overId = event.over?.id;
@@ -250,16 +267,16 @@ const ProjectBoardPageClient = ({
     if (!overId || typeof overId !== "string") return;
     const issue = data?.items.find((i) => i.id === activeId);
     if (!issue || issue.status_id === overId) return;
-    transition.mutate({ issueId: activeId, statusId: overId });
+    transitionStatus({ issueId: activeId, statusId: overId });
   };
 
   const onTransition = (issueId: string, statusId: string) => {
-    transition.mutate({ issueId, statusId });
+    transitionStatus({ issueId, statusId });
   };
 
   const onConfirmClose = () => {
     if (!issueToClose) return;
-    closeIssue.mutate(issueToClose);
+    softDeleteIssue(issueToClose);
     setIssueToClose(null);
   };
 
@@ -289,32 +306,43 @@ const ProjectBoardPageClient = ({
         )}
       </Group>
 
-      <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-        <div
-          style={{
-            display: "flex",
-            gap: 12,
-            flexWrap: "wrap",
-            alignItems: "stretch",
-          }}
-        >
-          {sortedStatuses.map((s) => (
-            <StatusColumn key={s.id} statusId={s.id} title={s.name}>
-              {(issuesByStatus.get(s.id) ?? []).map((issue) => (
-                <IssueCard
-                  key={issue.id}
-                  issue={issue}
-                  projectKey={projectKey}
-                  statuses={sortedStatuses}
-                  onTransition={onTransition}
-                  onRequestClose={setIssueToClose}
-                  isAdmin={isAdmin}
-                />
-              ))}
-            </StatusColumn>
-          ))}
-        </div>
-      </DndContext>
+      <Box
+        pos="relative"
+        aria-busy={transitionPending || softDeletePending}
+      >
+        <LoadingOverlay
+          visible={transitionPending || softDeletePending}
+          zIndex={5}
+          overlayProps={{ blur: 1 }}
+          loaderProps={{ "aria-label": t("projects.board.loading") }}
+        />
+        <DndContext sensors={sensors} onDragEnd={onDragEnd}>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              flexWrap: "wrap",
+              alignItems: "stretch",
+            }}
+          >
+            {sortedStatuses.map((s) => (
+              <StatusColumn key={s.id} statusId={s.id} title={s.name}>
+                {(issuesByStatus.get(s.id) ?? []).map((issue) => (
+                  <IssueCard
+                    key={issue.id}
+                    issue={issue}
+                    projectKey={projectKey}
+                    statuses={sortedStatuses}
+                    onTransition={onTransition}
+                    onRequestClose={setIssueToClose}
+                    isAdmin={isAdmin}
+                  />
+                ))}
+              </StatusColumn>
+            ))}
+          </div>
+        </DndContext>
+      </Box>
 
       <Modal
         opened={issueToClose !== null}
@@ -331,7 +359,7 @@ const ProjectBoardPageClient = ({
             <Button
               color="red"
               onClick={onConfirmClose}
-              loading={closeIssue.isPending}
+              loading={softDeletePending}
             >
               {t("projects.board.closeIssueConfirmButton")}
             </Button>

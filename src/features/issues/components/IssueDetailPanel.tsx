@@ -2,10 +2,12 @@
 
 import {
   ActionIcon,
+  Box,
   Button,
   Divider,
   Group,
   Loader,
+  LoadingOverlay,
   Modal,
   SegmentedControl,
   Select,
@@ -34,7 +36,7 @@ import { useSoftDeleteIssue } from "../hooks/useSoftDeleteIssue";
 import { useTransitionIssueStatus } from "../hooks/useTransitionIssueStatus";
 import { useUpdateIssue } from "../hooks/useUpdateIssue";
 import { isIssuesQueryError } from "../issues-query-error";
-import { isIssueBug } from "../issueTypeUtils";
+import { isIssueBug, type IssueType, IssueTypes } from "../issueTypeUtils";
 
 const UNASSIGNED_VALUE = "__unassigned__";
 
@@ -71,10 +73,16 @@ const IssueDetailPanel = ({
     isPending: assigneesPending,
     isError: assigneesError,
   } = useAssigneeFilterOptions(locale, canAssignIssue && !!data?.project_id, data?.project_id);
-  const transition = useTransitionIssueStatus(locale, issueId);
-  const assignMutation = useAssignIssue(locale);
-  const updateMutation = useUpdateIssue(locale, issueId);
-  const closeIssue = useSoftDeleteIssue(locale);
+  const { mutate: transitionStatus, isPending: transitionPending } =
+    useTransitionIssueStatus(locale, issueId);
+  const { mutate: assignIssue, isPending: assignPending } =
+    useAssignIssue(locale);
+  const { mutate: updateIssue, isPending: updatePending } = useUpdateIssue(
+    locale,
+    issueId,
+  );
+  const { mutate: softDeleteIssue, isPending: softDeletePending } =
+    useSoftDeleteIssue(locale);
 
   const [isEditing, setIsEditing] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
@@ -117,7 +125,7 @@ const IssueDetailPanel = ({
     if ((descDraft || "") !== (data.description ?? "")) {
       patch.description = descDraft.length ? descDraft : null;
     }
-    updateMutation.mutate(patch, {
+    updateIssue(patch, {
       onSuccess: () => setIsEditing(false),
     });
   };
@@ -132,7 +140,7 @@ const IssueDetailPanel = ({
 
   const onConfirmClose = () => {
     closeConfirm();
-    closeIssue.mutate(issueId, {
+    softDeleteIssue(issueId, {
       onSuccess: () => {
         const projectKey = data?.projects?.key;
         if (projectKey) {
@@ -198,8 +206,8 @@ const IssueDetailPanel = ({
                 <Group>
                   <Button
                     onClick={onSaveDetails}
-                    disabled={!dirty || updateMutation.isPending}
-                    loading={updateMutation.isPending}
+                    disabled={!dirty || updatePending}
+                    loading={updatePending}
                   >
                     {t("issues.detail.save")}
                   </Button>
@@ -243,8 +251,19 @@ const IssueDetailPanel = ({
             </>
           )}
 
-          <SimpleGrid cols={{ base: 1, sm: 2 }}>
-            {canTransitionStatus ? (
+          <Box
+            pos="relative"
+            aria-busy={transitionPending || assignPending || updatePending}
+          >
+            <LoadingOverlay
+              visible={transitionPending || assignPending || updatePending}
+              zIndex={2}
+              overlayProps={{ blur: 1 }}
+              loaderProps={{ "aria-label": t("issues.loading") }}
+            />
+            <Stack gap="md">
+              <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                {canTransitionStatus ? (
               statusesError ? (
                 <Text c="dimmed" size="sm">
                   {data.issue_statuses?.name ?? "—"}
@@ -259,9 +278,9 @@ const IssueDetailPanel = ({
                   value={data.status_id}
                   onChange={(value) => {
                     if (!value || value === data.status_id) return;
-                    transition.mutate(value);
+                    transitionStatus(value);
                   }}
-                  disabled={transition.isPending}
+                  disabled={transitionPending}
                   aria-label={t("issues.detail.statusLabel")}
                 />
               )
@@ -303,9 +322,9 @@ const IssueDetailPanel = ({
                     const next =
                       value === UNASSIGNED_VALUE || !value ? null : value;
                     if (next === data.assignee_id) return;
-                    assignMutation.mutate({ issueId, assigneeId: next });
+                    assignIssue({ issueId, assigneeId: next });
                   }}
-                  disabled={assignMutation.isPending}
+                  disabled={assignPending}
                   comboboxProps={{ withinPortal: true }}
                   aria-label={t("issues.detail.assigneeLabel")}
                 />
@@ -335,7 +354,7 @@ const IssueDetailPanel = ({
               <SegmentedControl
                 data={[
                   {
-                    value: "ticket",
+                    value: IssueTypes.TASK,
                     label: (
                       <Group gap={6} justify="center" align="center" wrap="nowrap">
                         <IconClipboardList size={14} color="var(--mantine-color-blue-6)" />
@@ -344,7 +363,7 @@ const IssueDetailPanel = ({
                     ),
                   },
                   {
-                    value: "bug",
+                    value: IssueTypes.BUG,
                     label: (
                       <Group gap={6} justify="center" align="center" wrap="nowrap">
                         <IconBug size={14} color="var(--mantine-color-red-6)" />
@@ -356,11 +375,11 @@ const IssueDetailPanel = ({
                 value={data.issue_type}
                 onChange={(value) => {
                   if (!value || value === data.issue_type) return;
-                  updateMutation.mutate({
-                    issue_type: value as "bug" | "ticket",
+                  updateIssue({
+                    issue_type: value as IssueType,
                   });
                 }}
-                disabled={updateMutation.isPending}
+                disabled={updatePending}
               />
             </Stack>
           ) : (
@@ -382,6 +401,8 @@ const IssueDetailPanel = ({
               </Group>
             </Stack>
           )}
+            </Stack>
+          </Box>
 
           {canViewIssueAudit ? (
             <IssueAuditActivitySection locale={locale} issueId={issueId} />
@@ -395,7 +416,7 @@ const IssueDetailPanel = ({
                   variant="subtle"
                   color="red"
                   onClick={openConfirm}
-                  loading={closeIssue.isPending}
+                  loading={softDeletePending}
                 >
                   {t("issues.detail.closeIssue")}
                 </Button>
@@ -420,7 +441,7 @@ const IssueDetailPanel = ({
             <Button
               color="red"
               onClick={onConfirmClose}
-              loading={closeIssue.isPending}
+              loading={softDeletePending}
             >
               {t("issues.detail.closeIssueConfirmButton")}
             </Button>

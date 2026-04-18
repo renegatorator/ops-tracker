@@ -18,6 +18,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import {
   createIssueStatus,
   deleteIssueStatus,
@@ -25,9 +26,18 @@ import {
   updateIssueStatus,
 } from "@/features/issues/actions";
 
-import { isIssuesQueryError,IssuesQueryError } from "../issues-query-error";
+import { isIssuesQueryError, IssuesQueryError } from "../issues-query-error";
 import { issueQueryKeys } from "../keys";
 import type { IssueStatusRow } from "../types";
+
+const defaultStatusValues = {
+  name: "",
+  slug: "",
+  sort_order: 0,
+  is_terminal: false,
+};
+
+type IssueStatusFormValues = typeof defaultStatusValues;
 
 interface AdminIssueStatusesPanelProps {
   locale: string;
@@ -58,13 +68,13 @@ const AdminIssueStatusesPanel = ({
       queryKey: issueQueryKeys.statuses(locale),
     });
 
-  const createForm = useForm({
-    initialValues: {
-      name: "",
-      slug: "",
-      sort_order: 0,
-      is_terminal: false,
-    },
+  const {
+    values: createValues,
+    onSubmit: handleCreateSubmit,
+    getInputProps: getCreateInputProps,
+    reset: resetCreateForm,
+  } = useForm<IssueStatusFormValues>({
+    initialValues: defaultStatusValues,
     validate: {
       name: (v) =>
         !v?.trim() ? t("issues.validation.statusNameRequired") : null,
@@ -72,13 +82,13 @@ const AdminIssueStatusesPanel = ({
     },
   });
 
-  const editForm = useForm({
-    initialValues: {
-      name: "",
-      slug: "",
-      sort_order: 0,
-      is_terminal: false,
-    },
+  const {
+    values: editValues,
+    onSubmit: handleEditSubmit,
+    getInputProps: getEditInputProps,
+    setValues: setEditValues,
+  } = useForm<IssueStatusFormValues>({
+    initialValues: defaultStatusValues,
     validate: {
       name: (v) =>
         !v?.trim() ? t("issues.validation.statusNameRequired") : null,
@@ -86,9 +96,14 @@ const AdminIssueStatusesPanel = ({
     },
   });
 
-  const createMut = useMutation({
+  const {
+    mutate: createStatus,
+    isPending: createPending,
+    isError: createFailed,
+    error: createError,
+  } = useMutation({
     mutationFn: async () => {
-      const result = await createIssueStatus(locale, createForm.values);
+      const result = await createIssueStatus(locale, createValues);
       if (!result.ok) {
         throw new IssuesQueryError(result.errorKey, result.fieldErrors);
       }
@@ -97,21 +112,26 @@ const AdminIssueStatusesPanel = ({
     onSuccess: async () => {
       await invalidate();
       setCreateOpen(false);
-      createForm.reset();
+      resetCreateForm();
     },
   });
 
-  const updateMut = useMutation({
+  const {
+    mutate: updateStatus,
+    isPending: updatePending,
+    isError: updateFailed,
+    error: updateError,
+  } = useMutation({
     mutationFn: async () => {
       if (!editing) {
         throw new Error("No row selected");
       }
       const result = await updateIssueStatus(locale, {
         statusId: editing.id,
-        name: editForm.values.name,
-        slug: editForm.values.slug,
-        sort_order: editForm.values.sort_order,
-        is_terminal: editForm.values.is_terminal,
+        name: editValues.name,
+        slug: editValues.slug,
+        sort_order: editValues.sort_order,
+        is_terminal: editValues.is_terminal,
       });
       if (!result.ok) {
         throw new IssuesQueryError(result.errorKey, result.fieldErrors);
@@ -124,7 +144,12 @@ const AdminIssueStatusesPanel = ({
     },
   });
 
-  const deleteMut = useMutation({
+  const {
+    mutate: deleteStatus,
+    isPending: deletePending,
+    isError: deleteFailed,
+    error: deleteError,
+  } = useMutation({
     mutationFn: async () => {
       if (!deleting) {
         throw new Error("No row selected");
@@ -144,7 +169,7 @@ const AdminIssueStatusesPanel = ({
   });
 
   const openEdit = (row: IssueStatusRow) => {
-    editForm.setValues({
+    setEditValues({
       name: row.name,
       slug: row.slug,
       sort_order: row.sort_order,
@@ -154,7 +179,12 @@ const AdminIssueStatusesPanel = ({
   };
 
   if (isPending) {
-    return <Text c="dimmed">{t("admin.statuses.loading")}</Text>;
+    return (
+      <TableSkeleton
+        columnWidths={["30%", "20%", "10%", "15%", "15%", "10%"]}
+        ariaLabel={t("admin.statuses.loading")}
+      />
+    );
   }
   if (isError) {
     const key = isIssuesQueryError(error) ? error.errorKey : "errors.readFailed";
@@ -224,39 +254,35 @@ const AdminIssueStatusesPanel = ({
         onClose={() => setCreateOpen(false)}
         title={t("admin.statuses.createTitle")}
       >
-        <form
-          onSubmit={createForm.onSubmit(() => createMut.mutate())}
-        >
+        <form onSubmit={handleCreateSubmit(() => createStatus())}>
           <Stack gap="sm">
             <TextInput
               label={t("admin.statuses.name")}
-              {...createForm.getInputProps("name")}
+              {...getCreateInputProps("name")}
             />
             <TextInput
               label={t("admin.statuses.slug")}
               description={t("admin.statuses.slugHint")}
-              {...createForm.getInputProps("slug")}
+              {...getCreateInputProps("slug")}
             />
             <NumberInput
               label={t("admin.statuses.sortOrder")}
-              {...createForm.getInputProps("sort_order")}
+              {...getCreateInputProps("sort_order")}
             />
             <Switch
               label={t("admin.statuses.terminal")}
-              {...createForm.getInputProps("is_terminal", { type: "checkbox" })}
+              {...getCreateInputProps("is_terminal", { type: "checkbox" })}
             />
-            {createMut.isError && isIssuesQueryError(createMut.error) ? (
+            {createFailed && isIssuesQueryError(createError) ? (
               <Text c="red" size="sm">
-                {t(
-                  `admin.${createMut.error.errorKey}` as Parameters<typeof t>[0],
-                )}
+                {t(`admin.${createError.errorKey}` as Parameters<typeof t>[0])}
               </Text>
             ) : null}
             <Group justify="flex-end">
               <Button variant="default" onClick={() => setCreateOpen(false)}>
                 {t("admin.statuses.cancel")}
               </Button>
-              <Button type="submit" loading={createMut.isPending}>
+              <Button type="submit" loading={createPending}>
                 {t("admin.statuses.save")}
               </Button>
             </Group>
@@ -269,36 +295,34 @@ const AdminIssueStatusesPanel = ({
         onClose={() => setEditing(null)}
         title={t("admin.statuses.editTitle")}
       >
-        <form onSubmit={editForm.onSubmit(() => updateMut.mutate())}>
+        <form onSubmit={handleEditSubmit(() => updateStatus())}>
           <Stack gap="sm">
             <TextInput
               label={t("admin.statuses.name")}
-              {...editForm.getInputProps("name")}
+              {...getEditInputProps("name")}
             />
             <TextInput
               label={t("admin.statuses.slug")}
-              {...editForm.getInputProps("slug")}
+              {...getEditInputProps("slug")}
             />
             <NumberInput
               label={t("admin.statuses.sortOrder")}
-              {...editForm.getInputProps("sort_order")}
+              {...getEditInputProps("sort_order")}
             />
             <Switch
               label={t("admin.statuses.terminal")}
-              {...editForm.getInputProps("is_terminal", { type: "checkbox" })}
+              {...getEditInputProps("is_terminal", { type: "checkbox" })}
             />
-            {updateMut.isError && isIssuesQueryError(updateMut.error) ? (
+            {updateFailed && isIssuesQueryError(updateError) ? (
               <Text c="red" size="sm">
-                {t(
-                  `admin.${updateMut.error.errorKey}` as Parameters<typeof t>[0],
-                )}
+                {t(`admin.${updateError.errorKey}` as Parameters<typeof t>[0])}
               </Text>
             ) : null}
             <Group justify="flex-end">
               <Button variant="default" onClick={() => setEditing(null)}>
                 {t("admin.statuses.cancel")}
               </Button>
-              <Button type="submit" loading={updateMut.isPending}>
+              <Button type="submit" loading={updatePending}>
                 {t("admin.statuses.save")}
               </Button>
             </Group>
@@ -315,11 +339,9 @@ const AdminIssueStatusesPanel = ({
           <Text size="sm">
             {t("admin.statuses.deleteConfirm", { name: deleting?.name ?? "" })}
           </Text>
-          {deleteMut.isError && isIssuesQueryError(deleteMut.error) ? (
+          {deleteFailed && isIssuesQueryError(deleteError) ? (
             <Text c="red" size="sm">
-              {t(
-                `admin.${deleteMut.error.errorKey}` as Parameters<typeof t>[0],
-              )}
+              {t(`admin.${deleteError.errorKey}` as Parameters<typeof t>[0])}
             </Text>
           ) : null}
           <Group justify="flex-end">
@@ -328,8 +350,8 @@ const AdminIssueStatusesPanel = ({
             </Button>
             <Button
               color="red"
-              loading={deleteMut.isPending}
-              onClick={() => deleteMut.mutate()}
+              loading={deletePending}
+              onClick={() => deleteStatus()}
             >
               {t("admin.statuses.delete")}
             </Button>
