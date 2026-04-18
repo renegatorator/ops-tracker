@@ -229,31 +229,37 @@ const ProjectBoardPageClient = ({
     return map;
   }, [data?.items, sortedStatuses]);
 
-  const transition = useMutation({
-    mutationFn: async (input: { issueId: string; statusId: string }) => {
-      const result = await transitionIssueStatus(locale, input);
-      if (!result.ok) {
-        throw new IssuesQueryError(result.errorKey, result.fieldErrors);
-      }
-      return result.data;
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: issueQueryKeys.lists() });
-      await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
-    },
-    onError: (err) => {
-      const key = isIssuesQueryError(err)
-        ? err.errorKey
-        : "errors.transitionFailed";
-      notifications.show({
-        title: t("projects.board.moveFailedTitle"),
-        message: t(`issues.${key}` as Parameters<typeof t>[0]),
-        color: "red",
-      });
-    },
-  });
+  const { mutate: transitionStatus, isPending: transitionPending } =
+    useMutation({
+      mutationFn: async (input: { issueId: string; statusId: string }) => {
+        const result = await transitionIssueStatus(locale, input);
+        if (!result.ok) {
+          throw new IssuesQueryError(result.errorKey, result.fieldErrors);
+        }
+        return result.data;
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: issueQueryKeys.lists(),
+        });
+        await queryClient.invalidateQueries({
+          queryKey: projectQueryKeys.all,
+        });
+      },
+      onError: (err) => {
+        const key = isIssuesQueryError(err)
+          ? err.errorKey
+          : "errors.transitionFailed";
+        notifications.show({
+          title: t("projects.board.moveFailedTitle"),
+          message: t(`issues.${key}` as Parameters<typeof t>[0]),
+          color: "red",
+        });
+      },
+    });
 
-  const closeIssue = useSoftDeleteIssue(locale);
+  const { mutate: softDeleteIssue, isPending: softDeletePending } =
+    useSoftDeleteIssue(locale);
 
   const onDragEnd = (event: DragEndEvent) => {
     const overId = event.over?.id;
@@ -261,16 +267,16 @@ const ProjectBoardPageClient = ({
     if (!overId || typeof overId !== "string") return;
     const issue = data?.items.find((i) => i.id === activeId);
     if (!issue || issue.status_id === overId) return;
-    transition.mutate({ issueId: activeId, statusId: overId });
+    transitionStatus({ issueId: activeId, statusId: overId });
   };
 
   const onTransition = (issueId: string, statusId: string) => {
-    transition.mutate({ issueId, statusId });
+    transitionStatus({ issueId, statusId });
   };
 
   const onConfirmClose = () => {
     if (!issueToClose) return;
-    closeIssue.mutate(issueToClose);
+    softDeleteIssue(issueToClose);
     setIssueToClose(null);
   };
 
@@ -302,10 +308,10 @@ const ProjectBoardPageClient = ({
 
       <Box
         pos="relative"
-        aria-busy={transition.isPending || closeIssue.isPending}
+        aria-busy={transitionPending || softDeletePending}
       >
         <LoadingOverlay
-          visible={transition.isPending || closeIssue.isPending}
+          visible={transitionPending || softDeletePending}
           zIndex={5}
           overlayProps={{ blur: 1 }}
           loaderProps={{ "aria-label": t("projects.board.loading") }}
@@ -353,7 +359,7 @@ const ProjectBoardPageClient = ({
             <Button
               color="red"
               onClick={onConfirmClose}
-              loading={closeIssue.isPending}
+              loading={softDeletePending}
             >
               {t("projects.board.closeIssueConfirmButton")}
             </Button>

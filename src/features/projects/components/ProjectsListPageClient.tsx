@@ -27,6 +27,14 @@ import type { AppRole } from "@/lib/auth/types";
 import { isAdminAccessRole } from "@/lib/auth/types";
 import { projectBoardPath, projectSettingsPath } from "@/lib/routes";
 
+const defaultValues = {
+  key: "",
+  name: "",
+  description: "",
+};
+
+type CreateProjectFormValues = typeof defaultValues;
+
 interface ProjectsListPageClientProps {
   locale: string;
   userRole: AppRole;
@@ -48,15 +56,19 @@ const ProjectsListPageClient = ({
   } = useProjectsList(locale);
   const [creating, setCreating] = useState(false);
 
-  const form = useForm({
-    initialValues: { key: "", name: "", description: "" },
+  const {
+    onSubmit: handleFormSubmit,
+    getInputProps,
+    reset,
+  } = useForm<CreateProjectFormValues>({
+    initialValues: defaultValues,
     validate: {
       key: (v) => (!v.trim() ? t("projects.list.keyRequired") : null),
       name: (v) => (!v.trim() ? t("projects.list.nameRequired") : null),
     },
   });
 
-  const onCreate = form.onSubmit(async (values) => {
+  const onCreate = handleFormSubmit(async (values) => {
     const result = await createProject(locale, {
       key: values.key.trim().toUpperCase(),
       name: values.name.trim(),
@@ -77,7 +89,7 @@ const ProjectsListPageClient = ({
       message: t("projects.list.createSuccessMessage"),
       color: "green",
     });
-    form.reset();
+    reset();
     setCreating(false);
     await refetch();
     const key = values.key.trim().toUpperCase();
@@ -109,15 +121,15 @@ const ProjectsListPageClient = ({
               <TextInput
                 label={t("projects.list.keyLabel")}
                 description={t("projects.list.keyHint")}
-                {...form.getInputProps("key")}
+                {...getInputProps("key")}
               />
               <TextInput
                 label={t("projects.list.nameLabel")}
-                {...form.getInputProps("name")}
+                {...getInputProps("name")}
               />
               <TextInput
                 label={t("projects.list.descriptionLabel")}
-                {...form.getInputProps("description")}
+                {...getInputProps("description")}
               />
               <Button type="submit" leftSection={<IconPlus size={16} />}>
                 {t("projects.list.submitCreate")}

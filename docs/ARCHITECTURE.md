@@ -181,12 +181,13 @@ Migrations live in the repo; apply via `npm run db:push` (see [SUPABASE_MIGRATIO
 The DB stores `issue_type` as `"bug" | "ticket"` (Postgres enum). The UI displays these as **Bug** and **Task**. All comparisons go through `src/features/issues/issueTypeUtils.ts`:
 
 ```ts
-export const ISSUE_TYPE = { BUG: "bug", TASK: "ticket" } as const;
-export const isIssueBug  = (t: IssueType) => t === ISSUE_TYPE.BUG;
-export const isIssueTask = (t: IssueType) => t === ISSUE_TYPE.TASK;
+export const IssueTypes = { BUG: "bug", TASK: "ticket" } as const;
+export type IssueType = (typeof IssueTypes)[keyof typeof IssueTypes];
+export const isIssueBug  = (t: IssueType) => t === IssueTypes.BUG;
+export const isIssueTask = (t: IssueType) => t === IssueTypes.TASK;
 ```
 
-If the DB enum is ever renamed, only `ISSUE_TYPE` needs updating.
+If the DB enum is ever renamed, only `IssueTypes` needs updating.
 
 ---
 

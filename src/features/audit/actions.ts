@@ -9,7 +9,7 @@ import type {
 } from "@/features/issues/types";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
-import { ADMIN_ACCESS_ROLES } from "@/lib/auth/types";
+import { AdminAccessRoles } from "@/lib/auth/types";
 
 import { listAuditLogsSchema } from "./schemas";
 import * as auditService from "./service";
@@ -32,7 +32,7 @@ const requireAdmin = async (): Promise<
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };

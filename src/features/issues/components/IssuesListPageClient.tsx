@@ -109,7 +109,11 @@ const IssuesListPageClient = ({
     locale,
     canListAllAssignees,
   );
-  const assignIssue = useAssignIssue(locale);
+  const {
+    mutate: assignIssue,
+    isPending: assignPending,
+    variables: assignVariables,
+  } = useAssignIssue(locale);
 
   const assignColumnOptions = useMemo(
     () =>
@@ -121,9 +125,7 @@ const IssuesListPageClient = ({
   );
 
   const assignPendingIssueId =
-    assignIssue.isPending && assignIssue.variables
-      ? assignIssue.variables.issueId
-      : null;
+    assignPending && assignVariables ? assignVariables.issueId : null;
 
   const qFromUrl = searchParams.get("q") ?? "";
   const [searchDraft, setSearchDraft] = useState(qFromUrl);
@@ -337,7 +339,7 @@ const IssuesListPageClient = ({
             canAssignIssues={canListAllAssignees}
             assigneeSelectOptions={assignColumnOptions}
             onAssignIssue={(issueId, assigneeId) =>
-              assignIssue.mutate({ issueId, assigneeId })
+              assignIssue({ issueId, assigneeId })
             }
             assignPendingIssueId={assignPendingIssueId}
           />

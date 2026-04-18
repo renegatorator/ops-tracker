@@ -21,9 +21,29 @@ import { useEffect, useMemo } from "react";
 import { useAssigneeFilterOptions } from "@/features/issues/hooks/useAssigneeFilterOptions";
 import { useCreateIssue } from "@/features/issues/hooks/useCreateIssue";
 import { useIssueStatuses } from "@/features/issues/hooks/useIssueStatuses";
-import { isIssueTask } from "@/features/issues/issueTypeUtils";
+import {
+  isIssueTask,
+  type IssueType,
+  IssueTypes,
+} from "@/features/issues/issueTypeUtils";
 
 const UNASSIGNED_VALUE = "__unassigned__";
+
+type CreateIssueFormValues = {
+  title: string;
+  description: string;
+  status_id: string;
+  issue_type: IssueType;
+  assignee_id: string;
+};
+
+const defaultValues: CreateIssueFormValues = {
+  title: "",
+  description: "",
+  status_id: "",
+  issue_type: IssueTypes.TASK,
+  assignee_id: UNASSIGNED_VALUE,
+};
 
 interface CreateIssueModalProps {
   locale: string;
@@ -42,22 +62,21 @@ const CreateIssueModal = ({
   const { data: statuses = [], isSuccess } = useIssueStatuses(locale);
   const { data: assigneeUsers = [], isPending: assigneesPending } =
     useAssigneeFilterOptions(locale, true, projectId);
-  const createMutation = useCreateIssue(locale);
-  const pending = createMutation.isPending;
+  const { mutate: createIssue, isPending: pending } = useCreateIssue(locale);
 
-  const form = useForm({
-    initialValues: {
-      title: "",
-      description: "",
-      status_id: "",
-      issue_type: "ticket" as "bug" | "ticket",
-      assignee_id: UNASSIGNED_VALUE,
-    },
+  const {
+    onSubmit: handleFormSubmit,
+    getInputProps,
+    values,
+    setFieldValue,
+    reset,
+  } = useForm<CreateIssueFormValues>({
+    initialValues: defaultValues,
     validate: {
       title: (v) => (!v.trim() ? t("issues.create.titleRequired") : null),
       status_id: (v) => (!v ? t("issues.create.statusRequired") : null),
-      description: (v, values) => {
-        if (isIssueTask(values.issue_type) && !v.trim()) {
+      description: (v, allValues) => {
+        if (isIssueTask(allValues.issue_type) && !v.trim()) {
           return t("issues.create.descriptionRequired");
         }
         return null;
@@ -66,34 +85,34 @@ const CreateIssueModal = ({
   });
 
   useEffect(() => {
-    if (isSuccess && statuses.length > 0 && !form.values.status_id) {
-      form.setFieldValue("status_id", statuses[0].id);
+    if (isSuccess && statuses.length > 0 && !values.status_id) {
+      setFieldValue("status_id", statuses[0].id);
     }
-  }, [isSuccess, statuses, form]);
+  }, [isSuccess, statuses, values.status_id, setFieldValue]);
 
   const handleClose = () => {
     if (pending) return;
     onClose();
   };
 
-  const onSubmit = form.onSubmit((values) => {
+  const onSubmit = handleFormSubmit((submitted) => {
     const assigneeId =
-      values.assignee_id && values.assignee_id !== UNASSIGNED_VALUE
-        ? values.assignee_id
+      submitted.assignee_id && submitted.assignee_id !== UNASSIGNED_VALUE
+        ? submitted.assignee_id
         : null;
 
-    createMutation.mutate(
+    createIssue(
       {
         project_id: projectId,
-        title: values.title.trim(),
-        description: values.description.trim() || undefined,
-        status_id: values.status_id,
-        issue_type: values.issue_type,
+        title: submitted.title.trim(),
+        description: submitted.description.trim() || undefined,
+        status_id: submitted.status_id,
+        issue_type: submitted.issue_type,
         assignee_id: assigneeId,
       },
       {
         onSuccess: () => {
-          form.reset();
+          reset();
           onClose();
         },
       },
@@ -113,7 +132,7 @@ const CreateIssueModal = ({
     [assigneeUsers, t],
   );
 
-  const isTask = isIssueTask(form.values.issue_type);
+  const isTask = isIssueTask(values.issue_type);
 
   return (
     <Modal
@@ -137,7 +156,7 @@ const CreateIssueModal = ({
             <SegmentedControl
               data={[
                 {
-                  value: "ticket",
+                  value: IssueTypes.TASK,
                   label: (
                     <Group gap={6} justify="center" align="center" wrap="nowrap">
                       <IconClipboardList
@@ -149,7 +168,7 @@ const CreateIssueModal = ({
                   ),
                 },
                 {
-                  value: "bug",
+                  value: IssueTypes.BUG,
                   label: (
                     <Group gap={6} justify="center" align="center" wrap="nowrap">
                       <IconBug size={14} color="var(--mantine-color-red-6)" />
@@ -158,14 +177,14 @@ const CreateIssueModal = ({
                   ),
                 },
               ]}
-              {...form.getInputProps("issue_type")}
+              {...getInputProps("issue_type")}
               disabled={pending}
               fullWidth
             />
 
             <TextInput
               label={t("issues.create.titleLabel")}
-              {...form.getInputProps("title")}
+              {...getInputProps("title")}
               disabled={pending}
               data-autofocus
             />
@@ -179,14 +198,14 @@ const CreateIssueModal = ({
               minRows={6}
               autosize
               maxRows={16}
-              {...form.getInputProps("description")}
+              {...getInputProps("description")}
               disabled={pending}
             />
 
             <Select
               label={t("issues.create.statusLabel")}
               data={statusData}
-              {...form.getInputProps("status_id")}
+              {...getInputProps("status_id")}
               disabled={pending}
               comboboxProps={{ withinPortal: true }}
             />
@@ -197,7 +216,7 @@ const CreateIssueModal = ({
               <Select
                 label={t("issues.create.assigneeLabel")}
                 data={assigneeData}
-                {...form.getInputProps("assignee_id")}
+                {...getInputProps("assignee_id")}
                 disabled={pending}
                 comboboxProps={{ withinPortal: true }}
               />

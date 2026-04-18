@@ -1,10 +1,12 @@
+import type { IssueType } from "./issueTypeUtils";
+
+export type { IssueType };
+
 export type ProjectBrief = {
   id: string;
   key: string;
   name: string;
 };
-
-export type IssueType = "bug" | "ticket";
 
 export type Issue = {
   id: string;

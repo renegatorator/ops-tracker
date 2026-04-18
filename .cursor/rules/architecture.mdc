@@ -67,7 +67,7 @@ Existing features: `admin`, `audit`, `dashboard`, `issues`, `projects`, `setting
 
 ### Issue type mapping (important domain quirk)
 - DB enum is `"bug" | "ticket"`; UI displays **Bug** / **Task**.
-- Always compare via `src/features/issues/issueTypeUtils.ts` (`ISSUE_TYPE`, `isIssueBug`, `isIssueTask`) — never compare the raw string.
+- Always compare via `src/features/issues/issueTypeUtils.ts` (`IssueTypes`, `isIssueBug`, `isIssueTask`) — never compare the raw string.
 
 ### Issues soft delete
 - `issues.deleted_at` is used for soft delete (archive). Lists must filter it out unless explicitly showing archived.

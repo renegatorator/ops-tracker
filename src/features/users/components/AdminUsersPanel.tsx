@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
-import { APP_ROLE, type AppRole } from "@/lib/auth/types";
+import { type AppRole, AppRoles } from "@/lib/auth/types";
 
 import { useAdminUsersList } from "../hooks/useAdminUsersList";
 import { useUpdateUserRole } from "../hooks/useUpdateUserRole";
@@ -21,7 +21,7 @@ const canEditUserRow = (
   targetRole: AppRole,
 ): boolean => {
   if (actorIsSuper) return true;
-  return targetRole === APP_ROLE.user;
+  return targetRole === AppRoles.USER;
 };
 
 const AdminUsersPanel = ({
@@ -30,17 +30,21 @@ const AdminUsersPanel = ({
 }: AdminUsersPanelProps) => {
   const t = useTranslations();
   const { data, isPending, isError, error } = useAdminUsersList(locale);
-  const updateRole = useUpdateUserRole(locale);
+  const {
+    mutate: updateUserRole,
+    isPending: updateRolePending,
+    variables: updateRoleVariables,
+  } = useUpdateUserRole(locale);
 
   const roleSelectData = useMemo(
     () =>
       [
-        { value: APP_ROLE.user, label: t("admin.roles.user") },
-        { value: APP_ROLE.admin, label: t("admin.roles.admin") },
+        { value: AppRoles.USER, label: t("admin.roles.user") },
+        { value: AppRoles.ADMIN, label: t("admin.roles.admin") },
         ...(isSuperAdmin
           ? [
               {
-                value: APP_ROLE.super_admin,
+                value: AppRoles.SUPER_ADMIN,
                 label: t("admin.roles.super_admin"),
               },
             ]
@@ -89,11 +93,11 @@ const AdminUsersPanel = ({
                       value={row.role}
                       onChange={(v) => {
                         if (!v || v === row.role) return;
-                        updateRole.mutate({ userId: row.id, role: v });
+                        updateUserRole({ userId: row.id, role: v });
                       }}
                       disabled={
-                        updateRole.isPending &&
-                        updateRole.variables?.userId === row.id
+                        updateRolePending &&
+                        updateRoleVariables?.userId === row.id
                       }
                       aria-label={t("admin.users.role")}
                     />

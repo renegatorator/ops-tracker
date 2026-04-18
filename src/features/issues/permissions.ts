@@ -1,4 +1,4 @@
-import { APP_ROLE, isAdminAccessRole, type UserAuthContext } from "@/lib/auth/types";
+import { AppRoles, isAdminAccessRole, type UserAuthContext } from "@/lib/auth/types";
 
 import type { IssueWithStatus } from "./types";
 
@@ -12,7 +12,7 @@ export const canUserTransitionIssueStatus = (
   if (isAdminAccessRole(ctx.role)) {
     return true;
   }
-  if (ctx.role === APP_ROLE.user) {
+  if (ctx.role === AppRoles.USER) {
     return (
       issue.reporter_id === ctx.user.id || issue.assignee_id === ctx.user.id
     );

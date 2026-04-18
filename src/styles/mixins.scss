@@ -1,9 +1,10 @@
+@use "sass:map";
 @use "./theme.scss" as theme;
 
 // ==================== Media Query Mixin ====================
 @mixin mq($breakpoint) {
-  @if map-has-key(theme.$breakpoints, $breakpoint) {
-    $breakpoint-value: map-get(theme.$breakpoints, $breakpoint);
+  @if map.has-key(theme.$breakpoints, $breakpoint) {
+    $breakpoint-value: map.get(theme.$breakpoints, $breakpoint);
     @media (max-width: $breakpoint-value) {
       @content;
     }

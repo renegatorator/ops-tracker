@@ -8,6 +8,7 @@ import { updateIssue } from "@/features/issues/actions";
 import { projectQueryKeys } from "@/features/projects/keys";
 
 import { isIssuesQueryError, IssuesQueryError } from "../issues-query-error";
+import type { IssueType } from "../issueTypeUtils";
 import { issueQueryKeys } from "../keys";
 import type { IssueWithStatus } from "../types";
 
@@ -19,7 +20,7 @@ export const useUpdateIssue = (locale: string, issueId: string) => {
     mutationFn: async (input: {
       title?: string;
       description?: string | null;
-      issue_type?: "bug" | "ticket";
+      issue_type?: IssueType;
     }) => {
       const result = await updateIssue(locale, {
         issueId,

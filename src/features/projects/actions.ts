@@ -8,7 +8,7 @@ import { localizedPath } from "@/i18n/localized-path";
 import { logAudit } from "@/lib/audit/log-audit";
 import { assertRole, ForbiddenError } from "@/lib/auth/rbac";
 import { getUserAuthContext } from "@/lib/auth/session";
-import { ADMIN_ACCESS_ROLES, SUPER_ADMIN_ROLES } from "@/lib/auth/types";
+import { AdminAccessRoles, SuperAdminRoles } from "@/lib/auth/types";
 import {
   projectBoardPath,
   projectIssuesPath,
@@ -85,7 +85,7 @@ export const createProject = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -115,7 +115,7 @@ export const updateProject = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -148,7 +148,7 @@ export const renameProject = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, SUPER_ADMIN_ROLES);
+    assertRole(ctx, SuperAdminRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -201,7 +201,7 @@ export const addProjectMember = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };
@@ -232,7 +232,7 @@ export const removeProjectMember = async (
   const ctx = await getUserAuthContext();
   if (!ctx) return unauthorized();
   try {
-    assertRole(ctx, ADMIN_ACCESS_ROLES);
+    assertRole(ctx, AdminAccessRoles);
   } catch (e) {
     if (e instanceof ForbiddenError) {
       return { ok: false, errorKey: "errors.forbidden" };

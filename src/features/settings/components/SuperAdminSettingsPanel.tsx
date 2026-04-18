@@ -34,7 +34,15 @@ const SuperAdminSettingsPanel = ({
   nodeEnv,
 }: SuperAdminSettingsPanelProps) => {
   const t = useTranslations();
-  const resetMut = useResetDemoData(locale);
+  const {
+    mutate: resetDemoData,
+    isPending: resetPending,
+    isSuccess: resetSucceeded,
+    isError: resetFailed,
+    data: resetData,
+    error: resetError,
+    reset: clearResetState,
+  } = useResetDemoData(locale);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const translateErrorKey = (key: string): string =>
@@ -103,23 +111,23 @@ const SuperAdminSettingsPanel = ({
             variant="light"
             disabled={!demoResetEnabled}
             onClick={() => {
-              resetMut.reset();
+              clearResetState();
               setConfirmOpen(true);
             }}
           >
             {t("admin.settings.demoReset.button")}
           </Button>
         </div>
-        {resetMut.isSuccess ? (
+        {resetSucceeded ? (
           <Text size="sm" c="green">
             {t("admin.settings.demoReset.success", {
-              count: resetMut.data.issuesDeleted,
+              count: resetData.issuesDeleted,
             })}
           </Text>
         ) : null}
-        {resetMut.isError && isIssuesQueryError(resetMut.error) ? (
+        {resetFailed && isIssuesQueryError(resetError) ? (
           <Text size="sm" c="red">
-            {translateErrorKey(resetMut.error.errorKey)}
+            {translateErrorKey(resetError.errorKey)}
           </Text>
         ) : null}
       </Stack>
@@ -137,9 +145,9 @@ const SuperAdminSettingsPanel = ({
             </Button>
             <Button
               color="red"
-              loading={resetMut.isPending}
+              loading={resetPending}
               onClick={() => {
-                resetMut.mutate(undefined, {
+                resetDemoData(undefined, {
                   onSettled: () => setConfirmOpen(false),
                 });
               }}
