@@ -7,6 +7,8 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 
 ## [Unreleased]
 
+## [2.1.3] — 2026-04-18
+
 ### Added
 
 - **Sticky landing header** — `PagesLayout` now renders a dedicated `PagesHeader` that becomes a fixed, slide-down bar with a subtle shadow once the user scrolls, keeping language, theme, and sign-in controls accessible on long marketing pages.
