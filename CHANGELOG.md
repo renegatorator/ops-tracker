@@ -7,6 +7,8 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 
 ## [Unreleased]
 
+---
+
 ## [2.1.3] — 2026-04-18
 
 ### Added
@@ -26,6 +28,14 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 - **Color-scheme bootstrap inlined** — Replaced Mantine's `ColorSchemeScript` with an inline `next/script` (`beforeInteractive`) that reads `mantine-color-scheme-value` from `localStorage` and sets `data-mantine-color-scheme` on `<html>` before React hydrates, eliminating the brief light-mode flash for users on dark mode.
 - **Header controls alignment** — `PagesLayout` controls now align to `center` instead of `flex-end`, keeping icons visually balanced regardless of label height.
 - **`overflow-x` on root** — `html, body` now use `overflow-x: clip` instead of `hidden` so descendants can still use `position: sticky` (needed by the new sticky header).
+
+### Fixed
+
+- **No layout jump on sticky header** — `PagesHeader` now uses `position: sticky` permanently and only toggles cosmetic styles (background, shadow, padding) on scroll, instead of switching to `position: fixed` past the threshold and shifting the page content up by the header height.
+- **Throttled scroll listener** — `PagesHeader` batches scroll updates through `requestAnimationFrame` and cancels the pending frame on unmount, avoiding state updates on every scroll tick.
+- **Reduced-motion respected on landing** — Landing page wraps the global `scroll-behavior: smooth` in a `prefers-reduced-motion: reduce` override, and the sticky header transition is disabled under the same media query.
+- **Tooltips on disabled landing buttons** — The "Request a demo" / demo user / demo admin buttons now use Mantine's `data-disabled` + `onClick={(e) => e.preventDefault()}` pattern so the wrapping `Tooltip` actually fires on hover/focus (HTML `disabled` controls swallow pointer events).
+- **CHANGELOG separator** — Restored the missing `---` separator between `## [Unreleased]` and `## [2.1.3]` to match the rest of the file.
 
 ---
 

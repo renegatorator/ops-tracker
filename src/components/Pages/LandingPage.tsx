@@ -135,7 +135,8 @@ const LandingPage = async () => {
               <Button
                 size="lg"
                 radius="md"
-                disabled
+                data-disabled
+                onClick={(event) => event.preventDefault()}
                 className={classes.ctaPrimary}
               >
                 {t("landing.cta.requestDemo")}
@@ -218,7 +219,12 @@ const LandingPage = async () => {
                 position="top"
                 withArrow
               >
-                <Button size="lg" variant="filled" disabled>
+                <Button
+                  size="lg"
+                  variant="filled"
+                  data-disabled
+                  onClick={(event) => event.preventDefault()}
+                >
                   {t("landing.demoUserButton")}
                 </Button>
               </Tooltip>
@@ -227,7 +233,12 @@ const LandingPage = async () => {
                 position="top"
                 withArrow
               >
-                <Button size="lg" variant="light" disabled>
+                <Button
+                  size="lg"
+                  variant="light"
+                  data-disabled
+                  onClick={(event) => event.preventDefault()}
+                >
                   {t("landing.demoAdminButton")}
                 </Button>
               </Tooltip>
