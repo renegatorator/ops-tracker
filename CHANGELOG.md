@@ -7,6 +7,38 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 
 ## [Unreleased]
 
+---
+
+## [2.1.3] — 2026-04-18
+
+### Added
+
+- **Sticky landing header** — `PagesLayout` now renders a dedicated `PagesHeader` that becomes a fixed, slide-down bar with a subtle shadow once the user scrolls, keeping language, theme, and sign-in controls accessible on long marketing pages.
+- **`top` layout variant** — `PagesLayout` accepts a `variant="top"` prop that anchors content to the top of the viewport (used by the landing page) instead of vertically centring it.
+- **Hero glow background** — Landing-page hero now sits on a soft radial violet glow with light/dark-aware tokens (`--hero-glow-gradient`, `$hero-glow-violet`, `$hero-glow-violet-deep`) and a new `soft-glow` SCSS mixin.
+- **Landing CTA buttons** — Hero now shows two CTAs: a disabled "Request a demo" button (with a "Coming soon" tooltip) and a "Learn more" button. New `landing.cta.requestDemo` / `landing.cta.learnMore` strings added in en/de/si.
+- **Sign-in nav link in pages header** — Public pages (landing, login) expose a sign-in entry in the top-right control cluster via the new `SignInNavLink` component.
+- **Login page logo links home** — The Ops Tracker logo on the login page is now a locale-aware link back to the landing page.
+
+### Changed
+
+- **Landing page browser title is "Ops Tracker"** — Removed the stale `Startseite` (de) / `Domov` (si) titles; all locales now resolve `seo.routes.home.title` to `Ops Tracker`. Home `generateMetadata` returns the title as `{ absolute }` so the root `"%s | Ops Tracker"` template no longer doubles it up.
+- **"Learn more" deep-links to portfolio** — The landing-page Learn more button now opens `https://renekrajnc.com/<locale>/projects` in a new tab, preserving the active app locale (English unprefixed; `de`, `si` prefixed).
+- **Language switcher restyled** — The trigger swapped from a custom `UnstyledButton` to a Mantine `ActionIcon` + `Tooltip`, matching the visual weight of the theme toggle and other header controls. Default flag size bumped from 16px to 18px.
+- **Color-scheme bootstrap inlined** — Replaced Mantine's `ColorSchemeScript` with an inline `next/script` (`beforeInteractive`) that reads `mantine-color-scheme-value` from `localStorage` and sets `data-mantine-color-scheme` on `<html>` before React hydrates, eliminating the brief light-mode flash for users on dark mode.
+- **Header controls alignment** — `PagesLayout` controls now align to `center` instead of `flex-end`, keeping icons visually balanced regardless of label height.
+- **`overflow-x` on root** — `html, body` now use `overflow-x: clip` instead of `hidden` so descendants can still use `position: sticky` (needed by the new sticky header).
+
+### Fixed
+
+- **No layout jump on sticky header** — `PagesHeader` now uses `position: sticky` permanently and only toggles cosmetic styles (background, shadow, padding) on scroll, instead of switching to `position: fixed` past the threshold and shifting the page content up by the header height.
+- **Throttled scroll listener** — `PagesHeader` batches scroll updates through `requestAnimationFrame` and cancels the pending frame on unmount, avoiding state updates on every scroll tick.
+- **Reduced-motion respected on landing** — Landing page wraps the global `scroll-behavior: smooth` in a `prefers-reduced-motion: reduce` override, and the sticky header transition is disabled under the same media query.
+- **Tooltips on disabled landing buttons** — The "Request a demo" / demo user / demo admin buttons now use Mantine's `data-disabled` + `onClick={(e) => e.preventDefault()}` pattern so the wrapping `Tooltip` actually fires on hover/focus (HTML `disabled` controls swallow pointer events).
+- **CHANGELOG separator** — Restored the missing `---` separator between `## [Unreleased]` and `## [2.1.3]` to match the rest of the file.
+
+---
+
 ## [2.1.2] — 2026-04-13
 
 ### Added

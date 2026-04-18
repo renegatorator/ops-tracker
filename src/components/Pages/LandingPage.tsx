@@ -1,5 +1,6 @@
 import {
   Badge,
+  Box,
   Button,
   Container,
   Divider,
@@ -20,13 +21,18 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import Typography from "@/components/Typography/Typography";
-import { Link } from "@/i18n/navigation";
-import { routes } from "@/lib/routes";
 
 import classes from "./LandingPage.module.scss";
+
+const PORTFOLIO_BASE_URL = "https://renekrajnc.com";
+
+const buildPortfolioProjectsUrl = (locale: string) => {
+  const prefix = locale === "en" ? "" : `/${locale}`;
+  return `${PORTFOLIO_BASE_URL}${prefix}/projects`;
+};
 
 const features = [
   {
@@ -69,62 +75,93 @@ const features = [
 
 const LandingPage = async () => {
   const t = await getTranslations();
+  const locale = await getLocale();
+  const learnMoreHref = buildPortfolioProjectsUrl(locale);
 
   return (
     <Container size="lg">
       {/* Hero */}
-      <Stack
-        gap="xl"
-        align="center"
-        justify="center"
-        className={classes.hero}
-      >
-        <div className={classes.logoWrapper}>
-          <Image
-            src="/logo-light.svg"
-            alt="Ops Tracker"
-            width={266}
-            height={72}
-            className="ops-logo-light"
-            style={{ display: "none" }}
-            unoptimized
-          />
-          <Image
-            src="/logo-dark.svg"
-            alt=""
-            aria-hidden="true"
-            width={266}
-            height={72}
-            className="ops-logo-dark"
-            style={{ display: "none" }}
-            unoptimized
-          />
-        </div>
+      <Box className={classes.heroWrapper}>
+        <div className={classes.heroGlow} aria-hidden="true" />
+        <Stack gap="lg" align="center" className={classes.hero}>
+          <div className={classes.logoWrapper}>
+            <Image
+              src="/logo-light.svg"
+              alt="Ops Tracker"
+              width={266}
+              height={72}
+              className="ops-logo-light"
+              style={{ display: "none" }}
+              unoptimized
+            />
+            <Image
+              src="/logo-dark.svg"
+              alt=""
+              aria-hidden="true"
+              width={266}
+              height={72}
+              className="ops-logo-dark"
+              style={{ display: "none" }}
+              unoptimized
+            />
+          </div>
 
-        <Badge variant="light" color="violet" size="lg" radius="sm">
-          {t("landing.badge")}
-        </Badge>
+          <Badge
+            variant="filled"
+            color="violet"
+            size="md"
+            radius="sm"
+            className={classes.heroBadge}
+          >
+            {t("landing.badge")}
+          </Badge>
 
-        <Text
-          size="lg"
-          c="dimmed"
-          maw={560}
-          style={{ textAlign: "center", lineHeight: 1.6 }}
-        >
-          {t("landing.description")}
-        </Text>
+          <Text
+            size="lg"
+            maw={620}
+            ta="center"
+            lh={1.6}
+            className={classes.heroDescription}
+          >
+            {t("landing.description")}
+          </Text>
 
-        <Link href={routes.login}>
-          <Button component="span" size="xl" variant="filled" px="xl">
-            {t("landing.loginButton")}
-          </Button>
-        </Link>
-      </Stack>
+          <Group justify="center" gap="sm" mt="md">
+            <Tooltip
+              label={t("landing.demoComingSoon")}
+              position="top"
+              withArrow
+            >
+              <Button
+                size="lg"
+                radius="md"
+                data-disabled
+                onClick={(event) => event.preventDefault()}
+                className={classes.ctaPrimary}
+              >
+                {t("landing.cta.requestDemo")}
+              </Button>
+            </Tooltip>
+            <Button
+              component="a"
+              href={learnMoreHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="light"
+              size="lg"
+              radius="md"
+              className={classes.ctaSecondary}
+            >
+              {t("landing.cta.learnMore")}
+            </Button>
+          </Group>
+        </Stack>
+      </Box>
 
       <Divider my="xl" />
 
       {/* Feature grid */}
-      <Stack gap="xl" pb="xl">
+      <Stack id="features" gap="xl" pb="xl">
         <Stack gap="xs" align="center" style={{ textAlign: "center" }}>
           <Typography type="heading-02">
             {t("landing.featuresHeading")}
@@ -182,7 +219,12 @@ const LandingPage = async () => {
                 position="top"
                 withArrow
               >
-                <Button size="lg" variant="filled" disabled>
+                <Button
+                  size="lg"
+                  variant="filled"
+                  data-disabled
+                  onClick={(event) => event.preventDefault()}
+                >
                   {t("landing.demoUserButton")}
                 </Button>
               </Tooltip>
@@ -191,7 +233,12 @@ const LandingPage = async () => {
                 position="top"
                 withArrow
               >
-                <Button size="lg" variant="light" disabled>
+                <Button
+                  size="lg"
+                  variant="light"
+                  data-disabled
+                  onClick={(event) => event.preventDefault()}
+                >
                   {t("landing.demoAdminButton")}
                 </Button>
               </Tooltip>

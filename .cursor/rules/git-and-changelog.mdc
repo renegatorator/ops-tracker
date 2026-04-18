@@ -38,3 +38,18 @@ When prompted to update the changelog:
 2. Inspect `git` history for changes not yet reflected.
 3. Add the missing changes under the `## [Unreleased]` section.
 4. Do not touch any existing content outside of `## [Unreleased]`.
+
+## Hard rules — never do these
+
+- NEVER delete, rename, or merge an existing version heading (`## [x.y.z] — YYYY-MM-DD`). Released sections are append-only history.
+- NEVER remove the `---` separator that sits between version sections.
+- NEVER include any line of an existing version section in the `old_string` of an edit. If you need an anchor below `[Unreleased]`, anchor on the **last bullet you yourself wrote inside `[Unreleased]`**, not on the next version heading.
+- When inserting new content into `[Unreleased]`, only add lines — do not replace lines that belong to a released version.
+
+## Verification step (mandatory)
+
+After editing `CHANGELOG.md`, re-read the file and confirm that:
+- Every version heading that existed before your edit still exists, with the same version number, date, and `---` separator above it.
+- The `[Unreleased]` section is still followed by the previously most-recent version heading (e.g. `## [Unreleased]` → `---` → `## [2.1.2] — 2026-04-13`).
+
+If either check fails, restore the missing heading/separator before reporting completion.

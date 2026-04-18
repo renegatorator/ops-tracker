@@ -25,6 +25,10 @@
     "demoAdminButton": "Demo kot skrbnik",
     "demoComingSoon": "Kmalu na voljo",
     "demoDisclaimer": "Demo različice prihajajo kmalu. Registracija ni potrebna.",
+    "cta": {
+      "requestDemo": "Zahtevaj predstavitev",
+      "learnMore": "Več informacij"
+    },
     "demoSectionHeading": "Zahtevaj demo",
     "demoSectionSubheading": "Oglej si Ops Tracker kot navaden uporabnik ali kot skrbnik. Demo različice prihajajo kmalu.",
     "featuresHeading": "Vse kar vaša ekipa potrebuje",
@@ -508,7 +512,7 @@
     },
     "routes": {
       "home": {
-        "title": "Domov",
+        "title": "Ops Tracker",
         "description": "Pregled tvojega ops trackerja."
       },
       "dashboard": {

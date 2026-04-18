@@ -2,14 +2,11 @@ import "../globals.scss";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 
-import {
-  ColorSchemeScript,
-  mantineHtmlProps,
-  MantineProvider,
-} from "@mantine/core";
+import { mantineHtmlProps, MantineProvider } from "@mantine/core";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import {
   getMessages,
@@ -83,10 +80,10 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
 
   return (
     <html lang={locale} {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript defaultColorScheme="auto" />
-      </head>
       <body className={inter.className}>
+        <Script id="mantine-color-scheme" strategy="beforeInteractive">
+          {`(function(){try{var s=localStorage.getItem('mantine-color-scheme-value')||'auto';var r=s==='auto'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):s;document.documentElement.setAttribute('data-mantine-color-scheme',r);}catch(e){}})();`}
+        </Script>
         <MantineProvider defaultColorScheme="auto">
           <NextIntlClientProvider messages={messages}>
             <QueryProvider>
