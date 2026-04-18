@@ -18,6 +18,7 @@ import { IconPlus, IconSettings } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 import { createProject } from "@/features/projects/actions";
 import { useProjectsList } from "@/features/projects/hooks/useProjectsList";
@@ -127,7 +128,10 @@ const ProjectsListPageClient = ({
       ) : null}
 
       {isPending ? (
-        <Text c="dimmed">{t("projects.list.loading")}</Text>
+        <TableSkeleton
+          columnWidths={["20%", "55%", "25%"]}
+          ariaLabel={t("projects.list.loading")}
+        />
       ) : isError ? (
         <Text c="red">
           {isIssuesQueryError(error)

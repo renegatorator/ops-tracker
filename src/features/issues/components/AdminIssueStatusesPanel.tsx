@@ -18,6 +18,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import {
   createIssueStatus,
   deleteIssueStatus,
@@ -154,7 +155,12 @@ const AdminIssueStatusesPanel = ({
   };
 
   if (isPending) {
-    return <Text c="dimmed">{t("admin.statuses.loading")}</Text>;
+    return (
+      <TableSkeleton
+        columnWidths={["30%", "20%", "10%", "15%", "15%", "10%"]}
+        ariaLabel={t("admin.statuses.loading")}
+      />
+    );
   }
   if (isError) {
     const key = isIssuesQueryError(error) ? error.errorKey : "errors.readFailed";

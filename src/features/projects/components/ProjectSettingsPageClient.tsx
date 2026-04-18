@@ -7,7 +7,6 @@ import {
   Select,
   Stack,
   Table,
-  Text,
   TextInput,
   Title,
 } from "@mantine/core";
@@ -17,6 +16,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { listUserProfilesForIssueFilters } from "@/features/issues/actions";
 import { IssuesQueryError } from "@/features/issues/issues-query-error";
 import { addProjectMember, removeProjectMember, renameProject } from "@/features/projects/actions";
@@ -197,7 +197,11 @@ const ProjectSettingsPageClient = ({
         </Button>
       </Group>
       {isPending ? (
-        <Text c="dimmed">{t("projects.settings.loading")}</Text>
+        <TableSkeleton
+          columnWidths={["45%", "30%", "25%"]}
+          rows={4}
+          ariaLabel={t("projects.settings.loading")}
+        />
       ) : (
         <Table.ScrollContainer minWidth={400}>
           <Table striped>

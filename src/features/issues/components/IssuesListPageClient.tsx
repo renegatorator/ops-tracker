@@ -18,6 +18,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import IssuesTableSkeleton from "@/components/skeletons/IssuesTableSkeleton";
 import { usePathname, useRouter } from "@/i18n/navigation";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
@@ -309,7 +310,7 @@ const IssuesListPageClient = ({
       </SimpleGrid>
 
       {isPending ? (
-        <Text c="dimmed">{t("issues.loading")}</Text>
+        <IssuesTableSkeleton />
       ) : isError ? (
         <Text c="red">
           {t(

@@ -4,6 +4,7 @@ import { Select, Table, Text } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 import { APP_ROLE, type AppRole } from "@/lib/auth/types";
 
@@ -49,7 +50,12 @@ const AdminUsersPanel = ({
   );
 
   if (isPending) {
-    return <Text c="dimmed">{t("admin.users.loading")}</Text>;
+    return (
+      <TableSkeleton
+        columnWidths={["40%", "35%", "25%"]}
+        ariaLabel={t("admin.users.loading")}
+      />
+    );
   }
   if (isError) {
     const key = isIssuesQueryError(error)

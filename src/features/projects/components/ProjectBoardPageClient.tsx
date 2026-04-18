@@ -9,7 +9,18 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Anchor, Button, Group, Modal, Stack, Text, Title, Tooltip } from "@mantine/core";
+import {
+  Anchor,
+  Box,
+  Button,
+  Group,
+  LoadingOverlay,
+  Modal,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconBug, IconClipboardList, IconPlus } from "@tabler/icons-react";
@@ -289,32 +300,43 @@ const ProjectBoardPageClient = ({
         )}
       </Group>
 
-      <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-        <div
-          style={{
-            display: "flex",
-            gap: 12,
-            flexWrap: "wrap",
-            alignItems: "stretch",
-          }}
-        >
-          {sortedStatuses.map((s) => (
-            <StatusColumn key={s.id} statusId={s.id} title={s.name}>
-              {(issuesByStatus.get(s.id) ?? []).map((issue) => (
-                <IssueCard
-                  key={issue.id}
-                  issue={issue}
-                  projectKey={projectKey}
-                  statuses={sortedStatuses}
-                  onTransition={onTransition}
-                  onRequestClose={setIssueToClose}
-                  isAdmin={isAdmin}
-                />
-              ))}
-            </StatusColumn>
-          ))}
-        </div>
-      </DndContext>
+      <Box
+        pos="relative"
+        aria-busy={transition.isPending || closeIssue.isPending}
+      >
+        <LoadingOverlay
+          visible={transition.isPending || closeIssue.isPending}
+          zIndex={5}
+          overlayProps={{ blur: 1 }}
+          loaderProps={{ "aria-label": t("projects.board.loading") }}
+        />
+        <DndContext sensors={sensors} onDragEnd={onDragEnd}>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              flexWrap: "wrap",
+              alignItems: "stretch",
+            }}
+          >
+            {sortedStatuses.map((s) => (
+              <StatusColumn key={s.id} statusId={s.id} title={s.name}>
+                {(issuesByStatus.get(s.id) ?? []).map((issue) => (
+                  <IssueCard
+                    key={issue.id}
+                    issue={issue}
+                    projectKey={projectKey}
+                    statuses={sortedStatuses}
+                    onTransition={onTransition}
+                    onRequestClose={setIssueToClose}
+                    isAdmin={isAdmin}
+                  />
+                ))}
+              </StatusColumn>
+            ))}
+          </div>
+        </DndContext>
+      </Box>
 
       <Modal
         opened={issueToClose !== null}

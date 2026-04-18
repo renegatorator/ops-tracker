@@ -13,6 +13,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
 import { auditMetadataPreview } from "../auditUtils";
@@ -120,7 +121,10 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
       </Group>
 
       {isPending ? (
-        <Text c="dimmed">{t("admin.audit.loading")}</Text>
+        <TableSkeleton
+          columnWidths={["15%", "15%", "20%", "15%", "15%", "20%"]}
+          ariaLabel={t("admin.audit.loading")}
+        />
       ) : isError ? (
         <Text c="red">
           {isIssuesQueryError(error)

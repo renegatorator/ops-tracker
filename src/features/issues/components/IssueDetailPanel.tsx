@@ -2,10 +2,12 @@
 
 import {
   ActionIcon,
+  Box,
   Button,
   Divider,
   Group,
   Loader,
+  LoadingOverlay,
   Modal,
   SegmentedControl,
   Select,
@@ -243,8 +245,27 @@ const IssueDetailPanel = ({
             </>
           )}
 
-          <SimpleGrid cols={{ base: 1, sm: 2 }}>
-            {canTransitionStatus ? (
+          <Box
+            pos="relative"
+            aria-busy={
+              transition.isPending ||
+              assignMutation.isPending ||
+              updateMutation.isPending
+            }
+          >
+            <LoadingOverlay
+              visible={
+                transition.isPending ||
+                assignMutation.isPending ||
+                updateMutation.isPending
+              }
+              zIndex={2}
+              overlayProps={{ blur: 1 }}
+              loaderProps={{ "aria-label": t("issues.loading") }}
+            />
+            <Stack gap="md">
+              <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                {canTransitionStatus ? (
               statusesError ? (
                 <Text c="dimmed" size="sm">
                   {data.issue_statuses?.name ?? "—"}
@@ -382,6 +403,8 @@ const IssueDetailPanel = ({
               </Group>
             </Stack>
           )}
+            </Stack>
+          </Box>
 
           {canViewIssueAudit ? (
             <IssueAuditActivitySection locale={locale} issueId={issueId} />
