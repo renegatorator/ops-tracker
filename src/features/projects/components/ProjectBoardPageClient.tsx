@@ -18,8 +18,8 @@ import { useTranslations } from "next-intl";
 import { type ReactNode, useMemo, useState } from "react";
 
 import { transitionIssueStatus } from "@/features/issues/actions";
-import IssueCardMenu from "@/features/issues/components/IssueCardMenu";
 import CreateIssueModal from "@/features/issues/components/CreateIssueModal";
+import IssueCardMenu from "@/features/issues/components/IssueCardMenu";
 import { useIssueMenu } from "@/features/issues/hooks/useIssueMenu";
 import { useIssuesList } from "@/features/issues/hooks/useIssuesList";
 import { useIssueStatuses } from "@/features/issues/hooks/useIssueStatuses";

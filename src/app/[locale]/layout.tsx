@@ -16,6 +16,7 @@ import {
   getTranslations,
   setRequestLocale,
 } from "next-intl/server";
+import type { ReactNode } from "react";
 
 import AppNotifications from "@/components/Providers/AppNotifications";
 import QueryProvider from "@/components/Providers/QueryProvider";
@@ -28,7 +29,7 @@ const inter = Inter({
 });
 
 interface LocaleLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }
 

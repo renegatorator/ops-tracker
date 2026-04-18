@@ -25,7 +25,7 @@ interface WorkspaceShellClientProps {
   locale: string;
   isStaff: boolean;
   headerRight: ReactNode;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const OpsTrackerLogo = () => (

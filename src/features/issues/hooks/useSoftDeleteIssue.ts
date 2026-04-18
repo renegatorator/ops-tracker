@@ -26,10 +26,6 @@ export const useSoftDeleteIssue = (locale: string) => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: issueQueryKeys.lists() });
       await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
-      notifications.show({
-        title: tDetail("closeSuccessTitle"),
-        color: "green",
-      });
     },
     onError: (err) => {
       const key = isIssuesQueryError(err)
