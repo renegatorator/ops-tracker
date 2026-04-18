@@ -1,0 +1,45 @@
+---
+description: Core code conventions for this project (TS/TSX)
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Code Conventions
+
+## Arrow functions
+Use arrow functions whenever possible, including for components, handlers, and utilities.
+
+```ts
+// BAD
+function getUser(id: string) { /* ... */ }
+
+// GOOD
+const getUser = (id: string) => { /* ... */ };
+```
+
+## Translations
+Use `useTranslations` without a namespace argument. Always pass the full key path to `t`.
+
+```tsx
+// BAD
+const t = useTranslations('issues.detail');
+t('title');
+
+// GOOD
+const t = useTranslations();
+t('issues.detail.title');
+```
+
+## Type safety
+Stick to strict type safety. When a set of literal values is needed, declare a `const` assertion and derive the type from it.
+
+```ts
+// GOOD
+const ISSUE_STATUSES = ['open', 'in_progress', 'resolved'] as const;
+type IssueStatus = (typeof ISSUE_STATUSES)[number];
+```
+
+Avoid `any`, non-null assertions (`!`), and untyped casts. Prefer narrowing and discriminated unions.
+
+## Extract hooks from cluttered components
+If a component file accumulates non-trivial logic (effects, derived state, mutations, handlers), extract it into a custom hook placed in the feature's existing `hooks/` folder (e.g. `src/features/<feature>/hooks/`). Keep the component file focused on JSX + wiring.
