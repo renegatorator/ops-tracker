@@ -16,13 +16,13 @@ export const ProjectIssuesHeaderActions = ({
   locale,
   projectId,
 }: ProjectIssuesHeaderActionsProps) => {
-  const t = useTranslations("projects.issues");
+  const t = useTranslations();
   const [opened, setOpened] = useState(false);
 
   return (
     <>
       <Button onClick={() => setOpened(true)} size="sm" leftSection={<IconPlus size={16} />}>
-        {t("newIssue")}
+        {t("projects.issues.newIssue")}
       </Button>
       <CreateIssueModal
         locale={locale}

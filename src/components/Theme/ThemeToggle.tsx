@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 const ThemeToggle = () => {
-  const t = useTranslations("ui.themeToggle");
+  const t = useTranslations();
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light");
   const [mounted, setMounted] = useState(false);
@@ -26,11 +26,13 @@ const ThemeToggle = () => {
   };
 
   return (
-    <Tooltip label={isDark ? t("toLight") : t("toDark")}>
+    <Tooltip
+      label={isDark ? t("ui.themeToggle.toLight") : t("ui.themeToggle.toDark")}
+    >
       <ActionIcon
         variant="subtle"
         size="lg"
-        aria-label={t("aria")}
+        aria-label={t("ui.themeToggle.aria")}
         onClick={handleToggle}
       >
         {mounted ? (

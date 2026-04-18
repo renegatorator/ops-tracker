@@ -28,7 +28,7 @@ const Flag = ({ locale, size = 16 }: { locale: string; size?: number }) => (
 );
 
 const LanguageSwitcher = () => {
-  const t = useTranslations("ui.language");
+  const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -45,7 +45,7 @@ const LanguageSwitcher = () => {
     <Menu position="bottom-end" withinPortal>
       <Menu.Target>
         <UnstyledButton
-          aria-label={t("label")}
+          aria-label={t("ui.language.label")}
           disabled={isPending}
           style={{
             display: "flex",
@@ -71,7 +71,7 @@ const LanguageSwitcher = () => {
             onClick={() => switchLocale(value)}
             fw={value === locale ? 700 : 400}
           >
-            {t(value)}
+            {t(`ui.language.${value}`)}
           </Menu.Item>
         ))}
       </Menu.Dropdown>

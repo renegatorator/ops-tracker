@@ -13,7 +13,7 @@ interface PagesLayoutProps {
 }
 
 const PagesLayout = async ({ children }: PagesLayoutProps) => {
-  const t = await getTranslations("layout");
+  const t = await getTranslations();
 
   return (
     <div className={classes.layout}>
@@ -31,7 +31,7 @@ const PagesLayout = async ({ children }: PagesLayoutProps) => {
         </Stack>
       </Container>
       <Container className={classes.footer} size="lg">
-        {t("footer")}
+        {t("layout.footer")}
       </Container>
     </div>
   );

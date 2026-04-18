@@ -31,13 +31,13 @@ export const generateMetadata = async ({ params }: AdminSettingsPageProps) => {
 const AdminSettingsPage = async ({ params }: AdminSettingsPageProps) => {
   const { locale } = await params;
   await requireRole(locale, SUPER_ADMIN_ROLES);
-  const t = await getTranslations({ locale, namespace: "admin" });
+  const t = await getTranslations({ locale });
 
   const demoResetEnabled = isDemoResetEnabled();
 
   return (
     <Stack gap="md" w="100%">
-      <Title order={3}>{t("settings.title")}</Title>
+      <Title order={3}>{t("admin.settings.title")}</Title>
       <SuperAdminSettingsPanel
         locale={locale}
         demoResetEnabled={demoResetEnabled}

@@ -48,7 +48,7 @@ async function signInAction(locale: string, formData: FormData) {
 }
 
 const LoginPage = async ({ locale, error }: LoginPageProps) => {
-  const t = await getTranslations({ locale, namespace: "auth.login" });
+  const t = await getTranslations({ locale });
   const signIn = signInAction.bind(null, locale);
 
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY?.trim() || undefined;
@@ -83,14 +83,14 @@ const LoginPage = async ({ locale, error }: LoginPageProps) => {
             error={error}
             siteKey={siteKey}
             labels={{
-              emailLabel: t("emailLabel"),
-              emailPlaceholder: t("emailPlaceholder"),
-              emailTitle: t("emailTitle"),
-              passwordLabel: t("passwordLabel"),
-              passwordPlaceholder: t("passwordPlaceholder"),
-              submit: t("submit"),
-              errorInvalidCredentials: t("errors.invalidCredentials"),
-              errorGeneric: t("errors.generic"),
+              emailLabel: t("auth.login.emailLabel"),
+              emailPlaceholder: t("auth.login.emailPlaceholder"),
+              emailTitle: t("auth.login.emailTitle"),
+              passwordLabel: t("auth.login.passwordLabel"),
+              passwordPlaceholder: t("auth.login.passwordPlaceholder"),
+              submit: t("auth.login.submit"),
+              errorInvalidCredentials: t("auth.login.errors.invalidCredentials"),
+              errorGeneric: t("auth.login.errors.generic"),
             }}
           />
         </Stack>

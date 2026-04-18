@@ -22,11 +22,11 @@ export const generateMetadata = async ({ params }: AdminStatusesPageProps) => {
 
 const AdminStatusesPage = async ({ params }: AdminStatusesPageProps) => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "admin" });
+  const t = await getTranslations({ locale });
 
   return (
     <Stack gap="md" w="100%">
-      <Title order={3}>{t("statuses.pageTitle")}</Title>
+      <Title order={3}>{t("admin.statuses.pageTitle")}</Title>
       <AdminIssueStatusesPanel locale={locale} />
     </Stack>
   );

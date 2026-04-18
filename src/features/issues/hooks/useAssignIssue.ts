@@ -13,7 +13,7 @@ import type { IssueWithStatus } from "../types";
 
 export const useAssignIssue = (locale: string) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("issues");
+  const t = useTranslations();
 
   return useMutation({
     mutationFn: async (input: { issueId: string; assigneeId: string | null }) => {
@@ -58,8 +58,8 @@ export const useAssignIssue = (locale: string) => {
       }
       const key = isIssuesQueryError(err) ? err.errorKey : "errors.assignFailed";
       notifications.show({
-        title: t("detail.assignUpdateFailedTitle"),
-        message: t(key),
+        title: t("issues.detail.assignUpdateFailedTitle"),
+        message: t(`issues.${key}` as Parameters<typeof t>[0]),
         color: "red",
       });
     },

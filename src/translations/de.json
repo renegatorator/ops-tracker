@@ -138,6 +138,15 @@
       "cancelEdit": "Abbrechen",
       "editTooltip": "Ticket bearbeiten",
       "noDescription": "Keine Beschreibung vorhanden.",
+      "closeIssue": "Ticket schließen",
+      "closeIssueConfirmTitle": "Dieses Ticket schließen?",
+      "closeIssueConfirmBody": "Geschlossene Tickets werden nicht mehr auf dem Board angezeigt, bleiben aber in der Ticket-Liste sichtbar.",
+      "closeIssueConfirmButton": "Ja, Ticket schließen",
+      "closeSuccessTitle": "Ticket geschlossen",
+      "closeFailedTitle": "Ticket konnte nicht geschlossen werden",
+      "issueTypeLabel": "Ticketart",
+      "typeBug": "Bug",
+      "typeTask": "Aufgabe",
       "activity": {
         "title": "Aktivität (Audit)",
         "hint": "Nur für Administratoren sichtbar. Kürzlich protokollierte Aktionen zu diesem Ticket.",
@@ -206,6 +215,7 @@
         "updated_at": "Aktualisiert",
         "assignee": "Bearbeiter"
       },
+      "showClosed": "Geschlossene anzeigen",
       "refreshing": "Aktualisiere…",
       "pageSummary": "Seite {page} · {count} Tickets",
       "prevPage": "Zurück",
@@ -282,7 +292,8 @@
       "colKey": "Key",
       "colName": "Name",
       "colAction": "",
-      "open": "Öffnen"
+      "open": "Öffnen",
+      "settings": "Einstellungen"
     },
     "subnav": {
       "board": "Board",
@@ -294,7 +305,13 @@
       "loading": "Board wird geladen…",
       "loadFailed": "Board konnte nicht geladen werden.",
       "moveFailedTitle": "Verschieben fehlgeschlagen",
-      "newIssue": "Neues Ticket"
+      "newIssue": "Neues Ticket",
+      "moveToNext": "Verschieben nach {name}",
+      "moveToPrev": "Verschieben nach {name}",
+      "closeIssue": "Ticket schließen",
+      "closeIssueConfirmTitle": "Dieses Ticket schließen?",
+      "closeIssueConfirmBody": "Geschlossene Tickets werden nicht mehr auf dem Board angezeigt, bleiben aber in der Ticket-Liste sichtbar.",
+      "closeIssueConfirmButton": "Ja, Ticket schließen"
     },
     "issues": {
       "title": "Tickets · {name}",

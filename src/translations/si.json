@@ -138,6 +138,15 @@
       "cancelEdit": "Prekliči",
       "editTooltip": "Uredi zadevo",
       "noDescription": "Opis ni podan.",
+      "closeIssue": "Zapri zadevo",
+      "closeIssueConfirmTitle": "Zapreti to zadevo?",
+      "closeIssueConfirmBody": "Zaprte zadeve niso prikazane na plošči, so pa dostopne v tabeli zadev.",
+      "closeIssueConfirmButton": "Da, zapri zadevo",
+      "closeSuccessTitle": "Zadeva zaprta",
+      "closeFailedTitle": "Zadeve ni bilo mogoče zapreti",
+      "issueTypeLabel": "Vrsta zadeve",
+      "typeBug": "Hrošč",
+      "typeTask": "Naloga",
       "activity": {
         "title": "Aktivnost (revizija)",
         "hint": "Vidno samo skrbnikom. Nedavna dejanja, zabeležena za to zadevo.",
@@ -206,6 +215,7 @@
         "updated_at": "Posodobljeno",
         "assignee": "Prevzemnik"
       },
+      "showClosed": "Prikaži zaprte",
       "refreshing": "Posodabljanje…",
       "pageSummary": "Stran {page} · prikazanih {count} zadev",
       "prevPage": "Prejšnja",
@@ -282,7 +292,8 @@
       "colKey": "Ključ",
       "colName": "Ime",
       "colAction": "",
-      "open": "Odpri"
+      "open": "Odpri",
+      "settings": "Nastavitve"
     },
     "subnav": {
       "board": "Plošča",
@@ -294,7 +305,13 @@
       "loading": "Nalaganje plošče…",
       "loadFailed": "Plošče ni bilo mogoče naložiti.",
       "moveFailedTitle": "Premik ni uspel",
-      "newIssue": "Nova zadeva"
+      "newIssue": "Nova zadeva",
+      "moveToNext": "Premakni na {name}",
+      "moveToPrev": "Premakni na {name}",
+      "closeIssue": "Zapri zadevo",
+      "closeIssueConfirmTitle": "Zapreti to zadevo?",
+      "closeIssueConfirmBody": "Zaprte zadeve niso prikazane na plošči, so pa dostopne v tabeli zadev.",
+      "closeIssueConfirmButton": "Da, zapri zadevo"
     },
     "issues": {
       "title": "Zadeve · {name}",

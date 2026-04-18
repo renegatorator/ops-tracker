@@ -7,10 +7,10 @@ import { routes } from "@/lib/routes";
 const SignInNavLink = async () => {
   const { user } = await getSession();
   if (user) return null;
-  const t = await getTranslations("landing");
+  const t = await getTranslations();
   return (
     <IntlLinkAnchor href={routes.login} size="sm" fw={500}>
-      {t("loginButton")}
+      {t("landing.loginButton")}
     </IntlLinkAnchor>
   );
 };

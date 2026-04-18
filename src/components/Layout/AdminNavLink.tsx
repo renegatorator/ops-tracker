@@ -11,10 +11,10 @@ const AdminNavLink = async () => {
   if (!ctx || !hasRole(ctx, ADMIN_ACCESS_ROLES)) {
     return null;
   }
-  const t = await getTranslations("admin.nav");
+  const t = await getTranslations();
   return (
     <IntlLinkAnchor href={routes.admin} size="sm" fw={500}>
-      {t("link")}
+      {t("admin.nav.link")}
     </IntlLinkAnchor>
   );
 };

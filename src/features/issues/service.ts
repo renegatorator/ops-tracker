@@ -105,7 +105,10 @@ export const listIssues = async (
   const sortDir = input.sortDir ?? "desc";
   const ascending = sortDir === "asc";
 
-  let q = supabase.from("issues").select(issueSelect).is("deleted_at", null);
+  let q = supabase.from("issues").select(issueSelect);
+  if (!input.includeClosed) {
+    q = q.is("deleted_at", null);
+  }
 
   if (sortBy === "status") {
     q = q.order("sort_order", {

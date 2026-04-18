@@ -16,6 +16,7 @@ import {
   getTranslations,
   setRequestLocale,
 } from "next-intl/server";
+import type { ReactNode } from "react";
 
 import AppNotifications from "@/components/Providers/AppNotifications";
 import QueryProvider from "@/components/Providers/QueryProvider";
@@ -28,7 +29,7 @@ const inter = Inter({
 });
 
 interface LocaleLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }
 
@@ -40,10 +41,10 @@ export const generateMetadata = async ({
   params,
 }: LocaleLayoutProps): Promise<Metadata> => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "seo.root" });
+  const t = await getTranslations({ locale });
 
-  const title = t("title");
-  const description = t("description");
+  const title = t("seo.root.title");
+  const description = t("seo.root.description");
 
   return {
     metadataBase: new URL(env("NEXT_PUBLIC_SITE_URL")),

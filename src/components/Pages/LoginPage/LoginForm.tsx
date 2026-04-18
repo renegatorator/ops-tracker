@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import Script from "next/script";
-import { useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 
 import type { LoginError } from "./LoginPage";
 
@@ -49,7 +49,7 @@ const LoginForm = ({ action, error, siteKey, labels }: LoginFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [captchaReady, setCaptchaReady] = useState(!siteKey);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);

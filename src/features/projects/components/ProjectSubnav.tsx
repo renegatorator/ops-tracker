@@ -20,7 +20,7 @@ interface ProjectSubnavProps {
 }
 
 const ProjectSubnav = ({ projectKey }: ProjectSubnavProps) => {
-  const t = useTranslations("projects.subnav");
+  const t = useTranslations();
   const pathname = usePathname();
   const board = projectBoardPath(projectKey);
   const issues = projectIssuesPath(projectKey);
@@ -33,14 +33,14 @@ const ProjectSubnav = ({ projectKey }: ProjectSubnavProps) => {
   return (
     <Group justify="space-between" align="center" mb="xs" wrap="nowrap">
       <Group gap={4}>
-        <Tooltip label={t("board")} position="bottom" withArrow>
+        <Tooltip label={t("projects.subnav.board")} position="bottom" withArrow>
           <ActionIcon
             component={Link}
             href={board}
             variant={isBoard ? "filled" : "subtle"}
             color={isBoard ? "blue" : "gray"}
             size="lg"
-            aria-label={t("board")}
+            aria-label={t("projects.subnav.board")}
             style={
               isBoard
                 ? { boxShadow: "0 0 6px 1px color-mix(in srgb, var(--mantine-color-blue-5) 60%, transparent)" }
@@ -51,14 +51,14 @@ const ProjectSubnav = ({ projectKey }: ProjectSubnavProps) => {
           </ActionIcon>
         </Tooltip>
 
-        <Tooltip label={t("issues")} position="bottom" withArrow>
+        <Tooltip label={t("projects.subnav.issues")} position="bottom" withArrow>
           <ActionIcon
             component={Link}
             href={issues}
             variant={isIssues ? "filled" : "subtle"}
             color={isIssues ? "blue" : "gray"}
             size="lg"
-            aria-label={t("issues")}
+            aria-label={t("projects.subnav.issues")}
             style={
               isIssues
                 ? { boxShadow: "0 0 6px 1px color-mix(in srgb, var(--mantine-color-blue-5) 60%, transparent)" }
@@ -70,14 +70,14 @@ const ProjectSubnav = ({ projectKey }: ProjectSubnavProps) => {
         </Tooltip>
       </Group>
 
-      <Tooltip label={t("settings")} position="left" withArrow>
+      <Tooltip label={t("projects.subnav.settings")} position="left" withArrow>
         <ActionIcon
           component={Link}
           href={settings}
           variant={isSettings ? "filled" : "subtle"}
           color={isSettings ? "blue" : "gray"}
           size="lg"
-          aria-label={t("settings")}
+          aria-label={t("projects.subnav.settings")}
           style={
             isSettings
               ? { boxShadow: "0 0 6px 1px color-mix(in srgb, var(--mantine-color-blue-5) 60%, transparent)" }

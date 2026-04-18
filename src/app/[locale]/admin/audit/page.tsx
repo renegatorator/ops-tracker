@@ -22,11 +22,11 @@ export const generateMetadata = async ({ params }: AdminAuditPageProps) => {
 
 const AdminAuditPage = async ({ params }: AdminAuditPageProps) => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "admin" });
+  const t = await getTranslations({ locale });
 
   return (
     <Stack gap="md" w="100%">
-      <Title order={3}>{t("audit.title")}</Title>
+      <Title order={3}>{t("admin.audit.title")}</Title>
       <AdminAuditLogPanel locale={locale} />
     </Stack>
   );

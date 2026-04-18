@@ -25,7 +25,7 @@ interface WorkspaceShellClientProps {
   locale: string;
   isStaff: boolean;
   headerRight: ReactNode;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const OpsTrackerLogo = () => (
@@ -59,7 +59,7 @@ const WorkspaceShellClient = ({
   headerRight,
   children,
 }: WorkspaceShellClientProps) => {
-  const t = useTranslations("workspace.nav");
+  const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
   const [opened, { toggle, close }] = useDisclosure();
@@ -111,14 +111,14 @@ const WorkspaceShellClient = ({
       <Select
         size="xs"
         maw={220}
-        placeholder={t("projectPlaceholder")}
+        placeholder={t("workspace.nav.projectPlaceholder")}
         data={projectSwitcherData}
         value={projectMatch}
         onChange={onProjectChange}
         clearable
         searchable
         comboboxProps={{ withinPortal: true }}
-        aria-label={t("projectPlaceholder")}
+        aria-label={t("workspace.nav.projectPlaceholder")}
       />
     ) : null;
 
@@ -161,10 +161,10 @@ const WorkspaceShellClient = ({
               style={{ alignSelf: "center" }}
             />
             <Group gap={4} visibleFrom="md" wrap="nowrap">
-              {navBtn(routes.dashboard, t("dashboard"))}
-              {navBtn(routes.projects, t("projects"))}
-              {navBtn(routes.issues, t("issues"))}
-              {isStaff ? navBtn(routes.admin, t("admin")) : null}
+              {navBtn(routes.dashboard, t("workspace.nav.dashboard"))}
+              {navBtn(routes.projects, t("workspace.nav.projects"))}
+              {navBtn(routes.issues, t("workspace.nav.issues"))}
+              {isStaff ? navBtn(routes.admin, t("workspace.nav.admin")) : null}
             </Group>
           </Group>
 
@@ -190,7 +190,7 @@ const WorkspaceShellClient = ({
               style={{ borderRadius: 4 }}
             >
               <Text size="sm" fw={pathname.startsWith(routes.dashboard) ? 700 : 400}>
-                {t("dashboard")}
+                {t("workspace.nav.dashboard")}
               </Text>
             </UnstyledButton>
             <UnstyledButton
@@ -205,7 +205,7 @@ const WorkspaceShellClient = ({
                 size="sm"
                 fw={pathname.startsWith(routes.projects) ? 700 : 400}
               >
-                {t("projects")}
+                {t("workspace.nav.projects")}
               </Text>
             </UnstyledButton>
             <UnstyledButton
@@ -217,7 +217,7 @@ const WorkspaceShellClient = ({
               style={{ borderRadius: 4 }}
             >
               <Text size="sm" fw={pathname.startsWith(routes.issues) ? 700 : 400}>
-                {t("issues")}
+                {t("workspace.nav.issues")}
               </Text>
             </UnstyledButton>
             {isStaff ? (
@@ -233,7 +233,7 @@ const WorkspaceShellClient = ({
                   size="sm"
                   fw={pathname.startsWith(routes.admin) ? 700 : 400}
                 >
-                  {t("admin")}
+                  {t("workspace.nav.admin")}
                 </Text>
               </UnstyledButton>
             ) : null}

@@ -16,7 +16,7 @@ const AdminLayout = async ({
 }) => {
   const { locale } = (await params) as { locale: string };
   const { role } = await requireRole(locale, ADMIN_ACCESS_ROLES);
-  const t = await getTranslations({ locale, namespace: "admin" });
+  const t = await getTranslations({ locale });
   const showSuperSettings = isSuperAdminRole(role);
 
   return (
@@ -24,7 +24,7 @@ const AdminLayout = async ({
       <Container size="lg" py="xl">
         <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
           <Stack gap="md">
-            <Title order={2}>{t("title")}</Title>
+            <Title order={2}>{t("admin.title")}</Title>
             <AdminSubnav showSuperSettings={showSuperSettings} />
             {children}
           </Stack>

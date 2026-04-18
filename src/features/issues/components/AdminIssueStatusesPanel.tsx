@@ -36,10 +36,7 @@ interface AdminIssueStatusesPanelProps {
 const AdminIssueStatusesPanel = ({
   locale,
 }: AdminIssueStatusesPanelProps) => {
-  const t = useTranslations("admin.statuses");
-  const tAdmin = useTranslations("admin");
-  const tIssues = useTranslations("issues");
-  const tVal = useTranslations("issues.validation");
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<IssueStatusRow | null>(null);
@@ -69,8 +66,9 @@ const AdminIssueStatusesPanel = ({
       is_terminal: false,
     },
     validate: {
-      name: (v) => (!v?.trim() ? tVal("statusNameRequired") : null),
-      slug: (v) => (!v?.trim() ? tVal("slugInvalid") : null),
+      name: (v) =>
+        !v?.trim() ? t("issues.validation.statusNameRequired") : null,
+      slug: (v) => (!v?.trim() ? t("issues.validation.slugInvalid") : null),
     },
   });
 
@@ -82,8 +80,9 @@ const AdminIssueStatusesPanel = ({
       is_terminal: false,
     },
     validate: {
-      name: (v) => (!v?.trim() ? tVal("statusNameRequired") : null),
-      slug: (v) => (!v?.trim() ? tVal("slugInvalid") : null),
+      name: (v) =>
+        !v?.trim() ? t("issues.validation.statusNameRequired") : null,
+      slug: (v) => (!v?.trim() ? t("issues.validation.slugInvalid") : null),
     },
   });
 
@@ -155,11 +154,11 @@ const AdminIssueStatusesPanel = ({
   };
 
   if (isPending) {
-    return <Text c="dimmed">{t("loading")}</Text>;
+    return <Text c="dimmed">{t("admin.statuses.loading")}</Text>;
   }
   if (isError) {
     const key = isIssuesQueryError(error) ? error.errorKey : "errors.readFailed";
-    return <Text c="red">{tIssues(key)}</Text>;
+    return <Text c="red">{t(`issues.${key}` as Parameters<typeof t>[0])}</Text>;
   }
 
   return (
@@ -169,7 +168,7 @@ const AdminIssueStatusesPanel = ({
           leftSection={<IconPlus size={16} />}
           onClick={() => setCreateOpen(true)}
         >
-          {t("add")}
+          {t("admin.statuses.add")}
         </Button>
       </Group>
 
@@ -177,10 +176,10 @@ const AdminIssueStatusesPanel = ({
         <Table striped highlightOnHover>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>{t("name")}</Table.Th>
-              <Table.Th>{t("slug")}</Table.Th>
-              <Table.Th>{t("sortOrder")}</Table.Th>
-              <Table.Th>{t("terminal")}</Table.Th>
+              <Table.Th>{t("admin.statuses.name")}</Table.Th>
+              <Table.Th>{t("admin.statuses.slug")}</Table.Th>
+              <Table.Th>{t("admin.statuses.sortOrder")}</Table.Th>
+              <Table.Th>{t("admin.statuses.terminal")}</Table.Th>
               <Table.Th w={100} />
             </Table.Tr>
           </Table.Thead>
@@ -190,12 +189,16 @@ const AdminIssueStatusesPanel = ({
                 <Table.Td>{row.name}</Table.Td>
                 <Table.Td>{row.slug}</Table.Td>
                 <Table.Td>{row.sort_order}</Table.Td>
-                <Table.Td>{row.is_terminal ? t("yes") : t("no")}</Table.Td>
+                <Table.Td>
+                  {row.is_terminal
+                    ? t("admin.statuses.yes")
+                    : t("admin.statuses.no")}
+                </Table.Td>
                 <Table.Td>
                   <Group gap="xs" justify="flex-end" wrap="nowrap">
                     <ActionIcon
                       variant="subtle"
-                      aria-label={t("edit")}
+                      aria-label={t("admin.statuses.edit")}
                       onClick={() => openEdit(row)}
                     >
                       <IconPencil size={16} />
@@ -203,7 +206,7 @@ const AdminIssueStatusesPanel = ({
                     <ActionIcon
                       variant="subtle"
                       color="red"
-                      aria-label={t("delete")}
+                      aria-label={t("admin.statuses.delete")}
                       onClick={() => setDeleting(row)}
                     >
                       <IconTrash size={16} />
@@ -219,40 +222,42 @@ const AdminIssueStatusesPanel = ({
       <Modal
         opened={createOpen}
         onClose={() => setCreateOpen(false)}
-        title={t("createTitle")}
+        title={t("admin.statuses.createTitle")}
       >
         <form
           onSubmit={createForm.onSubmit(() => createMut.mutate())}
         >
           <Stack gap="sm">
             <TextInput
-              label={t("name")}
+              label={t("admin.statuses.name")}
               {...createForm.getInputProps("name")}
             />
             <TextInput
-              label={t("slug")}
-              description={t("slugHint")}
+              label={t("admin.statuses.slug")}
+              description={t("admin.statuses.slugHint")}
               {...createForm.getInputProps("slug")}
             />
             <NumberInput
-              label={t("sortOrder")}
+              label={t("admin.statuses.sortOrder")}
               {...createForm.getInputProps("sort_order")}
             />
             <Switch
-              label={t("terminal")}
+              label={t("admin.statuses.terminal")}
               {...createForm.getInputProps("is_terminal", { type: "checkbox" })}
             />
             {createMut.isError && isIssuesQueryError(createMut.error) ? (
               <Text c="red" size="sm">
-                {tAdmin(createMut.error.errorKey)}
+                {t(
+                  `admin.${createMut.error.errorKey}` as Parameters<typeof t>[0],
+                )}
               </Text>
             ) : null}
             <Group justify="flex-end">
               <Button variant="default" onClick={() => setCreateOpen(false)}>
-                {t("cancel")}
+                {t("admin.statuses.cancel")}
               </Button>
               <Button type="submit" loading={createMut.isPending}>
-                {t("save")}
+                {t("admin.statuses.save")}
               </Button>
             </Group>
           </Stack>
@@ -262,31 +267,39 @@ const AdminIssueStatusesPanel = ({
       <Modal
         opened={editing != null}
         onClose={() => setEditing(null)}
-        title={t("editTitle")}
+        title={t("admin.statuses.editTitle")}
       >
         <form onSubmit={editForm.onSubmit(() => updateMut.mutate())}>
           <Stack gap="sm">
-            <TextInput label={t("name")} {...editForm.getInputProps("name")} />
-            <TextInput label={t("slug")} {...editForm.getInputProps("slug")} />
+            <TextInput
+              label={t("admin.statuses.name")}
+              {...editForm.getInputProps("name")}
+            />
+            <TextInput
+              label={t("admin.statuses.slug")}
+              {...editForm.getInputProps("slug")}
+            />
             <NumberInput
-              label={t("sortOrder")}
+              label={t("admin.statuses.sortOrder")}
               {...editForm.getInputProps("sort_order")}
             />
             <Switch
-              label={t("terminal")}
+              label={t("admin.statuses.terminal")}
               {...editForm.getInputProps("is_terminal", { type: "checkbox" })}
             />
             {updateMut.isError && isIssuesQueryError(updateMut.error) ? (
               <Text c="red" size="sm">
-                {tAdmin(updateMut.error.errorKey)}
+                {t(
+                  `admin.${updateMut.error.errorKey}` as Parameters<typeof t>[0],
+                )}
               </Text>
             ) : null}
             <Group justify="flex-end">
               <Button variant="default" onClick={() => setEditing(null)}>
-                {t("cancel")}
+                {t("admin.statuses.cancel")}
               </Button>
               <Button type="submit" loading={updateMut.isPending}>
-                {t("save")}
+                {t("admin.statuses.save")}
               </Button>
             </Group>
           </Stack>
@@ -296,25 +309,29 @@ const AdminIssueStatusesPanel = ({
       <Modal
         opened={deleting != null}
         onClose={() => setDeleting(null)}
-        title={t("deleteTitle")}
+        title={t("admin.statuses.deleteTitle")}
       >
         <Stack gap="md">
-          <Text size="sm">{t("deleteConfirm", { name: deleting?.name ?? "" })}</Text>
+          <Text size="sm">
+            {t("admin.statuses.deleteConfirm", { name: deleting?.name ?? "" })}
+          </Text>
           {deleteMut.isError && isIssuesQueryError(deleteMut.error) ? (
             <Text c="red" size="sm">
-              {tAdmin(deleteMut.error.errorKey)}
+              {t(
+                `admin.${deleteMut.error.errorKey}` as Parameters<typeof t>[0],
+              )}
             </Text>
           ) : null}
           <Group justify="flex-end">
             <Button variant="default" onClick={() => setDeleting(null)}>
-              {t("cancel")}
+              {t("admin.statuses.cancel")}
             </Button>
             <Button
               color="red"
               loading={deleteMut.isPending}
               onClick={() => deleteMut.mutate()}
             >
-              {t("delete")}
+              {t("admin.statuses.delete")}
             </Button>
           </Group>
         </Stack>
