@@ -13,8 +13,7 @@ import type { IssueWithStatus } from "../types";
 
 export const useUpdateIssue = (locale: string, issueId: string) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("issues");
-  const tDetail = useTranslations("issues.detail");
+  const t = useTranslations();
 
   return useMutation({
     mutationFn: async (input: {
@@ -61,8 +60,8 @@ export const useUpdateIssue = (locale: string, issueId: string) => {
         ? err.errorKey
         : "errors.updateFailed";
       notifications.show({
-        title: tDetail("saveFailedTitle"),
-        message: t(key),
+        title: t("issues.detail.saveFailedTitle"),
+        message: t(`issues.${key}` as Parameters<typeof t>[0]),
         color: "red",
       });
     },
@@ -73,8 +72,8 @@ export const useUpdateIssue = (locale: string, issueId: string) => {
       });
       await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
       notifications.show({
-        title: tDetail("saveSuccessTitle"),
-        message: tDetail("saveSuccessMessage"),
+        title: t("issues.detail.saveSuccessTitle"),
+        message: t("issues.detail.saveSuccessMessage"),
         color: "green",
       });
     },

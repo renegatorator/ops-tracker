@@ -20,7 +20,7 @@ export const useIssueMenu = ({
   onClose,
   isAdmin,
 }: UseIssueMenuParams): IssueMenuItem[] => {
-  const t = useTranslations("projects.board");
+  const t = useTranslations();
 
   const currentIndex = statuses.findIndex((s) => s.id === issue.status_id);
   const prevStatus = currentIndex > 0 ? statuses[currentIndex - 1] : null;
@@ -34,7 +34,7 @@ export const useIssueMenu = ({
   if (nextStatus) {
     items.push({
       kind: "action",
-      label: t("moveToNext", { name: nextStatus.name }),
+      label: t("projects.board.moveToNext", { name: nextStatus.name }),
       onClick: () => onTransition(nextStatus.id),
     });
   }
@@ -42,7 +42,7 @@ export const useIssueMenu = ({
   if (prevStatus) {
     items.push({
       kind: "action",
-      label: t("moveToPrev", { name: prevStatus.name }),
+      label: t("projects.board.moveToPrev", { name: prevStatus.name }),
       onClick: () => onTransition(prevStatus.id),
     });
   }
@@ -53,7 +53,7 @@ export const useIssueMenu = ({
     }
     items.push({
       kind: "action",
-      label: t("closeIssue"),
+      label: t("projects.board.closeIssue"),
       color: "red",
       onClick: onClose,
     });

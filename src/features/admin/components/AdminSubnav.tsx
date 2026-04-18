@@ -44,7 +44,7 @@ const TabLink = ({ href, label, active }: TabLinkProps) => (
 );
 
 const AdminSubnav = ({ showSuperSettings }: AdminSubnavProps) => {
-  const t = useTranslations("admin.nav");
+  const t = useTranslations();
   const pathname = usePathname();
 
   const is = (prefix: string) =>
@@ -60,12 +60,12 @@ const AdminSubnav = ({ showSuperSettings }: AdminSubnavProps) => {
       }}
     >
       <Group gap="lg" wrap="nowrap" style={{ overflowX: "auto" }}>
-        <TabLink href={routes.admin} label={t("overview")} active={is(routes.admin)} />
-        <TabLink href={routes.adminUsers} label={t("users")} active={is(routes.adminUsers)} />
-        <TabLink href={routes.adminStatuses} label={t("statuses")} active={is(routes.adminStatuses)} />
-        <TabLink href={routes.adminAudit} label={t("audit")} active={is(routes.adminAudit)} />
+        <TabLink href={routes.admin} label={t("admin.nav.overview")} active={is(routes.admin)} />
+        <TabLink href={routes.adminUsers} label={t("admin.nav.users")} active={is(routes.adminUsers)} />
+        <TabLink href={routes.adminStatuses} label={t("admin.nav.statuses")} active={is(routes.adminStatuses)} />
+        <TabLink href={routes.adminAudit} label={t("admin.nav.audit")} active={is(routes.adminAudit)} />
         {showSuperSettings && (
-          <TabLink href={routes.adminSettings} label={t("settings")} active={is(routes.adminSettings)} />
+          <TabLink href={routes.adminSettings} label={t("admin.nav.settings")} active={is(routes.adminSettings)} />
         )}
       </Group>
     </Box>

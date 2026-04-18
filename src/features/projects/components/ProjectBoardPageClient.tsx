@@ -61,6 +61,7 @@ const IssueCard = ({
   onRequestClose,
   isAdmin,
 }: IssueCardProps) => {
+  const t = useTranslations();
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: issue.id });
 
@@ -96,7 +97,11 @@ const IssueCard = ({
         <Group gap={4} align="center" justify="space-between" wrap="nowrap">
           <Group gap={4} align="center" style={{ minWidth: 0 }}>
             <Tooltip
-              label={isIssueBug(issue.issue_type) ? "Bug" : "Task"}
+              label={
+                isIssueBug(issue.issue_type)
+                  ? t("issues.detail.typeBug")
+                  : t("issues.detail.typeTask")
+              }
               position="top"
               withArrow
             >
@@ -173,8 +178,7 @@ const ProjectBoardPageClient = ({
   projectName,
   isAdmin = false,
 }: ProjectBoardPageClientProps) => {
-  const t = useTranslations("projects.board");
-  const tIssues = useTranslations("issues");
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
@@ -231,8 +235,8 @@ const ProjectBoardPageClient = ({
         ? err.errorKey
         : "errors.transitionFailed";
       notifications.show({
-        title: t("moveFailedTitle"),
-        message: tIssues(key),
+        title: t("projects.board.moveFailedTitle"),
+        message: t(`issues.${key}` as Parameters<typeof t>[0]),
         color: "red",
       });
     },
@@ -260,12 +264,14 @@ const ProjectBoardPageClient = ({
   };
 
   if (isPending) {
-    return <div style={{ opacity: 0.7 }}>{t("loading")}</div>;
+    return <div style={{ opacity: 0.7 }}>{t("projects.board.loading")}</div>;
   }
   if (isError) {
     return (
       <div style={{ color: "var(--mantine-color-red-text)" }}>
-        {isIssuesQueryError(error) ? tIssues(error.errorKey) : t("loadFailed")}
+        {isIssuesQueryError(error)
+          ? t(`issues.${error.errorKey}` as Parameters<typeof t>[0])
+          : t("projects.board.loadFailed")}
       </div>
     );
   }
@@ -278,7 +284,7 @@ const ProjectBoardPageClient = ({
         </Title>
         {isAdmin && (
           <Button onClick={openModal} size="sm" leftSection={<IconPlus size={16} />}>
-            {t("newIssue")}
+            {t("projects.board.newIssue")}
           </Button>
         )}
       </Group>
@@ -313,21 +319,21 @@ const ProjectBoardPageClient = ({
       <Modal
         opened={issueToClose !== null}
         onClose={() => setIssueToClose(null)}
-        title={t("closeIssueConfirmTitle")}
+        title={t("projects.board.closeIssueConfirmTitle")}
         centered
       >
         <Stack gap="md">
-          <Text size="sm">{t("closeIssueConfirmBody")}</Text>
+          <Text size="sm">{t("projects.board.closeIssueConfirmBody")}</Text>
           <Group justify="flex-end">
             <Button variant="subtle" onClick={() => setIssueToClose(null)}>
-              {tIssues("create.cancel")}
+              {t("issues.create.cancel")}
             </Button>
             <Button
               color="red"
               onClick={onConfirmClose}
               loading={closeIssue.isPending}
             >
-              {t("closeIssueConfirmButton")}
+              {t("projects.board.closeIssueConfirmButton")}
             </Button>
           </Group>
         </Stack>

@@ -31,44 +31,44 @@ import classes from "./LandingPage.module.scss";
 const features = [
   {
     icon: IconLayoutKanban,
-    titleKey: "features.kanban.title" as const,
-    descKey: "features.kanban.description" as const,
+    titleKey: "landing.features.kanban.title" as const,
+    descKey: "landing.features.kanban.description" as const,
     color: "violet",
   },
   {
     icon: IconBug,
-    titleKey: "features.tracking.title" as const,
-    descKey: "features.tracking.description" as const,
+    titleKey: "landing.features.tracking.title" as const,
+    descKey: "landing.features.tracking.description" as const,
     color: "blue",
   },
   {
     icon: IconUsers,
-    titleKey: "features.team.title" as const,
-    descKey: "features.team.description" as const,
+    titleKey: "landing.features.team.title" as const,
+    descKey: "landing.features.team.description" as const,
     color: "teal",
   },
   {
     icon: IconShieldCheck,
-    titleKey: "features.audit.title" as const,
-    descKey: "features.audit.description" as const,
+    titleKey: "landing.features.audit.title" as const,
+    descKey: "landing.features.audit.description" as const,
     color: "orange",
   },
   {
     icon: IconChartBar,
-    titleKey: "features.dashboard.title" as const,
-    descKey: "features.dashboard.description" as const,
+    titleKey: "landing.features.dashboard.title" as const,
+    descKey: "landing.features.dashboard.description" as const,
     color: "pink",
   },
   {
     icon: IconBrandTrello,
-    titleKey: "features.projects.title" as const,
-    descKey: "features.projects.description" as const,
+    titleKey: "landing.features.projects.title" as const,
+    descKey: "landing.features.projects.description" as const,
     color: "cyan",
   },
 ];
 
 const LandingPage = async () => {
-  const t = await getTranslations("landing");
+  const t = await getTranslations();
 
   return (
     <Container size="lg">
@@ -102,7 +102,7 @@ const LandingPage = async () => {
         </div>
 
         <Badge variant="light" color="violet" size="lg" radius="sm">
-          {t("badge")}
+          {t("landing.badge")}
         </Badge>
 
         <Text
@@ -111,12 +111,12 @@ const LandingPage = async () => {
           maw={560}
           style={{ textAlign: "center", lineHeight: 1.6 }}
         >
-          {t("description")}
+          {t("landing.description")}
         </Text>
 
         <Link href={routes.login}>
           <Button component="span" size="xl" variant="filled" px="xl">
-            {t("loginButton")}
+            {t("landing.loginButton")}
           </Button>
         </Link>
       </Stack>
@@ -126,9 +126,11 @@ const LandingPage = async () => {
       {/* Feature grid */}
       <Stack gap="xl" pb="xl">
         <Stack gap="xs" align="center" style={{ textAlign: "center" }}>
-          <Typography type="heading-02">{t("featuresHeading")}</Typography>
+          <Typography type="heading-02">
+            {t("landing.featuresHeading")}
+          </Typography>
           <Text c="dimmed" maw={500}>
-            {t("featuresSubheading")}
+            {t("landing.featuresSubheading")}
           </Text>
         </Stack>
 
@@ -159,9 +161,11 @@ const LandingPage = async () => {
 
       {/* Request a Demo */}
       <Stack gap="lg" align="center" pb="xl" style={{ textAlign: "center" }}>
-        <Typography type="heading-02">{t("demoSectionHeading")}</Typography>
+        <Typography type="heading-02">
+          {t("landing.demoSectionHeading")}
+        </Typography>
         <Text c="dimmed" maw={480}>
-          {t("demoSectionSubheading")}
+          {t("landing.demoSectionSubheading")}
         </Text>
         <Paper
           withBorder
@@ -173,19 +177,27 @@ const LandingPage = async () => {
         >
           <Stack gap="md" align="center">
             <Group justify="center" gap="sm" wrap="wrap">
-              <Tooltip label={t("demoComingSoon")} position="top" withArrow>
+              <Tooltip
+                label={t("landing.demoComingSoon")}
+                position="top"
+                withArrow
+              >
                 <Button size="lg" variant="filled" disabled>
-                  {t("demoUserButton")}
+                  {t("landing.demoUserButton")}
                 </Button>
               </Tooltip>
-              <Tooltip label={t("demoComingSoon")} position="top" withArrow>
+              <Tooltip
+                label={t("landing.demoComingSoon")}
+                position="top"
+                withArrow
+              >
                 <Button size="lg" variant="light" disabled>
-                  {t("demoAdminButton")}
+                  {t("landing.demoAdminButton")}
                 </Button>
               </Tooltip>
             </Group>
             <Text size="xs" c="dimmed">
-              {t("demoDisclaimer")}
+              {t("landing.demoDisclaimer")}
             </Text>
           </Stack>
         </Paper>

@@ -23,14 +23,14 @@ const IssuesPage = async ({ params }: IssuesPageProps) => {
   if (!ctx) {
     return redirect({ href: routes.login, locale });
   }
-  const t = await getTranslations({ locale, namespace: "issues" });
+  const t = await getTranslations({ locale });
   const canListAllAssignees = isAdminAccessRole(ctx.role);
 
   return (
     <Container size="xl" px={{ base: "xs", sm: "md" }} py="xl">
       <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
         <Stack gap="md">
-          <Title order={2}>{t("pageTitle")}</Title>
+          <Title order={2}>{t("issues.pageTitle")}</Title>
           <IssuesListPageClient
             locale={locale}
             currentUserId={ctx.user.id}

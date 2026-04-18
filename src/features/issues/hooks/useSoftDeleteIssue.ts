@@ -12,8 +12,7 @@ import { issueQueryKeys } from "../keys";
 
 export const useSoftDeleteIssue = (locale: string) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("issues");
-  const tDetail = useTranslations("issues.detail");
+  const t = useTranslations();
 
   return useMutation({
     mutationFn: async (issueId: string) => {
@@ -23,8 +22,11 @@ export const useSoftDeleteIssue = (locale: string) => {
       }
       return result.data;
     },
-    onSuccess: async () => {
+    onSuccess: async (_data, issueId) => {
       await queryClient.invalidateQueries({ queryKey: issueQueryKeys.lists() });
+      await queryClient.invalidateQueries({
+        queryKey: issueQueryKeys.detail(locale, issueId),
+      });
       await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
     },
     onError: (err) => {
@@ -32,8 +34,8 @@ export const useSoftDeleteIssue = (locale: string) => {
         ? err.errorKey
         : "errors.deleteFailed";
       notifications.show({
-        title: tDetail("closeFailedTitle"),
-        message: t(key),
+        title: t("issues.detail.closeFailedTitle"),
+        message: t(`issues.${key}` as Parameters<typeof t>[0]),
         color: "red",
       });
     },

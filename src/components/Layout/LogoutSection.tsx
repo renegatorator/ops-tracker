@@ -12,10 +12,10 @@ const LogoutSection = async () => {
   }
 
   const locale = await getLocale();
-  const t = await getTranslations("layout");
+  const t = await getTranslations();
   const boundSignOut = signOutAction.bind(null, locale);
 
-  return <LogoutForm formAction={boundSignOut} label={t("logout")} />;
+  return <LogoutForm formAction={boundSignOut} label={t("layout.logout")} />;
 };
 
 export default LogoutSection;

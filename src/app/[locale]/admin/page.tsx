@@ -15,12 +15,12 @@ export const generateMetadata = async ({ params }: AdminHomePageProps) => {
 
 const AdminHomePage = async ({ params }: AdminHomePageProps) => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "admin" });
+  const t = await getTranslations({ locale });
 
   return (
     <Stack gap="sm">
-      <Title order={3}>{t("overview.title")}</Title>
-      <Text c="dimmed">{t("overview.description")}</Text>
+      <Title order={3}>{t("admin.overview.title")}</Title>
+      <Text c="dimmed">{t("admin.overview.description")}</Text>
     </Stack>
   );
 };

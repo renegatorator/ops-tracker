@@ -27,32 +27,35 @@ const AdminUsersPanel = ({
   locale,
   isSuperAdmin,
 }: AdminUsersPanelProps) => {
-  const t = useTranslations("admin.users");
-  const tAdmin = useTranslations("admin");
-  const tRoles = useTranslations("admin.roles");
+  const t = useTranslations();
   const { data, isPending, isError, error } = useAdminUsersList(locale);
   const updateRole = useUpdateUserRole(locale);
 
   const roleSelectData = useMemo(
     () =>
       [
-        { value: APP_ROLE.user, label: tRoles("user") },
-        { value: APP_ROLE.admin, label: tRoles("admin") },
+        { value: APP_ROLE.user, label: t("admin.roles.user") },
+        { value: APP_ROLE.admin, label: t("admin.roles.admin") },
         ...(isSuperAdmin
-          ? [{ value: APP_ROLE.super_admin, label: tRoles("super_admin") }]
+          ? [
+              {
+                value: APP_ROLE.super_admin,
+                label: t("admin.roles.super_admin"),
+              },
+            ]
           : []),
       ],
-    [isSuperAdmin, tRoles],
+    [isSuperAdmin, t],
   );
 
   if (isPending) {
-    return <Text c="dimmed">{t("loading")}</Text>;
+    return <Text c="dimmed">{t("admin.users.loading")}</Text>;
   }
   if (isError) {
     const key = isIssuesQueryError(error)
       ? error.errorKey
       : "errors.listUsersFailed";
-    return <Text c="red">{tAdmin(key)}</Text>;
+    return <Text c="red">{t(`admin.${key}` as Parameters<typeof t>[0])}</Text>;
   }
 
   return (
@@ -60,9 +63,9 @@ const AdminUsersPanel = ({
       <Table striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>{t("email")}</Table.Th>
-            <Table.Th>{t("name")}</Table.Th>
-            <Table.Th>{t("role")}</Table.Th>
+            <Table.Th>{t("admin.users.email")}</Table.Th>
+            <Table.Th>{t("admin.users.name")}</Table.Th>
+            <Table.Th>{t("admin.users.role")}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -86,10 +89,12 @@ const AdminUsersPanel = ({
                         updateRole.isPending &&
                         updateRole.variables?.userId === row.id
                       }
-                      aria-label={t("role")}
+                      aria-label={t("admin.users.role")}
                     />
                   ) : (
-                    <Text size="sm">{tRoles(row.role)}</Text>
+                    <Text size="sm">
+                      {t(`admin.roles.${row.role}` as Parameters<typeof t>[0])}
+                    </Text>
                   )}
                 </Table.Td>
               </Table.Tr>

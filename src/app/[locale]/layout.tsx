@@ -41,10 +41,10 @@ export const generateMetadata = async ({
   params,
 }: LocaleLayoutProps): Promise<Metadata> => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "seo.root" });
+  const t = await getTranslations({ locale });
 
-  const title = t("title");
-  const description = t("description");
+  const title = t("seo.root.title");
+  const description = t("seo.root.description");
 
   return {
     metadataBase: new URL(env("NEXT_PUBLIC_SITE_URL")),

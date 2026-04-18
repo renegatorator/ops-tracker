@@ -127,8 +127,7 @@ const IssuesVirtualizedTable = ({
   onAssignIssue,
   assignPendingIssueId = null,
 }: IssuesVirtualizedTableProps) => {
-  const t = useTranslations("issues.table");
-  const tCommon = useTranslations("issues");
+  const t = useTranslations();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const columns = useMemo<ColumnDef<IssueWithStatus, unknown>[]>(
@@ -137,7 +136,13 @@ const IssuesVirtualizedTable = ({
         id: "title",
         accessorKey: "title",
         header: () =>
-          sortableHeader(t("title"), "title", sortBy, sortDir, onSortChange),
+          sortableHeader(
+            t("issues.table.title"),
+            "title",
+            sortBy,
+            sortDir,
+            onSortChange,
+          ),
         cell: ({ row }) => {
           const pk = row.original.projects?.key;
           const href =
@@ -160,7 +165,13 @@ const IssuesVirtualizedTable = ({
         id: "status",
         accessorFn: (row) => row.issue_statuses?.name ?? "",
         header: () =>
-          sortableHeader(t("status"), "status", sortBy, sortDir, onSortChange),
+          sortableHeader(
+            t("issues.table.status"),
+            "status",
+            sortBy,
+            sortDir,
+            onSortChange,
+          ),
         cell: ({ row }) => (
           <Text size="sm">{row.original.issue_statuses?.name ?? "—"}</Text>
         ),
@@ -170,7 +181,7 @@ const IssuesVirtualizedTable = ({
         accessorKey: "created_at",
         header: () =>
           sortableHeader(
-            t("createdAt"),
+            t("issues.table.createdAt"),
             "created_at",
             sortBy,
             sortDir,
@@ -185,7 +196,7 @@ const IssuesVirtualizedTable = ({
         accessorKey: "updated_at",
         header: () =>
           sortableHeader(
-            t("updatedAt"),
+            t("issues.table.updatedAt"),
             "updated_at",
             sortBy,
             sortDir,
@@ -201,7 +212,7 @@ const IssuesVirtualizedTable = ({
           row.assignee?.full_name?.trim() ||
           row.assignee?.email?.trim() ||
           "",
-        header: t("assignee"),
+        header: t("issues.table.assignee"),
         enableSorting: false,
         cell: ({ row }) => {
           if (canAssignIssues && onAssignIssue) {
@@ -210,7 +221,7 @@ const IssuesVirtualizedTable = ({
                 size="xs"
                 comboboxProps={{ withinPortal: true }}
                 data={[
-                  { value: UNASSIGNED_VALUE, label: tCommon("unassigned") },
+                  { value: UNASSIGNED_VALUE, label: t("issues.unassigned") },
                   ...assigneeSelectOptions,
                 ]}
                 value={row.original.assignee_id ?? UNASSIGNED_VALUE}
@@ -220,13 +231,13 @@ const IssuesVirtualizedTable = ({
                   onAssignIssue(row.original.id, next);
                 }}
                 disabled={assignPendingIssueId === row.original.id}
-                aria-label={t("assignee")}
+                aria-label={t("issues.table.assignee")}
               />
             );
           }
           const a = row.original.assignee;
           const label =
-            a?.full_name?.trim() || a?.email?.trim() || tCommon("unassigned");
+            a?.full_name?.trim() || a?.email?.trim() || t("issues.unassigned");
           return <Text size="sm">{label}</Text>;
         },
       },
@@ -241,7 +252,6 @@ const IssuesVirtualizedTable = ({
       sortBy,
       sortDir,
       t,
-      tCommon,
     ],
   );
 
@@ -327,7 +337,7 @@ const IssuesVirtualizedTable = ({
           <Table.Tr>
             <Table.Td colSpan={columns.length}>
               <Text c="dimmed" size="sm">
-                {tCommon("empty")}
+                {t("issues.empty")}
               </Text>
             </Table.Td>
           </Table.Tr>

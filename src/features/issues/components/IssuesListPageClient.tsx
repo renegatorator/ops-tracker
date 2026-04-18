@@ -69,8 +69,7 @@ const IssuesListPageClient = ({
   canListAllAssignees,
   forcedProjectId,
 }: IssuesListPageClientProps) => {
-  const t = useTranslations("issues");
-  const tTable = useTranslations("issues.table");
+  const t = useTranslations();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -97,16 +96,11 @@ const IssuesListPageClient = ({
     [forcedProjectId, pathname, router],
   );
 
-  const [showClosed, setShowClosed] = useState(false);
-
-  const queryParams = useMemo(
-    () => ({ ...listParams, includeClosed: showClosed }),
-    [listParams, showClosed],
-  );
+  const showClosed = listParams.includeClosed ?? false;
 
   const { data, isPending, isError, error, isFetching } = useIssuesList(
     locale,
-    queryParams,
+    listParams,
   );
 
   const { data: statuses = [] } = useIssueStatuses(locale);
@@ -183,16 +177,16 @@ const IssuesListPageClient = ({
 
   const statusSelectData = useMemo(
     () => [
-      { value: "", label: tTable("filterStatusAll") },
+      { value: "", label: t("issues.table.filterStatusAll") },
       ...statuses.map((s) => ({ value: s.id, label: s.name })),
     ],
-    [statuses, tTable],
+    [statuses, t],
   );
 
   const assigneeSelectData = useMemo(() => {
     const base: { value: string; label: string }[] = [
-      { value: "", label: tTable("filterAssigneeAll") },
-      { value: currentUserId, label: tTable("filterAssigneeMe") },
+      { value: "", label: t("issues.table.filterAssigneeAll") },
+      { value: currentUserId, label: t("issues.table.filterAssigneeMe") },
     ];
     if (!canListAllAssignees) return base;
     const seen = new Set(base.map((o) => o.value));
@@ -205,15 +199,15 @@ const IssuesListPageClient = ({
       });
     }
     return base;
-  }, [adminUsers, canListAllAssignees, currentUserId, tTable]);
+  }, [adminUsers, canListAllAssignees, currentUserId, t]);
 
   const perPageData = useMemo(
     () =>
       [20, 50, 100].map((n) => ({
         value: String(n),
-        label: tTable("perPage", { count: n }),
+        label: t("issues.table.perPage", { count: n }),
       })),
-    [tTable],
+    [t],
   );
 
   const pagination =
@@ -225,14 +219,14 @@ const IssuesListPageClient = ({
     <Stack gap="md" w="100%" maw={1200}>
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="sm">
         <TextInput
-          label={tTable("searchLabel")}
-          placeholder={tTable("searchPlaceholder")}
+          label={t("issues.table.searchLabel")}
+          placeholder={t("issues.table.searchPlaceholder")}
           value={searchDraft}
           onChange={(e) => setSearchDraft(e.currentTarget.value)}
-          aria-label={tTable("searchLabel")}
+          aria-label={t("issues.table.searchLabel")}
         />
         <Select
-          label={tTable("filterStatus")}
+          label={t("issues.table.filterStatus")}
           data={statusSelectData}
           value={listParams.statusId ?? ""}
           onChange={(v) =>
@@ -247,7 +241,7 @@ const IssuesListPageClient = ({
           clearable={false}
         />
         <Select
-          label={tTable("filterAssignee")}
+          label={t("issues.table.filterAssignee")}
           data={assigneeSelectData}
           value={listParams.assigneeId ?? ""}
           onChange={(v) =>
@@ -262,7 +256,7 @@ const IssuesListPageClient = ({
           clearable={false}
         />
         <Select
-          label={tTable("rowsPerPage")}
+          label={t("issues.table.rowsPerPage")}
           data={perPageData}
           value={String(listParams.limit)}
           onChange={(v) => {
@@ -279,14 +273,14 @@ const IssuesListPageClient = ({
         <Menu shadow="md" width={260}>
           <Menu.Target>
             <Button variant="default" mt={{ base: 0, sm: 24 }}>
-              {tTable("columnsMenu")}
+              {t("issues.table.columnsMenu")}
             </Button>
           </Menu.Target>
           <Menu.Dropdown>
             {TABLE_COLUMN_IDS.map((id) => (
               <Menu.Item key={id} closeMenuOnClick={false}>
                 <Checkbox
-                  label={tTable(`columns.${id}`)}
+                  label={t(`issues.table.columns.${id}`)}
                   checked={columnVisibility[id] !== false}
                   onChange={(e) =>
                     setColumnVisibility((prev) => ({
@@ -300,26 +294,33 @@ const IssuesListPageClient = ({
           </Menu.Dropdown>
         </Menu>
         <Switch
-          label={tTable("showClosed")}
+          label={t("issues.table.showClosed")}
           checked={showClosed}
-          onChange={(e) => setShowClosed(e.currentTarget.checked)}
+          onChange={(e) =>
+            replaceListUrl(
+              patchIssuesListParams(listParams, {
+                includeClosed: e.currentTarget.checked,
+                resetPage: true,
+              }),
+            )
+          }
           mt={{ base: 0, sm: 28 }}
         />
       </SimpleGrid>
 
       {isPending ? (
-        <Text c="dimmed">{t("loading")}</Text>
+        <Text c="dimmed">{t("issues.loading")}</Text>
       ) : isError ? (
         <Text c="red">
           {t(
-            isIssuesQueryError(error) ? error.errorKey : "errors.listFailed",
+            `issues.${isIssuesQueryError(error) ? error.errorKey : "errors.listFailed"}` as Parameters<typeof t>[0],
           )}
         </Text>
       ) : data ? (
         <>
           {isFetching ? (
             <Text size="sm" c="dimmed">
-              {tTable("refreshing")}
+              {t("issues.table.refreshing")}
             </Text>
           ) : null}
           <IssuesVirtualizedTable
@@ -342,7 +343,7 @@ const IssuesListPageClient = ({
           {pagination ? (
             <Group justify="space-between" wrap="wrap">
               <Text size="sm" c="dimmed">
-                {tTable("pageSummary", {
+                {t("issues.table.pageSummary", {
                   page: page + 1,
                   count: data.items.length,
                 })}
@@ -362,7 +363,7 @@ const IssuesListPageClient = ({
                     )
                   }
                 >
-                  {tTable("prevPage")}
+                  {t("issues.table.prevPage")}
                 </Button>
                 <Button
                   variant="default"
@@ -375,7 +376,7 @@ const IssuesListPageClient = ({
                     )
                   }
                 >
-                  {tTable("nextPage")}
+                  {t("issues.table.nextPage")}
                 </Button>
               </Group>
             </Group>

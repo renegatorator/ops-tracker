@@ -27,8 +27,7 @@ export const useTransitionIssueStatus = (
   issueId: string,
 ) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("issues");
-  const tDetail = useTranslations("issues.detail");
+  const t = useTranslations();
   const detailKey = issueQueryKeys.detail(locale, issueId);
 
   return useMutation({
@@ -66,8 +65,8 @@ export const useTransitionIssueStatus = (
         ? err.errorKey
         : "errors.transitionFailed";
       notifications.show({
-        title: tDetail("statusUpdateFailedTitle"),
-        message: t(key),
+        title: t("issues.detail.statusUpdateFailedTitle"),
+        message: t(`issues.${key}` as Parameters<typeof t>[0]),
         color: "red",
       });
     },

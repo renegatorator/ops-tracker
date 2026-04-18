@@ -40,8 +40,7 @@ const CreateIssueModal = ({
   opened,
   onClose,
 }: CreateIssueModalProps) => {
-  const t = useTranslations("issues.create");
-  const tErrors = useTranslations("issues");
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const { data: statuses = [], isSuccess } = useIssueStatuses(locale);
   const { data: assigneeUsers = [], isPending: assigneesPending } =
@@ -56,11 +55,11 @@ const CreateIssueModal = ({
       assignee_id: UNASSIGNED_VALUE,
     },
     validate: {
-      title: (v) => (!v.trim() ? t("titleRequired") : null),
-      status_id: (v) => (!v ? t("statusRequired") : null),
+      title: (v) => (!v.trim() ? t("issues.create.titleRequired") : null),
+      status_id: (v) => (!v ? t("issues.create.statusRequired") : null),
       description: (v, values) => {
         if (isIssueTask(values.issue_type) && !v.trim()) {
-          return t("descriptionRequired");
+          return t("issues.create.descriptionRequired");
         }
         return null;
       },
@@ -89,8 +88,8 @@ const CreateIssueModal = ({
     });
     if (!result.ok) {
       notifications.show({
-        title: t("failedTitle"),
-        message: tErrors(result.errorKey as Parameters<typeof tErrors>[0]),
+        title: t("issues.create.failedTitle"),
+        message: t(`issues.${result.errorKey}` as Parameters<typeof t>[0]),
         color: "red",
       });
       return;
@@ -100,8 +99,8 @@ const CreateIssueModal = ({
       queryClient.invalidateQueries({ queryKey: projectQueryKeys.all }),
     ]);
     notifications.show({
-      title: t("successTitle"),
-      message: t("successMessage"),
+      title: t("issues.create.successTitle"),
+      message: t("issues.create.successMessage"),
       color: "green",
     });
     form.reset();
@@ -112,7 +111,7 @@ const CreateIssueModal = ({
 
   const assigneeData = useMemo(
     () => [
-      { value: UNASSIGNED_VALUE, label: t("assigneeUnassigned") },
+      { value: UNASSIGNED_VALUE, label: t("issues.create.assigneeUnassigned") },
       ...assigneeUsers.map((u) => ({
         value: u.id,
         label: u.full_name?.trim() || u.email?.trim() || u.id,
@@ -124,7 +123,12 @@ const CreateIssueModal = ({
   const isTask = isIssueTask(form.values.issue_type);
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t("modalTitle")} size="lg">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={t("issues.create.modalTitle")}
+      size="lg"
+    >
       <form onSubmit={onSubmit}>
         <Stack gap="md">
           <SegmentedControl
@@ -137,7 +141,7 @@ const CreateIssueModal = ({
                       size={14}
                       color="var(--mantine-color-blue-6)"
                     />
-                    {t("typeTask")}
+                    {t("issues.create.typeTask")}
                   </Group>
                 ),
               },
@@ -146,7 +150,7 @@ const CreateIssueModal = ({
                 label: (
                   <Group gap={6} justify="center" align="center" wrap="nowrap">
                     <IconBug size={14} color="var(--mantine-color-red-6)" />
-                    {t("typeBug")}
+                    {t("issues.create.typeBug")}
                   </Group>
                 ),
               },
@@ -156,14 +160,16 @@ const CreateIssueModal = ({
           />
 
           <TextInput
-            label={t("titleLabel")}
+            label={t("issues.create.titleLabel")}
             {...form.getInputProps("title")}
             data-autofocus
           />
 
           <Textarea
             label={
-              isTask ? t("descriptionLabel") : t("descriptionLabelOptional")
+              isTask
+                ? t("issues.create.descriptionLabel")
+                : t("issues.create.descriptionLabelOptional")
             }
             minRows={6}
             autosize
@@ -172,7 +178,7 @@ const CreateIssueModal = ({
           />
 
           <Select
-            label={t("statusLabel")}
+            label={t("issues.create.statusLabel")}
             data={statusData}
             {...form.getInputProps("status_id")}
             comboboxProps={{ withinPortal: true }}
@@ -182,7 +188,7 @@ const CreateIssueModal = ({
             <Loader size="sm" type="dots" />
           ) : (
             <Select
-              label={t("assigneeLabel")}
+              label={t("issues.create.assigneeLabel")}
               data={assigneeData}
               {...form.getInputProps("assignee_id")}
               comboboxProps={{ withinPortal: true }}
@@ -191,9 +197,9 @@ const CreateIssueModal = ({
 
           <Group justify="flex-end">
             <Button variant="subtle" onClick={onClose}>
-              {t("cancel")}
+              {t("issues.create.cancel")}
             </Button>
-            <Button type="submit">{t("submit")}</Button>
+            <Button type="submit">{t("issues.create.submit")}</Button>
           </Group>
         </Stack>
       </form>

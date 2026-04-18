@@ -38,15 +38,13 @@ const ProjectSettingsPageClient = ({
   projectName,
   isSuperAdmin,
 }: ProjectSettingsPageClientProps) => {
-  const t = useTranslations("projects.settings");
-  const tProjects = useTranslations("projects");
-  const tIssues = useTranslations("issues");
+  const t = useTranslations();
   const queryClient = useQueryClient();
 
   const errMsg = (key: string) =>
     key.startsWith("projects.")
-      ? tProjects(key.slice(9) as Parameters<typeof tProjects>[0])
-      : tIssues(key as Parameters<typeof tIssues>[0]);
+      ? t(key as Parameters<typeof t>[0])
+      : t(`issues.${key}` as Parameters<typeof t>[0]);
   const { data: members = [], isPending } = useProjectMembers(locale, projectId);
   const [addUserId, setAddUserId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -91,7 +89,7 @@ const ProjectSettingsPageClient = ({
     setBusy(false);
     if (!result.ok) {
       notifications.show({
-        title: t("addFailed"),
+        title: t("projects.settings.addFailed"),
         message: errMsg(result.errorKey),
         color: "red",
       });
@@ -102,7 +100,11 @@ const ProjectSettingsPageClient = ({
       queryKey: projectQueryKeys.members(locale, projectId),
     });
     await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
-    notifications.show({ title: t("addSuccess"), message: "", color: "green" });
+    notifications.show({
+      title: t("projects.settings.addSuccess"),
+      message: "",
+      color: "green",
+    });
   };
 
   const onRemove = async (userId: string) => {
@@ -111,7 +113,7 @@ const ProjectSettingsPageClient = ({
     setBusy(false);
     if (!result.ok) {
       notifications.show({
-        title: t("removeFailed"),
+        title: t("projects.settings.removeFailed"),
         message: errMsg(result.errorKey),
         color: "red",
       });
@@ -122,7 +124,7 @@ const ProjectSettingsPageClient = ({
     });
     await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
     notifications.show({
-      title: t("removeSuccess"),
+      title: t("projects.settings.removeSuccess"),
       message: "",
       color: "green",
     });
@@ -136,24 +138,28 @@ const ProjectSettingsPageClient = ({
     setRenaming(false);
     if (!result.ok) {
       notifications.show({
-        title: t("renameFailed"),
+        title: t("projects.settings.renameFailed"),
         message: errMsg(result.errorKey),
         color: "red",
       });
       return;
     }
     await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
-    notifications.show({ title: t("renameSuccess"), message: "", color: "green" });
+    notifications.show({
+      title: t("projects.settings.renameSuccess"),
+      message: "",
+      color: "green",
+    });
   };
 
   return (
     <Stack gap="md">
       {isSuperAdmin && (
         <>
-          <Title order={4}>{t("renameTitle")}</Title>
+          <Title order={4}>{t("projects.settings.renameTitle")}</Title>
           <Group align="flex-end" wrap="wrap">
             <TextInput
-              label={t("renameLabel")}
+              label={t("projects.settings.renameLabel")}
               value={newName}
               onChange={(e) => setNewName(e.currentTarget.value)}
               maw={360}
@@ -163,17 +169,17 @@ const ProjectSettingsPageClient = ({
               disabled={!newName.trim() || newName.trim() === projectName || renaming}
               loading={renaming}
             >
-              {t("renameButton")}
+              {t("projects.settings.renameButton")}
             </Button>
           </Group>
           <Divider />
         </>
       )}
-      <Title order={3}>{t("membersTitle")}</Title>
+      <Title order={3}>{t("projects.settings.membersTitle")}</Title>
       <Group align="flex-end" wrap="wrap">
         <Select
-          label={t("addMemberLabel")}
-          placeholder={t("addMemberPlaceholder")}
+          label={t("projects.settings.addMemberLabel")}
+          placeholder={t("projects.settings.addMemberPlaceholder")}
           data={addOptions}
           value={addUserId}
           onChange={setAddUserId}
@@ -181,20 +187,27 @@ const ProjectSettingsPageClient = ({
           comboboxProps={{ withinPortal: true }}
           maw={360}
         />
-        <Button onClick={onAdd} disabled={!addUserId || busy} loading={busy} leftSection={<IconPlus size={16} />}>
-          {t("addMember")}
+        <Button
+          onClick={onAdd}
+          disabled={!addUserId || busy}
+          loading={busy}
+          leftSection={<IconPlus size={16} />}
+        >
+          {t("projects.settings.addMember")}
         </Button>
       </Group>
       {isPending ? (
-        <Text c="dimmed">{t("loading")}</Text>
+        <Text c="dimmed">{t("projects.settings.loading")}</Text>
       ) : (
         <Table.ScrollContainer minWidth={400}>
           <Table striped>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>{t("colUser")}</Table.Th>
-                <Table.Th>{t("colRole")}</Table.Th>
-                <Table.Th style={{ textAlign: "right" }}>{t("colAction")}</Table.Th>
+                <Table.Th>{t("projects.settings.colUser")}</Table.Th>
+                <Table.Th>{t("projects.settings.colRole")}</Table.Th>
+                <Table.Th style={{ textAlign: "right" }}>
+                  {t("projects.settings.colAction")}
+                </Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -216,7 +229,7 @@ const ProjectSettingsPageClient = ({
                         onClick={() => onRemove(m.user_id)}
                         disabled={busy}
                       >
-                        {t("remove")}
+                        {t("projects.settings.remove")}
                       </Button>
                     </Table.Td>
                   </Table.Tr>

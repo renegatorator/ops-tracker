@@ -51,6 +51,8 @@ export const parseIssuesListParams = (
 
   const search = searchParams.get("q")?.trim() || undefined;
 
+  const includeClosed = searchParams.get("closed") === "1";
+
   const { sortBy, sortDir } = parseSort(searchParams.get("sort"));
 
   return {
@@ -63,6 +65,7 @@ export const parseIssuesListParams = (
     search,
     sortBy,
     sortDir,
+    includeClosed,
   };
 };
 
@@ -80,6 +83,7 @@ export const issuesListParamsToSearchParams = (
   if (params.statusId) sp.set("status", params.statusId);
   if (params.assigneeId) sp.set("assignee", params.assigneeId);
   if (params.search?.trim()) sp.set("q", params.search.trim());
+  if (params.includeClosed) sp.set("closed", "1");
   const sortBy = params.sortBy ?? "created_at";
   const sortDir = params.sortDir ?? "desc";
   if (sortBy !== "created_at" || sortDir !== "desc") {
@@ -99,6 +103,7 @@ export const patchIssuesListParams = (
     offset: number;
     sortBy: IssuesListSortField;
     sortDir: "asc" | "desc";
+    includeClosed: boolean;
   }> & { resetPage?: boolean },
 ): IssuesListOffsetParams => {
   const { resetPage, ...rest } = patch;

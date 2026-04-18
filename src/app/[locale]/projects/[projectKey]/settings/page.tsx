@@ -32,14 +32,16 @@ const ProjectSettingsPage = async ({ params }: ProjectSettingsPageProps) => {
     notFound();
   }
 
-  const t = await getTranslations({ locale, namespace: "projects.settings" });
+  const t = await getTranslations({ locale });
   const canManage = isAdminAccessRole(ctx.role);
 
   return (
     <Container size="md" py="md">
       <Paper withBorder p="md" radius="md">
         <Stack gap="md">
-          <Title order={3}>{t("pageTitle", { name: proj.data.name })}</Title>
+          <Title order={3}>
+            {t("projects.settings.pageTitle", { name: proj.data.name })}
+          </Title>
           {canManage ? (
             <ProjectSettingsPageClient
               locale={locale}
@@ -49,7 +51,7 @@ const ProjectSettingsPage = async ({ params }: ProjectSettingsPageProps) => {
               isSuperAdmin={isSuperAdminRole(ctx.role)}
             />
           ) : (
-            <Text c="dimmed">{t("adminOnly")}</Text>
+            <Text c="dimmed">{t("projects.settings.adminOnly")}</Text>
           )}
         </Stack>
       </Paper>

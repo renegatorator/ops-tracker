@@ -27,9 +27,7 @@ interface AdminAuditLogPanelProps {
 }
 
 const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
-  const t = useTranslations("admin.audit");
-  const tAdmin = useTranslations("admin");
-  const tIssues = useTranslations("issues");
+  const t = useTranslations();
 
   const { translateAction, translateEntityType } = useAuditTranslations();
 
@@ -65,17 +63,25 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
 
   const entityOptions = useMemo(
     () => [
-      { value: "", label: t("filters.entityAll") },
-      { value: "issue", label: t("filters.entity.issue") },
-      { value: "issue_status", label: t("filters.entity.issue_status") },
-      { value: "user_profile", label: t("filters.entity.user_profile") },
-      { value: "system", label: t("filters.entity.system") },
+      { value: "", label: t("admin.audit.filters.entityAll") },
+      { value: "issue", label: t("admin.audit.filters.entity.issue") },
+      {
+        value: "issue_status",
+        label: t("admin.audit.filters.entity.issue_status"),
+      },
+      {
+        value: "user_profile",
+        label: t("admin.audit.filters.entity.user_profile"),
+      },
+      { value: "system", label: t("admin.audit.filters.entity.system") },
     ],
     [t],
   );
 
   const translateError = (key: string) =>
-    key.startsWith("audit.") ? tAdmin(key) : tIssues(key);
+    key.startsWith("audit.")
+      ? t(`admin.${key}` as Parameters<typeof t>[0])
+      : t(`issues.${key}` as Parameters<typeof t>[0]);
 
   const totalPages = data ? Math.max(1, Math.ceil(data.total / LIMIT)) : 1;
 
@@ -83,14 +89,14 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
     <Stack gap="md">
       <Group align="flex-end" gap="sm" wrap="wrap">
         <TextInput
-          label={t("filters.action")}
-          placeholder={t("filters.actionPlaceholder")}
+          label={t("admin.audit.filters.action")}
+          placeholder={t("admin.audit.filters.actionPlaceholder")}
           value={actionFilter}
           onChange={(e) => setActionFilter(e.currentTarget.value)}
           w={220}
         />
         <Select
-          label={t("filters.entityType")}
+          label={t("admin.audit.filters.entityType")}
           data={entityOptions}
           value={entityType ?? ""}
           onChange={(v) => setEntityType(v && v.length ? v : null)}
@@ -99,14 +105,14 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
         />
         <TextInput
           type="date"
-          label={t("filters.fromDate")}
+          label={t("admin.audit.filters.fromDate")}
           value={fromDate}
           onChange={(e) => setFromDate(e.currentTarget.value)}
           w={160}
         />
         <TextInput
           type="date"
-          label={t("filters.toDate")}
+          label={t("admin.audit.filters.toDate")}
           value={toDate}
           onChange={(e) => setToDate(e.currentTarget.value)}
           w={160}
@@ -114,27 +120,27 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
       </Group>
 
       {isPending ? (
-        <Text c="dimmed">{t("loading")}</Text>
+        <Text c="dimmed">{t("admin.audit.loading")}</Text>
       ) : isError ? (
         <Text c="red">
           {isIssuesQueryError(error)
             ? translateError(error.errorKey)
-            : t("errors.listFailed")}
+            : t("admin.audit.errors.listFailed")}
         </Text>
       ) : data.items.length === 0 ? (
-        <Text c="dimmed">{t("empty")}</Text>
+        <Text c="dimmed">{t("admin.audit.empty")}</Text>
       ) : (
         <>
           <Table.ScrollContainer minWidth={720}>
             <Table striped highlightOnHover withTableBorder>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>{t("table.when")}</Table.Th>
-                  <Table.Th>{t("table.actor")}</Table.Th>
-                  <Table.Th>{t("table.action")}</Table.Th>
-                  <Table.Th>{t("table.entity")}</Table.Th>
-                  <Table.Th>{t("table.entityId")}</Table.Th>
-                  <Table.Th>{t("table.metadata")}</Table.Th>
+                  <Table.Th>{t("admin.audit.table.when")}</Table.Th>
+                  <Table.Th>{t("admin.audit.table.actor")}</Table.Th>
+                  <Table.Th>{t("admin.audit.table.action")}</Table.Th>
+                  <Table.Th>{t("admin.audit.table.entity")}</Table.Th>
+                  <Table.Th>{t("admin.audit.table.entityId")}</Table.Th>
+                  <Table.Th>{t("admin.audit.table.metadata")}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -175,7 +181,7 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
           </Table.ScrollContainer>
           <Group justify="space-between">
             <Text size="sm" c="dimmed">
-              {t("pagination.summary", {
+              {t("admin.audit.pagination.summary", {
                 from: data.offset + 1,
                 to: data.offset + data.items.length,
                 total: data.total,
@@ -188,10 +194,13 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
                 disabled={page <= 0}
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
               >
-                {t("pagination.prev")}
+                {t("admin.audit.pagination.prev")}
               </Button>
               <Text size="sm" c="dimmed">
-                {t("pagination.pageOf", { page: page + 1, totalPages })}
+                {t("admin.audit.pagination.pageOf", {
+                  page: page + 1,
+                  totalPages,
+                })}
               </Text>
               <Button
                 variant="default"
@@ -199,7 +208,7 @@ const AdminAuditLogPanel = ({ locale }: AdminAuditLogPanelProps) => {
                 disabled={!data.hasMore}
                 onClick={() => setPage((p) => p + 1)}
               >
-                {t("pagination.next")}
+                {t("admin.audit.pagination.next")}
               </Button>
             </Group>
           </Group>
