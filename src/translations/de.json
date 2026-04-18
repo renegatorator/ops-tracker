@@ -25,6 +25,10 @@
     "demoAdminButton": "Demo als Admin",
     "demoComingSoon": "Demnächst verfügbar",
     "demoDisclaimer": "Live-Demos kommen bald. Keine Registrierung erforderlich.",
+    "cta": {
+      "requestDemo": "Demo anfragen",
+      "learnMore": "Mehr erfahren"
+    },
     "demoSectionHeading": "Demo anfragen",
     "demoSectionSubheading": "Erlebe Ops Tracker als normaler Nutzer oder als Administrator. Demos kommen bald.",
     "featuresHeading": "Alles, was dein Team braucht",
@@ -508,7 +512,7 @@
     },
     "routes": {
       "home": {
-        "title": "Startseite",
+        "title": "Ops Tracker",
         "description": "Überblick über deinen Ops Tracker."
       },
       "dashboard": {

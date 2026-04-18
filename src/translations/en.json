@@ -25,6 +25,10 @@
     "demoAdminButton": "Demo as Admin",
     "demoComingSoon": "Coming soon",
     "demoDisclaimer": "Live demos are coming soon. No sign-up required.",
+    "cta": {
+      "requestDemo": "Request a demo",
+      "learnMore": "Learn more"
+    },
     "demoSectionHeading": "Request a Demo",
     "demoSectionSubheading": "See Ops Tracker in action as a regular user or as an administrator. Demos are coming soon.",
     "featuresHeading": "Everything your team needs",
@@ -508,7 +512,7 @@
     },
     "routes": {
       "home": {
-        "title": "Ops Tracker — Issue Tracking & Project Management",
+        "title": "Ops Tracker",
         "description": "Track bugs, manage tickets, and ship projects faster with Ops Tracker — a professional Kanban-based issue tracker for modern teams."
       },
       "dashboard": {

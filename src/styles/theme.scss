@@ -4,6 +4,10 @@ $color-primary: #667eea;
 $color-primary-dark: #764ba2;
 $color-primary-light: #8b9ef9;
 
+// Hero glow palette (saturated violets, used by the landing-page radial glow)
+$hero-glow-violet: #7c3aed;
+$hero-glow-violet-deep: #5b21b6;
+
 // Mantine colors
 $color-mantine-primary: #228be6;
 
@@ -57,6 +61,17 @@ $breakpoints: (
   --color-primary-dark: #{$color-primary-dark};
   --color-primary-light: #{$color-primary-light};
   --color-mantine-primary: #{$color-mantine-primary};
+  --hero-glow-violet: #{$hero-glow-violet};
+  --hero-glow-violet-deep: #{$hero-glow-violet-deep};
+
+  /* Default (light scheme): subtle violet wash — present but not competing with the text. */
+  --hero-glow-gradient: radial-gradient(
+    ellipse at center,
+    rgba(124, 58, 237, 0.18) 0%,
+    rgba(124, 58, 237, 0.09) 30%,
+    rgba(91, 33, 182, 0.03) 55%,
+    transparent 75%
+  );
   --background-01: #{$background-01};
   --background-02: #{$background-02};
   --background-03: #{$background-03};

@@ -30,6 +30,11 @@
   animation: fadeInScale $duration $easing forwards;
 }
 
+// ==================== Effect Mixins ====================
+@mixin soft-glow($color: var(--color-primary), $blur: 18px, $spread: 2px) {
+  box-shadow: 0 0 $blur $spread $color;
+}
+
 // ==================== Utility Mixins ====================
 @mixin flex-center($direction: row) {
   display: flex;

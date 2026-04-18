@@ -2,7 +2,7 @@ import { Container, Paper, Stack } from "@mantine/core";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
-import { redirect } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { verifyRecaptchaToken } from "@/lib/recaptcha";
 import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
@@ -57,7 +57,15 @@ const LoginPage = async ({ locale, error }: LoginPageProps) => {
     <Container size="xs" py="xl">
       <Paper withBorder p="lg" radius="md" miw={400}>
         <Stack gap="md">
-          <div style={{ display: "flex", justifyContent: "center", paddingBottom: 4 }}>
+          <Link
+            href={routes.home}
+            aria-label={t("seo.root.title")}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingBottom: 4,
+            }}
+          >
             <Image
               src="/logo-light.svg"
               alt="Ops Tracker"
@@ -77,7 +85,7 @@ const LoginPage = async ({ locale, error }: LoginPageProps) => {
               style={{ display: "none" }}
               unoptimized
             />
-          </div>
+          </Link>
           <LoginForm
             action={signIn}
             error={error}

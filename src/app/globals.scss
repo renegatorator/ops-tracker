@@ -3,7 +3,7 @@
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -37,6 +37,15 @@ a {
 }
 [data-mantine-color-scheme="dark"] {
   --ops-board-column-bg: var(--mantine-color-dark-6);
+
+  /* Deeper, more saturated glow on dark — pushes contrast under the hero text. */
+  --hero-glow-gradient: radial-gradient(
+    ellipse at center,
+    rgba(124, 58, 237, 0.6) 0%,
+    rgba(91, 33, 182, 0.38) 28%,
+    rgba(91, 33, 182, 0.18) 55%,
+    transparent 75%
+  );
 }
 
 /* Hide the reCAPTCHA v3 floating badge globally.
