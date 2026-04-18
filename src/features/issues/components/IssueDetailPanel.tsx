@@ -2,9 +2,13 @@
 
 import {
   ActionIcon,
+  Box,
   Button,
+  Divider,
   Group,
   Loader,
+  LoadingOverlay,
+  Modal,
   SegmentedControl,
   Select,
   SimpleGrid,
@@ -15,20 +19,24 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconBug, IconClipboardList, IconPencil } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
 import IssueAuditActivitySection from "@/features/audit/components/IssueAuditActivitySection";
+import { useRouter } from "@/i18n/navigation";
+import { projectIssuesPath, routes } from "@/lib/routes";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
 import { useAssignIssue } from "../hooks/useAssignIssue";
 import { useIssueDetail } from "../hooks/useIssueDetail";
 import { useIssueStatuses } from "../hooks/useIssueStatuses";
+import { useSoftDeleteIssue } from "../hooks/useSoftDeleteIssue";
 import { useTransitionIssueStatus } from "../hooks/useTransitionIssueStatus";
 import { useUpdateIssue } from "../hooks/useUpdateIssue";
 import { isIssuesQueryError } from "../issues-query-error";
-import { isIssueBug } from "../issueTypeUtils";
+import { isIssueBug, type IssueType, IssueTypes } from "../issueTypeUtils";
 
 const UNASSIGNED_VALUE = "__unassigned__";
 
@@ -39,6 +47,7 @@ interface IssueDetailPanelProps {
   canAssignIssue: boolean;
   canEditDetails: boolean;
   canViewIssueAudit: boolean;
+  isAdmin: boolean;
 }
 
 const IssueDetailPanel = ({
@@ -48,9 +57,11 @@ const IssueDetailPanel = ({
   canAssignIssue,
   canEditDetails,
   canViewIssueAudit,
+  isAdmin,
 }: IssueDetailPanelProps) => {
-  const t = useTranslations("issues");
-  const tDetail = useTranslations("issues.detail");
+  const t = useTranslations();
+  const router = useRouter();
+
   const { data, isPending, isError, error } = useIssueDetail(locale, issueId);
   const {
     data: statuses = [],
@@ -62,13 +73,22 @@ const IssueDetailPanel = ({
     isPending: assigneesPending,
     isError: assigneesError,
   } = useAssigneeFilterOptions(locale, canAssignIssue && !!data?.project_id, data?.project_id);
-  const transition = useTransitionIssueStatus(locale, issueId);
-  const assignMutation = useAssignIssue(locale);
-  const updateMutation = useUpdateIssue(locale, issueId);
+  const { mutate: transitionStatus, isPending: transitionPending } =
+    useTransitionIssueStatus(locale, issueId);
+  const { mutate: assignIssue, isPending: assignPending } =
+    useAssignIssue(locale);
+  const { mutate: updateIssue, isPending: updatePending } = useUpdateIssue(
+    locale,
+    issueId,
+  );
+  const { mutate: softDeleteIssue, isPending: softDeletePending } =
+    useSoftDeleteIssue(locale);
 
   const [isEditing, setIsEditing] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
   const [descDraft, setDescDraft] = useState("");
+  const [confirmOpened, { open: openConfirm, close: closeConfirm }] =
+    useDisclosure(false);
 
   useEffect(() => {
     if (data) {
@@ -84,7 +104,7 @@ const IssueDetailPanel = ({
 
   const assigneeSelectData = useMemo(
     () => [
-      { value: UNASSIGNED_VALUE, label: t("unassigned") },
+      { value: UNASSIGNED_VALUE, label: t("issues.unassigned") },
       ...assigneeUsers.map((u) => ({
         value: u.id,
         label: u.full_name?.trim() || u.email?.trim() || u.id,
@@ -105,7 +125,7 @@ const IssueDetailPanel = ({
     if ((descDraft || "") !== (data.description ?? "")) {
       patch.description = descDraft.length ? descDraft : null;
     }
-    updateMutation.mutate(patch, {
+    updateIssue(patch, {
       onSuccess: () => setIsEditing(false),
     });
   };
@@ -118,21 +138,39 @@ const IssueDetailPanel = ({
     setIsEditing(false);
   };
 
+  const onConfirmClose = () => {
+    closeConfirm();
+    softDeleteIssue(issueId, {
+      onSuccess: () => {
+        const projectKey = data?.projects?.key;
+        if (projectKey) {
+          router.push(projectIssuesPath(projectKey));
+        } else {
+          router.push(routes.issues);
+        }
+      },
+    });
+  };
+
   return (
     <Stack gap="md">
       {isPending ? (
-        <Text c="dimmed">{t("loading")}</Text>
+        <Text c="dimmed">{t("issues.loading")}</Text>
       ) : isError ? (
         <Text c="red">
           {t(
-            isIssuesQueryError(error) ? error.errorKey : "errors.readFailed",
+            `issues.${isIssuesQueryError(error) ? error.errorKey : "errors.readFailed"}` as Parameters<typeof t>[0],
           )}
         </Text>
       ) : (
         <>
           <Group gap={6} align="center">
             <Tooltip
-              label={isIssueBug(data.issue_type) ? tDetail("typeBug") : tDetail("typeTask")}
+              label={
+                isIssueBug(data.issue_type)
+                  ? t("issues.detail.typeBug")
+                  : t("issues.detail.typeTask")
+              }
               position="top"
               withArrow
             >
@@ -151,30 +189,30 @@ const IssueDetailPanel = ({
             isEditing ? (
               <Stack gap="sm">
                 <TextInput
-                  label={tDetail("titleLabel")}
+                  label={t("issues.detail.titleLabel")}
                   value={titleDraft}
                   onChange={(e) => setTitleDraft(e.currentTarget.value)}
-                  aria-label={tDetail("titleLabel")}
+                  aria-label={t("issues.detail.titleLabel")}
                 />
                 <Textarea
-                  label={tDetail("descriptionLabel")}
+                  label={t("issues.detail.descriptionLabel")}
                   value={descDraft}
                   onChange={(e) => setDescDraft(e.currentTarget.value)}
                   minRows={4}
                   autosize
                   maxRows={16}
-                  aria-label={tDetail("descriptionLabel")}
+                  aria-label={t("issues.detail.descriptionLabel")}
                 />
                 <Group>
                   <Button
                     onClick={onSaveDetails}
-                    disabled={!dirty || updateMutation.isPending}
-                    loading={updateMutation.isPending}
+                    disabled={!dirty || updatePending}
+                    loading={updatePending}
                   >
-                    {tDetail("save")}
+                    {t("issues.detail.save")}
                   </Button>
                   <Button variant="subtle" onClick={onCancelEdit}>
-                    {tDetail("cancelEdit")}
+                    {t("issues.detail.cancelEdit")}
                   </Button>
                 </Group>
               </Stack>
@@ -182,12 +220,12 @@ const IssueDetailPanel = ({
               <Stack gap="sm">
                 <Group justify="space-between" align="flex-start" wrap="nowrap">
                   <Title order={3} style={{ flex: 1 }}>{data.title}</Title>
-                  <Tooltip label={tDetail("editTooltip")} position="left">
+                  <Tooltip label={t("issues.detail.editTooltip")} position="left">
                     <ActionIcon
                       variant="subtle"
                       color="gray"
                       onClick={() => setIsEditing(true)}
-                      aria-label={tDetail("editTooltip")}
+                      aria-label={t("issues.detail.editTooltip")}
                     >
                       <IconPencil size={16} />
                     </ActionIcon>
@@ -199,7 +237,7 @@ const IssueDetailPanel = ({
                   </Text>
                 ) : (
                   <Text size="sm" c="dimmed" fs="italic">
-                    {tDetail("noDescription")}
+                    {t("issues.detail.noDescription")}
                   </Text>
                 )}
               </Stack>
@@ -213,8 +251,19 @@ const IssueDetailPanel = ({
             </>
           )}
 
-          <SimpleGrid cols={{ base: 1, sm: 2 }}>
-            {canTransitionStatus ? (
+          <Box
+            pos="relative"
+            aria-busy={transitionPending || assignPending || updatePending}
+          >
+            <LoadingOverlay
+              visible={transitionPending || assignPending || updatePending}
+              zIndex={2}
+              overlayProps={{ blur: 1 }}
+              loaderProps={{ "aria-label": t("issues.loading") }}
+            />
+            <Stack gap="md">
+              <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                {canTransitionStatus ? (
               statusesError ? (
                 <Text c="dimmed" size="sm">
                   {data.issue_statuses?.name ?? "—"}
@@ -223,28 +272,28 @@ const IssueDetailPanel = ({
                 <Loader size="sm" type="dots" />
               ) : (
                 <Select
-                  label={tDetail("statusLabel")}
-                  placeholder={tDetail("statusPlaceholder")}
+                  label={t("issues.detail.statusLabel")}
+                  placeholder={t("issues.detail.statusPlaceholder")}
                   data={statusSelectData}
                   value={data.status_id}
                   onChange={(value) => {
                     if (!value || value === data.status_id) return;
-                    transition.mutate(value);
+                    transitionStatus(value);
                   }}
-                  disabled={transition.isPending}
-                  aria-label={tDetail("statusLabel")}
+                  disabled={transitionPending}
+                  aria-label={t("issues.detail.statusLabel")}
                 />
               )
             ) : (
               <Stack gap={4}>
                 <Text size="sm" fw={600}>
-                  {tDetail("statusLabel")}
+                  {t("issues.detail.statusLabel")}
                 </Text>
                 <Text c="dimmed" size="sm">
                   {data.issue_statuses?.name ?? "—"}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  {tDetail("statusReadOnlyHint")}
+                  {t("issues.detail.statusReadOnlyHint")}
                 </Text>
               </Stack>
             )}
@@ -253,45 +302,45 @@ const IssueDetailPanel = ({
               assigneesError ? (
                 <Stack gap={4}>
                   <Text size="sm" fw={600}>
-                    {tDetail("assigneeLabel")}
+                    {t("issues.detail.assigneeLabel")}
                   </Text>
                   <Text c="dimmed" size="sm">
                     {data.assignee?.full_name?.trim() ||
                       data.assignee?.email?.trim() ||
-                      t("unassigned")}
+                      t("issues.unassigned")}
                   </Text>
                 </Stack>
               ) : assigneesPending ? (
                 <Loader size="sm" type="dots" />
               ) : (
                 <Select
-                  label={tDetail("assigneeLabel")}
-                  placeholder={tDetail("assignPlaceholder")}
+                  label={t("issues.detail.assigneeLabel")}
+                  placeholder={t("issues.detail.assignPlaceholder")}
                   data={assigneeSelectData}
                   value={data.assignee_id ?? UNASSIGNED_VALUE}
                   onChange={(value) => {
                     const next =
                       value === UNASSIGNED_VALUE || !value ? null : value;
                     if (next === data.assignee_id) return;
-                    assignMutation.mutate({ issueId, assigneeId: next });
+                    assignIssue({ issueId, assigneeId: next });
                   }}
-                  disabled={assignMutation.isPending}
+                  disabled={assignPending}
                   comboboxProps={{ withinPortal: true }}
-                  aria-label={tDetail("assigneeLabel")}
+                  aria-label={t("issues.detail.assigneeLabel")}
                 />
               )
             ) : (
               <Stack gap={4}>
                 <Text size="sm" fw={600}>
-                  {tDetail("assigneeLabel")}
+                  {t("issues.detail.assigneeLabel")}
                 </Text>
                 <Text c="dimmed" size="sm">
                   {data.assignee?.full_name?.trim() ||
                     data.assignee?.email?.trim() ||
-                    t("unassigned")}
+                    t("issues.unassigned")}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  {tDetail("assignReadOnlyHint")}
+                  {t("issues.detail.assignReadOnlyHint")}
                 </Text>
               </Stack>
             )}
@@ -300,25 +349,25 @@ const IssueDetailPanel = ({
           {canEditDetails ? (
             <Stack gap={4}>
               <Text size="sm" fw={600}>
-                {tDetail("issueTypeLabel")}
+                {t("issues.detail.issueTypeLabel")}
               </Text>
               <SegmentedControl
                 data={[
                   {
-                    value: "ticket",
+                    value: IssueTypes.TASK,
                     label: (
                       <Group gap={6} justify="center" align="center" wrap="nowrap">
                         <IconClipboardList size={14} color="var(--mantine-color-blue-6)" />
-                        {tDetail("typeTask")}
+                        {t("issues.detail.typeTask")}
                       </Group>
                     ),
                   },
                   {
-                    value: "bug",
+                    value: IssueTypes.BUG,
                     label: (
                       <Group gap={6} justify="center" align="center" wrap="nowrap">
                         <IconBug size={14} color="var(--mantine-color-red-6)" />
-                        {tDetail("typeBug")}
+                        {t("issues.detail.typeBug")}
                       </Group>
                     ),
                   },
@@ -326,17 +375,17 @@ const IssueDetailPanel = ({
                 value={data.issue_type}
                 onChange={(value) => {
                   if (!value || value === data.issue_type) return;
-                  updateMutation.mutate({
-                    issue_type: value as "bug" | "ticket",
+                  updateIssue({
+                    issue_type: value as IssueType,
                   });
                 }}
-                disabled={updateMutation.isPending}
+                disabled={updatePending}
               />
             </Stack>
           ) : (
             <Stack gap={4}>
               <Text size="sm" fw={600}>
-                {tDetail("issueTypeLabel")}
+                {t("issues.detail.issueTypeLabel")}
               </Text>
               <Group gap={6} align="center">
                 {isIssueBug(data.issue_type) ? (
@@ -346,18 +395,59 @@ const IssueDetailPanel = ({
                 )}
                 <Text c="dimmed" size="sm">
                   {isIssueBug(data.issue_type)
-                    ? tDetail("typeBug")
-                    : tDetail("typeTask")}
+                    ? t("issues.detail.typeBug")
+                    : t("issues.detail.typeTask")}
                 </Text>
               </Group>
             </Stack>
           )}
+            </Stack>
+          </Box>
 
           {canViewIssueAudit ? (
             <IssueAuditActivitySection locale={locale} issueId={issueId} />
           ) : null}
+
+          {isAdmin ? (
+            <>
+              <Divider />
+              <Group justify="flex-end">
+                <Button
+                  variant="subtle"
+                  color="red"
+                  onClick={openConfirm}
+                  loading={softDeletePending}
+                >
+                  {t("issues.detail.closeIssue")}
+                </Button>
+              </Group>
+            </>
+          ) : null}
         </>
       )}
+
+      <Modal
+        opened={confirmOpened}
+        onClose={closeConfirm}
+        title={t("issues.detail.closeIssueConfirmTitle")}
+        centered
+      >
+        <Stack gap="md">
+          <Text size="sm">{t("issues.detail.closeIssueConfirmBody")}</Text>
+          <Group justify="flex-end">
+            <Button variant="subtle" onClick={closeConfirm}>
+              {t("issues.create.cancel")}
+            </Button>
+            <Button
+              color="red"
+              onClick={onConfirmClose}
+              loading={softDeletePending}
+            >
+              {t("issues.detail.closeIssueConfirmButton")}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Stack>
   );
 };

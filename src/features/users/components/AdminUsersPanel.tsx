@@ -4,8 +4,9 @@ import { Select, Table, Text } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
-import { APP_ROLE, type AppRole } from "@/lib/auth/types";
+import { type AppRole, AppRoles } from "@/lib/auth/types";
 
 import { useAdminUsersList } from "../hooks/useAdminUsersList";
 import { useUpdateUserRole } from "../hooks/useUpdateUserRole";
@@ -20,39 +21,51 @@ const canEditUserRow = (
   targetRole: AppRole,
 ): boolean => {
   if (actorIsSuper) return true;
-  return targetRole === APP_ROLE.user;
+  return targetRole === AppRoles.USER;
 };
 
 const AdminUsersPanel = ({
   locale,
   isSuperAdmin,
 }: AdminUsersPanelProps) => {
-  const t = useTranslations("admin.users");
-  const tAdmin = useTranslations("admin");
-  const tRoles = useTranslations("admin.roles");
+  const t = useTranslations();
   const { data, isPending, isError, error } = useAdminUsersList(locale);
-  const updateRole = useUpdateUserRole(locale);
+  const {
+    mutate: updateUserRole,
+    isPending: updateRolePending,
+    variables: updateRoleVariables,
+  } = useUpdateUserRole(locale);
 
   const roleSelectData = useMemo(
     () =>
       [
-        { value: APP_ROLE.user, label: tRoles("user") },
-        { value: APP_ROLE.admin, label: tRoles("admin") },
+        { value: AppRoles.USER, label: t("admin.roles.user") },
+        { value: AppRoles.ADMIN, label: t("admin.roles.admin") },
         ...(isSuperAdmin
-          ? [{ value: APP_ROLE.super_admin, label: tRoles("super_admin") }]
+          ? [
+              {
+                value: AppRoles.SUPER_ADMIN,
+                label: t("admin.roles.super_admin"),
+              },
+            ]
           : []),
       ],
-    [isSuperAdmin, tRoles],
+    [isSuperAdmin, t],
   );
 
   if (isPending) {
-    return <Text c="dimmed">{t("loading")}</Text>;
+    return (
+      <TableSkeleton
+        columnWidths={["40%", "35%", "25%"]}
+        ariaLabel={t("admin.users.loading")}
+      />
+    );
   }
   if (isError) {
     const key = isIssuesQueryError(error)
       ? error.errorKey
       : "errors.listUsersFailed";
-    return <Text c="red">{tAdmin(key)}</Text>;
+    return <Text c="red">{t(`admin.${key}` as Parameters<typeof t>[0])}</Text>;
   }
 
   return (
@@ -60,9 +73,9 @@ const AdminUsersPanel = ({
       <Table striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>{t("email")}</Table.Th>
-            <Table.Th>{t("name")}</Table.Th>
-            <Table.Th>{t("role")}</Table.Th>
+            <Table.Th>{t("admin.users.email")}</Table.Th>
+            <Table.Th>{t("admin.users.name")}</Table.Th>
+            <Table.Th>{t("admin.users.role")}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -80,16 +93,18 @@ const AdminUsersPanel = ({
                       value={row.role}
                       onChange={(v) => {
                         if (!v || v === row.role) return;
-                        updateRole.mutate({ userId: row.id, role: v });
+                        updateUserRole({ userId: row.id, role: v });
                       }}
                       disabled={
-                        updateRole.isPending &&
-                        updateRole.variables?.userId === row.id
+                        updateRolePending &&
+                        updateRoleVariables?.userId === row.id
                       }
-                      aria-label={t("role")}
+                      aria-label={t("admin.users.role")}
                     />
                   ) : (
-                    <Text size="sm">{tRoles(row.role)}</Text>
+                    <Text size="sm">
+                      {t(`admin.roles.${row.role}` as Parameters<typeof t>[0])}
+                    </Text>
                   )}
                 </Table.Td>
               </Table.Tr>

@@ -3,6 +3,7 @@
 import { Badge, Stack, Table, Text, Title } from "@mantine/core";
 import { useTranslations } from "next-intl";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 
 import { auditActionColor } from "../auditUtils";
@@ -20,9 +21,7 @@ const IssueAuditActivitySection = ({
   locale,
   issueId,
 }: IssueAuditActivitySectionProps) => {
-  const t = useTranslations("issues.detail.activity");
-  const tIssues = useTranslations("issues");
-  const tAdmin = useTranslations("admin");
+  const t = useTranslations();
   const { translateAction } = useAuditTranslations();
 
   const formatSummary = (row: AuditLogRow): string => {
@@ -33,21 +32,28 @@ const IssueAuditActivitySection = ({
       case "issue.update": {
         const fields = Array.isArray(m.fields) ? (m.fields as string[]) : [];
         return fields.length > 0
-          ? t("summary.update", { fields: fields.join(", ") })
-          : t("summary.updateNoFields");
+          ? t("issues.detail.activity.summary.update", {
+              fields: fields.join(", "),
+            })
+          : t("issues.detail.activity.summary.updateNoFields");
       }
       case "issue.assign": {
-        if (m.assignee_id == null) return t("summary.unassign");
+        if (m.assignee_id == null)
+          return t("issues.detail.activity.summary.unassign");
         return typeof m.assignee_id === "string"
-          ? t("summary.assign", { id: m.assignee_id.slice(0, 8) })
-          : t("summary.assigned");
+          ? t("issues.detail.activity.summary.assign", {
+              id: m.assignee_id.slice(0, 8),
+            })
+          : t("issues.detail.activity.summary.assigned");
       }
       case "issue.status_transition":
         return typeof m.status_id === "string"
-          ? t("summary.statusChange", { id: m.status_id.slice(0, 8) })
-          : t("summary.statusChanged");
+          ? t("issues.detail.activity.summary.statusChange", {
+              id: m.status_id.slice(0, 8),
+            })
+          : t("issues.detail.activity.summary.statusChanged");
       case "issue.archive":
-        return t("summary.archive");
+        return t("issues.detail.activity.summary.archive");
       default:
         return row.action;
     }
@@ -61,35 +67,37 @@ const IssueAuditActivitySection = ({
 
   return (
     <Stack gap="sm" mt="lg">
-      <Title order={4}>{t("title")}</Title>
+      <Title order={4}>{t("issues.detail.activity.title")}</Title>
       <Text size="xs" c="dimmed">
-        {t("hint")}
+        {t("issues.detail.activity.hint")}
       </Text>
       {isPending ? (
-        <Text c="dimmed" size="sm">
-          {t("loading")}
-        </Text>
+        <TableSkeleton
+          columnWidths={["20%", "25%", "25%", "30%"]}
+          rows={3}
+          ariaLabel={t("issues.detail.activity.loading")}
+        />
       ) : isError ? (
         <Text c="red" size="sm">
           {isIssuesQueryError(error)
             ? error.errorKey.startsWith("audit.")
-              ? tAdmin(error.errorKey)
-              : tIssues(error.errorKey)
-            : t("loadFailed")}
+              ? t(`admin.${error.errorKey}` as Parameters<typeof t>[0])
+              : t(`issues.${error.errorKey}` as Parameters<typeof t>[0])
+            : t("issues.detail.activity.loadFailed")}
         </Text>
       ) : data.length === 0 ? (
         <Text c="dimmed" size="sm">
-          {t("empty")}
+          {t("issues.detail.activity.empty")}
         </Text>
       ) : (
         <Table.ScrollContainer minWidth={480}>
           <Table striped withTableBorder>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>{t("when")}</Table.Th>
-                <Table.Th>{t("actor")}</Table.Th>
-                <Table.Th>{t("action")}</Table.Th>
-                <Table.Th>{t("summaryColumn")}</Table.Th>
+                <Table.Th>{t("issues.detail.activity.when")}</Table.Th>
+                <Table.Th>{t("issues.detail.activity.actor")}</Table.Th>
+                <Table.Th>{t("issues.detail.activity.action")}</Table.Th>
+                <Table.Th>{t("issues.detail.activity.summaryColumn")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>

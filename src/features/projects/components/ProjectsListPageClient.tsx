@@ -18,6 +18,7 @@ import { IconPlus, IconSettings } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { isIssuesQueryError } from "@/features/issues/issues-query-error";
 import { createProject } from "@/features/projects/actions";
 import { useProjectsList } from "@/features/projects/hooks/useProjectsList";
@@ -25,6 +26,14 @@ import { Link, useRouter } from "@/i18n/navigation";
 import type { AppRole } from "@/lib/auth/types";
 import { isAdminAccessRole } from "@/lib/auth/types";
 import { projectBoardPath, projectSettingsPath } from "@/lib/routes";
+
+const defaultValues = {
+  key: "",
+  name: "",
+  description: "",
+};
+
+type CreateProjectFormValues = typeof defaultValues;
 
 interface ProjectsListPageClientProps {
   locale: string;
@@ -35,9 +44,7 @@ const ProjectsListPageClient = ({
   locale,
   userRole,
 }: ProjectsListPageClientProps) => {
-  const t = useTranslations("projects.list");
-  const tIssues = useTranslations("issues");
-  const tProjErrors = useTranslations("projects.errors");
+  const t = useTranslations();
   const router = useRouter();
   const canManage = isAdminAccessRole(userRole);
   const {
@@ -49,15 +56,19 @@ const ProjectsListPageClient = ({
   } = useProjectsList(locale);
   const [creating, setCreating] = useState(false);
 
-  const form = useForm({
-    initialValues: { key: "", name: "", description: "" },
+  const {
+    onSubmit: handleFormSubmit,
+    getInputProps,
+    reset,
+  } = useForm<CreateProjectFormValues>({
+    initialValues: defaultValues,
     validate: {
-      key: (v) => (!v.trim() ? t("keyRequired") : null),
-      name: (v) => (!v.trim() ? t("nameRequired") : null),
+      key: (v) => (!v.trim() ? t("projects.list.keyRequired") : null),
+      name: (v) => (!v.trim() ? t("projects.list.nameRequired") : null),
     },
   });
 
-  const onCreate = form.onSubmit(async (values) => {
+  const onCreate = handleFormSubmit(async (values) => {
     const result = await createProject(locale, {
       key: values.key.trim().toUpperCase(),
       name: values.name.trim(),
@@ -65,20 +76,20 @@ const ProjectsListPageClient = ({
     });
     if (!result.ok) {
       notifications.show({
-        title: t("createFailed"),
+        title: t("projects.list.createFailed"),
         message: result.errorKey.startsWith("projects.errors.")
-          ? tProjErrors(result.errorKey.replace("projects.errors.", ""))
-          : tIssues(result.errorKey),
+          ? t(result.errorKey as Parameters<typeof t>[0])
+          : t(`issues.${result.errorKey}` as Parameters<typeof t>[0]),
         color: "red",
       });
       return;
     }
     notifications.show({
-      title: t("createSuccess"),
-      message: t("createSuccessMessage"),
+      title: t("projects.list.createSuccess"),
+      message: t("projects.list.createSuccessMessage"),
       color: "green",
     });
-    form.reset();
+    reset();
     setCreating(false);
     await refetch();
     const key = values.key.trim().toUpperCase();
@@ -89,14 +100,16 @@ const ProjectsListPageClient = ({
     <Stack gap="lg">
       <Group justify="space-between" wrap="wrap">
         <Title order={2} data-testid="projects-page-title">
-          {t("title")}
+          {t("projects.list.title")}
         </Title>
         {canManage ? (
           <Button
             onClick={() => setCreating((v) => !v)}
             leftSection={creating ? undefined : <IconPlus size={16} />}
           >
-            {creating ? t("cancelCreate") : t("newProject")}
+            {creating
+              ? t("projects.list.cancelCreate")
+              : t("projects.list.newProject")}
           </Button>
         ) : null}
       </Group>
@@ -106,20 +119,20 @@ const ProjectsListPageClient = ({
           <form onSubmit={onCreate}>
             <Stack gap="sm">
               <TextInput
-                label={t("keyLabel")}
-                description={t("keyHint")}
-                {...form.getInputProps("key")}
+                label={t("projects.list.keyLabel")}
+                description={t("projects.list.keyHint")}
+                {...getInputProps("key")}
               />
               <TextInput
-                label={t("nameLabel")}
-                {...form.getInputProps("name")}
+                label={t("projects.list.nameLabel")}
+                {...getInputProps("name")}
               />
               <TextInput
-                label={t("descriptionLabel")}
-                {...form.getInputProps("description")}
+                label={t("projects.list.descriptionLabel")}
+                {...getInputProps("description")}
               />
               <Button type="submit" leftSection={<IconPlus size={16} />}>
-                {t("submitCreate")}
+                {t("projects.list.submitCreate")}
               </Button>
             </Stack>
           </form>
@@ -127,22 +140,25 @@ const ProjectsListPageClient = ({
       ) : null}
 
       {isPending ? (
-        <Text c="dimmed">{t("loading")}</Text>
+        <TableSkeleton
+          columnWidths={["20%", "55%", "25%"]}
+          ariaLabel={t("projects.list.loading")}
+        />
       ) : isError ? (
         <Text c="red">
           {isIssuesQueryError(error)
-            ? tIssues(error.errorKey)
-            : t("loadFailed")}
+            ? t(`issues.${error.errorKey}` as Parameters<typeof t>[0])
+            : t("projects.list.loadFailed")}
         </Text>
       ) : (
         <Table.ScrollContainer minWidth={480}>
           <Table striped highlightOnHover>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>{t("colKey")}</Table.Th>
-                <Table.Th>{t("colName")}</Table.Th>
+                <Table.Th>{t("projects.list.colKey")}</Table.Th>
+                <Table.Th>{t("projects.list.colName")}</Table.Th>
                 <Table.Th style={{ textAlign: "right" }}>
-                  {t("colAction")}
+                  {t("projects.list.colAction")}
                 </Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -163,17 +179,21 @@ const ProjectsListPageClient = ({
                         size="xs"
                         variant="light"
                       >
-                        {t("open")}
+                        {t("projects.list.open")}
                       </Button>
                       {canManage && (
-                        <Tooltip label={t("settings")} position="top" withArrow>
+                        <Tooltip
+                          label={t("projects.list.settings")}
+                          position="top"
+                          withArrow
+                        >
                           <ActionIcon
                             component={Link}
                             href={projectSettingsPath(p.key)}
                             variant="subtle"
                             color="gray"
                             size="sm"
-                            aria-label={t("settings")}
+                            aria-label={t("projects.list.settings")}
                           >
                             <IconSettings size={14} />
                           </ActionIcon>

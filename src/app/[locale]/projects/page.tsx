@@ -22,7 +22,7 @@ const ProjectsPage = async ({ params }: ProjectsPageProps) => {
   if (!ctx) {
     return redirect({ href: routes.login, locale });
   }
-  await getTranslations({ locale, namespace: "projects.list" });
+  await getTranslations({ locale });
 
   return (
     <Container size="lg" py="xl">

@@ -10,7 +10,7 @@ type RouteSegmentErrorProps = {
 };
 
 const RouteSegmentError = ({ error, reset }: RouteSegmentErrorProps) => {
-  const t = useTranslations("common.route");
+  const t = useTranslations();
 
   useEffect(() => {
     console.error(error);
@@ -18,11 +18,11 @@ const RouteSegmentError = ({ error, reset }: RouteSegmentErrorProps) => {
 
   return (
     <Stack gap="md" py="lg" align="flex-start" w="100%">
-      <Alert color="red" title={t("errorTitle")} variant="light">
-        <Text size="sm">{t("errorDescription")}</Text>
+      <Alert color="red" title={t("common.route.errorTitle")} variant="light">
+        <Text size="sm">{t("common.route.errorDescription")}</Text>
       </Alert>
       <Button onClick={() => reset()} variant="light">
-        {t("tryAgain")}
+        {t("common.route.tryAgain")}
       </Button>
     </Stack>
   );

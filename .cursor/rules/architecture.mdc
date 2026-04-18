@@ -1,0 +1,88 @@
+---
+description: Ops Tracker app architecture and project-specific conventions
+alwaysApply: true
+---
+
+# Ops Tracker — architecture quick reference
+
+Full docs: `README.md`, `docs/ARCHITECTURE.md`, `docs/SUPABASE_MIGRATIONS.md`. Read those when deeper detail is needed.
+
+## Stack
+- **Next.js 16** (App Router, Server Components, Server Actions) + **React 19** + **TypeScript strict**.
+- **UI**: Mantine v8 (`@mantine/core`, `form`, `hooks`, `modals`, `notifications`) + **SCSS Modules** (tokens in `src/styles/`). Prefer Mantine components over raw HTML.
+- **Icons**: `@tabler/icons-react`.
+- **Data/state**: TanStack Query v5 (client), TanStack Table v8 + Virtual v3 (virtualized lists), `@dnd-kit` (Kanban).
+- **Backend**: Supabase (Postgres + Auth + RLS). Email via Resend. reCAPTCHA v3 on login.
+- **i18n**: `next-intl` (en default/unprefixed, `de`, `si`). Messages in `src/translations/*.json`.
+- **Validation**: Zod on all server action inputs.
+- **Testing**: Playwright E2E (`npm run test:e2e`).
+
+## Folder layout
+```
+src/
+  proxy.ts                      # auth + next-intl — DO NOT add src/middleware.ts (Next 16 errors if both exist)
+  app/[locale]/...              # routes; thin pages delegating to features
+  components/                   # shared UI (Layout, Providers, skeletons, Typography, Theme)
+  features/<feature>/
+    actions.ts                  # "use server" — zod-validated server actions
+    service.ts                  # Supabase data access
+    schemas.ts                  # zod schemas
+    types.ts
+    keys.ts                     # TanStack Query keys (namespaced by locale/resource)
+    components/                 # feature-scoped UI
+    hooks/                      # feature-scoped client hooks (useXxx)
+  i18n/                         # routing + navigation helpers
+  lib/                          # auth, audit, email, supabase clients, env, routes, recaptcha
+  styles/                       # mixins.scss, theme.scss
+  translations/                 # en.json, de.json, si.json
+  utils/                        # pure stateless helpers only
+```
+
+Existing features: `admin`, `audit`, `dashboard`, `issues`, `projects`, `settings`, `users`. Follow the same file layout when adding a new one.
+
+## Hard rules (project-specific gotchas)
+
+### Navigation & i18n
+- **Always** import `Link`, `redirect`, `useRouter`, `usePathname` from `@/i18n/navigation` — never from `next/link` or `next/navigation`. This preserves locale prefixes.
+- Locales use `localePrefix: "as-needed"`: English URLs are unprefixed, `de`/`si` are prefixed.
+
+### Middleware
+- There is exactly one entry point: `src/proxy.ts`. Do not create `src/middleware.ts` — Next.js 16 errors if both exist.
+
+### Env vars
+- Server-only secrets (e.g. `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`) must never be prefixed with `NEXT_PUBLIC_`.
+- Access env through the `env()` helper in `src/lib/env.ts`, not `process.env` directly elsewhere.
+
+### Server actions
+- All mutations are Server Actions in `features/<feature>/actions.ts`.
+- Validate inputs with Zod from `schemas.ts`.
+- Verify role on the server (`src/lib/auth/rbac.ts`); never trust the client. RLS is a second layer.
+- Return the feature's typed result shape (e.g. `IssuesActionResult<T>`).
+- On success, invalidate TanStack Query keys and/or call `revalidatePath` / `revalidateTag` as appropriate.
+- Audit every successful mutation via `src/lib/audit/log-audit.ts`, including `issue_key` (or equivalent) in metadata.
+
+### Data fetching
+- Prefer Server Components for initial data; use the `prefetch-*` helpers + `HydrationBoundary` pattern (see `src/features/issues/prefetch-issue-queries.ts`) for detail pages.
+- Client lists/filters/pagination use TanStack Query with keys from `features/<feature>/keys.ts`.
+
+### Issue type mapping (important domain quirk)
+- DB enum is `"bug" | "ticket"`; UI displays **Bug** / **Task**.
+- Always compare via `src/features/issues/issueTypeUtils.ts` (`IssueTypes`, `isIssueBug`, `isIssueTask`) — never compare the raw string.
+
+### Issues soft delete
+- `issues.deleted_at` is used for soft delete (archive). Lists must filter it out unless explicitly showing archived.
+
+### Roles
+- `user_profiles.role`: `user | admin | super_admin`. Admin routes live under `/admin`; regular users are redirected to `/dashboard`.
+
+### Styling
+- SCSS Modules (`*.module.scss`) colocated with components. Use tokens/mixins from `src/styles/`. Avoid inline styles unless dynamic.
+
+### Linting
+- ESLint flat config with `simple-import-sort` and `unused-imports`. Keep imports sorted and remove unused ones (auto-fixable via `npm run lint`).
+
+## Quality gates before declaring done
+- `npm run tsc` passes (strict TS).
+- `npm run lint` passes.
+- Any new user-facing string added to **all three** translation files (`en.json`, `de.json`, `si.json`).
+- Any mutation logs an audit entry.

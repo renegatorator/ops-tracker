@@ -2,20 +2,18 @@ import "../globals.scss";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 
-import {
-  ColorSchemeScript,
-  mantineHtmlProps,
-  MantineProvider,
-} from "@mantine/core";
+import { mantineHtmlProps, MantineProvider } from "@mantine/core";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import {
   getMessages,
   getTranslations,
   setRequestLocale,
 } from "next-intl/server";
+import type { ReactNode } from "react";
 
 import AppNotifications from "@/components/Providers/AppNotifications";
 import QueryProvider from "@/components/Providers/QueryProvider";
@@ -28,7 +26,7 @@ const inter = Inter({
 });
 
 interface LocaleLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }
 
@@ -40,10 +38,10 @@ export const generateMetadata = async ({
   params,
 }: LocaleLayoutProps): Promise<Metadata> => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "seo.root" });
+  const t = await getTranslations({ locale });
 
-  const title = t("title");
-  const description = t("description");
+  const title = t("seo.root.title");
+  const description = t("seo.root.description");
 
   return {
     metadataBase: new URL(env("NEXT_PUBLIC_SITE_URL")),
@@ -82,10 +80,10 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
 
   return (
     <html lang={locale} {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript defaultColorScheme="auto" />
-      </head>
       <body className={inter.className}>
+        <Script id="mantine-color-scheme" strategy="beforeInteractive">
+          {`(function(){try{var s=localStorage.getItem('mantine-color-scheme-value')||'auto';var r=s==='auto'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):s;document.documentElement.setAttribute('data-mantine-color-scheme',r);}catch(e){}})();`}
+        </Script>
         <MantineProvider defaultColorScheme="auto">
           <NextIntlClientProvider messages={messages}>
             <QueryProvider>

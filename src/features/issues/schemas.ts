@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { isIssueTask } from "./issueTypeUtils";
+import { isIssueTask,IssueTypes, IssueTypeValues } from "./issueTypeUtils";
 
 const trimmedTitle = z
   .string()
@@ -8,7 +8,7 @@ const trimmedTitle = z
   .min(1, { message: "validation.titleRequired" })
   .max(500, { message: "validation.titleTooLong" });
 
-export const issueTypeSchema = z.enum(["bug", "ticket"], {
+export const issueTypeSchema = z.enum(IssueTypeValues, {
   message: "validation.issueTypeInvalid",
 });
 
@@ -21,7 +21,7 @@ export const createIssueSchema = z
       .max(20_000, { message: "validation.descriptionTooLong" })
       .optional(),
     status_id: z.uuid({ message: "validation.statusInvalid" }),
-    issue_type: issueTypeSchema.default("ticket"),
+    issue_type: issueTypeSchema.default(IssueTypes.TASK),
     assignee_id: z
       .uuid({ message: "validation.assigneeInvalid" })
       .optional()
@@ -153,6 +153,7 @@ const filterFields = {
   sortDir: z
     .enum(["asc", "desc"], { message: "validation.sortDirInvalid" })
     .optional(),
+  includeClosed: z.boolean().optional(),
 };
 
 export const listIssuesSchema = z.discriminatedUnion("mode", [
@@ -170,7 +171,6 @@ export const listIssuesSchema = z.discriminatedUnion("mode", [
   }),
 ]);
 
-export type IssueType = z.infer<typeof issueTypeSchema>;
 export type CreateIssueInput = z.infer<typeof createIssueSchema>;
 export type UpdateIssueInput = z.infer<typeof updateIssueSchema>;
 export type TransitionIssueStatusInput = z.infer<

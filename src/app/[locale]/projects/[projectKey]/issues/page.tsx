@@ -34,7 +34,7 @@ const ProjectIssuesPage = async ({ params }: ProjectIssuesPageProps) => {
     notFound();
   }
 
-  const t = await getTranslations({ locale, namespace: "projects.issues" });
+  const t = await getTranslations({ locale });
   const canListAllAssignees = isAdminAccessRole(ctx.role);
 
   return (
@@ -42,7 +42,9 @@ const ProjectIssuesPage = async ({ params }: ProjectIssuesPageProps) => {
       <Paper withBorder p={{ base: "sm", sm: "lg" }} radius="md" w="100%">
         <Stack gap="md">
           <Group justify="space-between" wrap="wrap">
-            <Title order={3}>{t("title", { name: proj.data.name })}</Title>
+            <Title order={3}>
+              {t("projects.issues.title", { name: proj.data.name })}
+            </Title>
             <ProjectIssuesHeaderActions
               locale={locale}
               projectId={proj.data.id}

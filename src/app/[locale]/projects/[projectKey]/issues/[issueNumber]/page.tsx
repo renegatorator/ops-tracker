@@ -96,6 +96,7 @@ const ProjectIssueDetailPage = async ({
             canAssignIssue={canAssignIssue}
             canEditDetails={canEditDetails}
             canViewIssueAudit={canViewIssueAudit}
+            isAdmin={isAdminAccessRole(ctx.role)}
           />
         </HydrationBoundary>
       </Paper>

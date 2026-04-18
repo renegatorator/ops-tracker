@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import RouteLoading from "@/components/RouteLoading";
 import { requireRole } from "@/lib/auth/session";
-import { SUPER_ADMIN_ROLES } from "@/lib/auth/types";
+import { SuperAdminRoles } from "@/lib/auth/types";
 import {
   env,
   getDemoResetEnvRaw,
@@ -30,14 +30,14 @@ export const generateMetadata = async ({ params }: AdminSettingsPageProps) => {
 
 const AdminSettingsPage = async ({ params }: AdminSettingsPageProps) => {
   const { locale } = await params;
-  await requireRole(locale, SUPER_ADMIN_ROLES);
-  const t = await getTranslations({ locale, namespace: "admin" });
+  await requireRole(locale, SuperAdminRoles);
+  const t = await getTranslations({ locale });
 
   const demoResetEnabled = isDemoResetEnabled();
 
   return (
     <Stack gap="md" w="100%">
-      <Title order={3}>{t("settings.title")}</Title>
+      <Title order={3}>{t("admin.settings.title")}</Title>
       <SuperAdminSettingsPanel
         locale={locale}
         demoResetEnabled={demoResetEnabled}

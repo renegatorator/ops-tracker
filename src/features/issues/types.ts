@@ -1,10 +1,12 @@
+import type { IssueType } from "./issueTypeUtils";
+
+export type { IssueType };
+
 export type ProjectBrief = {
   id: string;
   key: string;
   name: string;
 };
-
-export type IssueType = "bug" | "ticket";
 
 export type Issue = {
   id: string;
@@ -50,6 +52,8 @@ export type IssueListFilters = {
   assigneeId?: string;
   /** Plain-text fragment; `%` / `_` stripped to avoid LIKE metacharacters. */
   search?: string;
+  /** When true, includes soft-deleted (closed) issues in results. */
+  includeClosed?: boolean;
 };
 
 export type ListIssuesOffsetPagination = {
@@ -86,6 +90,17 @@ export type ListIssuesSuccess = {
         nextCursor: string | null;
       };
 };
+
+export type IssueMenuActionItem = {
+  kind: "action";
+  label: string;
+  color?: string;
+  onClick: () => void;
+};
+
+export type IssueMenuDividerItem = { kind: "divider" };
+
+export type IssueMenuItem = IssueMenuActionItem | IssueMenuDividerItem;
 
 export type IssuesActionFailure = {
   ok: false;

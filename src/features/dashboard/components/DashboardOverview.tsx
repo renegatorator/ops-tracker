@@ -36,7 +36,7 @@ function formatDate(iso: string, locale: string): string {
 }
 
 const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
-  const t = await getTranslations({ locale, namespace: "dashboard" });
+  const t = await getTranslations({ locale });
 
   const {
     projects,
@@ -52,12 +52,12 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
     <Stack gap="xl">
       {/* Header */}
       <Stack gap={4}>
-        <Title order={2}>{t("title")}</Title>
+        <Title order={2}>{t("dashboard.title")}</Title>
         <Text c="dimmed" size="sm">
-          {t("subtitle")}
+          {t("dashboard.subtitle")}
         </Text>
         <Text size="sm" fw={500}>
-          {t("welcome", { email: fullName?.trim() || email })}
+          {t("dashboard.welcome", { email: fullName?.trim() || email })}
         </Text>
       </Stack>
 
@@ -67,7 +67,7 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
           color="orange"
           variant="light"
         >
-          {t("error")}
+          {t("dashboard.error")}
         </Alert>
       )}
 
@@ -76,11 +76,11 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
         <Paper withBorder p="md" radius="md">
           <Stack gap={4}>
             <Text size="xs" tt="uppercase" fw={600} c="dimmed">
-              {t("stats.activeProjects")}
+              {t("dashboard.stats.activeProjects")}
             </Text>
             <Title order={2}>{projects.length}</Title>
             <IntlLinkAnchor href={routes.projects} size="sm">
-              {t("stats.viewProjects")}
+              {t("dashboard.stats.viewProjects")}
             </IntlLinkAnchor>
           </Stack>
         </Paper>
@@ -88,11 +88,11 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
         <Paper withBorder p="md" radius="md">
           <Stack gap={4}>
             <Text size="xs" tt="uppercase" fw={600} c="dimmed">
-              {t("stats.openIssues")}
+              {t("dashboard.stats.openIssues")}
             </Text>
             <Title order={2}>{openIssues}</Title>
             <IntlLinkAnchor href={routes.issues} size="sm">
-              {t("stats.viewAllIssues")}
+              {t("dashboard.stats.viewAllIssues")}
             </IntlLinkAnchor>
           </Stack>
         </Paper>
@@ -100,11 +100,11 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
         <Paper withBorder p="md" radius="md">
           <Stack gap={4}>
             <Text size="xs" tt="uppercase" fw={600} c="dimmed">
-              {t("stats.assignedToMe")}
+              {t("dashboard.stats.assignedToMe")}
             </Text>
             <Title order={2}>{myIssues}</Title>
             <IntlLinkAnchor href={routes.issues} size="sm">
-              {t("stats.viewMyIssues")}
+              {t("dashboard.stats.viewMyIssues")}
             </IntlLinkAnchor>
           </Stack>
         </Paper>
@@ -113,15 +113,15 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
       {/* Project shortcuts */}
       <Paper withBorder p="md" radius="md">
         <Stack gap="sm">
-          <Title order={4}>{t("projects.heading")}</Title>
+          <Title order={4}>{t("dashboard.projects.heading")}</Title>
           <Divider />
           {projects.length === 0 ? (
             <Group gap="xs">
               <Text size="sm" c="dimmed">
-                {t("projects.empty")}
+                {t("dashboard.projects.empty")}
               </Text>
               <IntlLinkAnchor href={routes.projects} size="sm">
-                {t("projects.createOne")}
+                {t("dashboard.projects.createOne")}
               </IntlLinkAnchor>
             </Group>
           ) : (
@@ -143,14 +143,14 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
                         size="xs"
                         c="dimmed"
                       >
-                        {t("projects.board")}
+                        {t("dashboard.projects.board")}
                       </IntlLinkAnchor>
                       <IntlLinkAnchor
                         href={projectIssuesPath(p.key)}
                         size="xs"
                         c="dimmed"
                       >
-                        {t("projects.issues")}
+                        {t("dashboard.projects.issues")}
                       </IntlLinkAnchor>
                     </Group>
                   </Stack>
@@ -165,11 +165,11 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
         <Paper withBorder p="md" radius="md">
           <Stack gap="sm">
-            <Title order={4}>{t("recent.heading")}</Title>
+            <Title order={4}>{t("dashboard.recent.heading")}</Title>
             <Divider />
             {recentIssues.length === 0 ? (
               <Text size="sm" c="dimmed">
-                {t("recent.empty")}
+                {t("dashboard.recent.empty")}
               </Text>
             ) : (
               <Stack gap={0}>
@@ -186,11 +186,11 @@ const DashboardOverview = async ({ data, email, fullName, locale }: Props) => {
 
         <Paper withBorder p="md" radius="md">
           <Stack gap="sm">
-            <Title order={4}>{t("mine.heading")}</Title>
+            <Title order={4}>{t("dashboard.mine.heading")}</Title>
             <Divider />
             {myAssignedIssues.length === 0 ? (
               <Text size="sm" c="dimmed">
-                {t("mine.empty")}
+                {t("dashboard.mine.empty")}
               </Text>
             ) : (
               <Stack gap={0}>

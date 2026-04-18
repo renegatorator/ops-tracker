@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Menu, Tooltip } from "@mantine/core";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import ReactCountryFlag from "react-country-flag";
@@ -14,7 +14,7 @@ const LOCALE_TO_COUNTRY: Record<string, string> = {
   de: "DE",
 };
 
-const Flag = ({ locale, size = 16 }: { locale: string; size?: number }) => (
+const Flag = ({ locale, size = 18 }: { locale: string; size?: number }) => (
   <ReactCountryFlag
     countryCode={LOCALE_TO_COUNTRY[locale] ?? locale.toUpperCase()}
     svg
@@ -28,7 +28,7 @@ const Flag = ({ locale, size = 16 }: { locale: string; size?: number }) => (
 );
 
 const LanguageSwitcher = () => {
-  const t = useTranslations("ui.language");
+  const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -44,23 +44,16 @@ const LanguageSwitcher = () => {
   return (
     <Menu position="bottom-end" withinPortal>
       <Menu.Target>
-        <UnstyledButton
-          aria-label={t("label")}
-          disabled={isPending}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "4px 6px",
-            borderRadius: 6,
-            border: "1px solid var(--mantine-color-default-border)",
-            background: "var(--mantine-color-default)",
-            opacity: isPending ? 0.6 : 1,
-            cursor: isPending ? "not-allowed" : "pointer",
-          }}
-        >
-          <Flag locale={locale} />
-        </UnstyledButton>
+        <Tooltip label={t("ui.language.label")}>
+          <ActionIcon
+            variant="subtle"
+            size="lg"
+            aria-label={t("ui.language.label")}
+            disabled={isPending}
+          >
+            <Flag locale={locale} />
+          </ActionIcon>
+        </Tooltip>
       </Menu.Target>
 
       <Menu.Dropdown>
@@ -71,7 +64,7 @@ const LanguageSwitcher = () => {
             onClick={() => switchLocale(value)}
             fw={value === locale ? 700 : 400}
           >
-            {t(value)}
+            {t(`ui.language.${value}`)}
           </Menu.Item>
         ))}
       </Menu.Dropdown>

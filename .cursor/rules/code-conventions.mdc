@@ -1,0 +1,116 @@
+---
+description: Core code conventions for this project (TS/TSX)
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Code Conventions
+
+## Arrow functions
+Use arrow functions whenever possible, including for components, handlers, and utilities.
+
+```ts
+// BAD
+function getUser(id: string) { /* ... */ }
+
+// GOOD
+const getUser = (id: string) => { /* ... */ };
+```
+
+## Translations
+Use `useTranslations` without a namespace argument. Always pass the full key path to `t`.
+
+```tsx
+// BAD
+const t = useTranslations('issues.detail');
+t('title');
+
+// GOOD
+const t = useTranslations();
+t('issues.detail.title');
+```
+
+## Type safety
+Stick to strict type safety. When a set of literal values is needed, declare a `const` assertion and derive the type from it.
+
+```ts
+// GOOD
+const ISSUE_STATUSES = ['open', 'in_progress', 'resolved'] as const;
+type IssueStatus = (typeof ISSUE_STATUSES)[number];
+```
+
+Avoid `any`, non-null assertions (`!`), and untyped casts. Prefer narrowing and discriminated unions.
+
+## Destructure mutation hooks
+Always destructure the return of any hook that wraps `useMutation` (whether it's a custom `use*` hook or an inline `useMutation`) at the top of the component. Rename via `mutate: verbName` when the generic `mutate` would be ambiguous. Never write `someMutation.mutate(...)`, `someMutation.isPending`, `someMutation.variables`, etc.
+
+```tsx
+// BAD
+const createMutation = useCreateIssue(locale);
+createMutation.mutate({ /* ... */ });
+if (createMutation.isPending) { /* ... */ }
+
+// GOOD
+const { mutate: createIssue, isPending } = useCreateIssue(locale);
+createIssue({ /* ... */ });
+```
+
+## Destructure `useForm` and extract typed default values
+- Destructure the object returned by `@mantine/form`'s `useForm` (mirrors how query hooks are consumed).
+- Never inline `initialValues` inside the `useForm({ ... })` argument. Declare a `defaultValues` const and a matching form type, then pass `useForm<FormType>({ initialValues: defaultValues, ... })`.
+- Prefer declaring the type first when any field needs a non-literal type (e.g. `IssueType` instead of the inferred `"ticket"`). Otherwise `type FormValues = typeof defaultValues` is fine.
+
+```tsx
+// BAD
+const form = useForm({
+  initialValues: {
+    title: "",
+    issue_type: "ticket" as "bug" | "ticket",
+  },
+});
+form.onSubmit((values) => { /* ... */ });
+form.getInputProps("title");
+
+// GOOD
+type CreateIssueFormValues = {
+  title: string;
+  issue_type: IssueType;
+};
+
+const defaultValues: CreateIssueFormValues = {
+  title: "",
+  issue_type: IssueTypes.TASK,
+};
+
+const { onSubmit, getInputProps, values, reset } = useForm<CreateIssueFormValues>({
+  initialValues: defaultValues,
+  validate: { /* ... */ },
+});
+```
+
+## Centralise frequently-used literal unions
+If a small set of literal strings is used across multiple files (e.g. issue type, user role, status slug), declare the runtime values with `as const` in a single module and derive the type from that constant. Import the constant (not the raw string) everywhere it's used, including form defaults, UI option lists, zod schemas, and service-layer defaults.
+
+Naming convention (apply everywhere `as const` is used to model a literal union):
+- The const is named in PascalCase, plural: `IssueTypes`, `UserRoles`, `IssueSortDirections`.
+- The derived type is the singular form: `IssueType`, `UserRole`, `IssueSortDirection`.
+- Property keys inside the const are `SCREAMING_SNAKE_CASE`; the literal values stay as-is (the actual string used at runtime / stored in the DB).
+- A companion tuple of values, when needed (e.g. for `z.enum`), uses the same plural PascalCase plus a `Values` suffix: `IssueTypeValues`.
+
+```ts
+// src/features/issues/issueTypeUtils.ts
+export const IssueTypes = { BUG: "bug", TASK: "ticket" } as const;
+export type IssueType = (typeof IssueTypes)[keyof typeof IssueTypes];
+export const IssueTypeValues = [IssueTypes.BUG, IssueTypes.TASK] as const;
+
+// BAD
+issue_type: "ticket" as "bug" | "ticket";
+z.enum(["bug", "ticket"]);
+
+// GOOD
+issue_type: IssueTypes.TASK;
+z.enum(IssueTypeValues);
+```
+
+## Extract hooks from cluttered components
+If a component file accumulates non-trivial logic (effects, derived state, mutations, handlers), extract it into a custom hook placed in the feature's existing `hooks/` folder (e.g. `src/features/<feature>/hooks/`). Keep the component file focused on JSX + wiring.

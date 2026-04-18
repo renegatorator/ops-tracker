@@ -2,7 +2,7 @@ import { redirect } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
-import { APP_ROLES, type AppRole, parseAppRole, type UserAuthContext } from "./types";
+import { type AppRole, AppRoleValues, parseAppRole, type UserAuthContext } from "./types";
 
 export type { AppRole, UserAuthContext } from "./types";
 
@@ -42,7 +42,7 @@ const fetchProfile = async (userId: string): Promise<ProfileData | null> => {
   if (role == null) {
     if (process.env.NODE_ENV === "development") {
       console.warn(
-        `[auth] user_profiles.role not recognized (expected ${APP_ROLES.join("|")}):`,
+        `[auth] user_profiles.role not recognized (expected ${AppRoleValues.join("|")}):`,
         profile.role,
       );
     }
@@ -64,7 +64,7 @@ export const getSession = async () => {
 
 /**
  * Signed-in user plus `user_profiles.role` and `full_name` from the database. No redirects.
- * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, ADMIN_ACCESS_ROLES)` (or `SUPER_ADMIN_ROLES`) for gated actions.
+ * Use in Server Actions: if null, return an unauthorized result; then `assertRole(ctx, AdminAccessRoles)` (or `SuperAdminRoles`) for gated actions.
  */
 export const getUserAuthContext = async (): Promise<UserAuthContext | null> => {
   const { user } = await getSession();

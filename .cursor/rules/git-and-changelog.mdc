@@ -1,0 +1,55 @@
+---
+description: Git commit message and CHANGELOG update conventions
+alwaysApply: true
+---
+
+# Git commit messages
+
+When asked to provide a git title and message, always base them on the **uncommitted changes compared to the diff of the branch we are currently on** (i.e. the working-tree diff against the current branch's base, not just the last commit).
+
+## Title
+- Short.
+- Must start with one of: `feat:`, `fix:`, `refactor:`, `update:`, `chore:`.
+
+## Message
+- Simple bullet list, no fancy formatting, no quotation marks, no nesting.
+- Each bullet starts with `- ` followed by a lowercase letter (only the first letter of the bullet is lowercase-enforced; proper nouns stay as-is).
+- Each bullet ends with a comma `,`.
+
+## Presentation
+- Provide both title and message inside a markdown code block (like a code example) so they are easy to copy.
+
+Example output shape:
+
+```
+feat: add issue soft delete
+
+- add useSoftDeleteIssue hook,
+- wire delete action into IssueDetailPanel,
+- update translations for delete confirmation,
+```
+
+---
+
+# CHANGELOG updates
+
+When prompted to update the changelog:
+1. Read the last entries in `CHANGELOG.md` to match style and scope.
+2. Inspect `git` history for changes not yet reflected.
+3. Add the missing changes under the `## [Unreleased]` section.
+4. Do not touch any existing content outside of `## [Unreleased]`.
+
+## Hard rules — never do these
+
+- NEVER delete, rename, or merge an existing version heading (`## [x.y.z] — YYYY-MM-DD`). Released sections are append-only history.
+- NEVER remove the `---` separator that sits between version sections.
+- NEVER include any line of an existing version section in the `old_string` of an edit. If you need an anchor below `[Unreleased]`, anchor on the **last bullet you yourself wrote inside `[Unreleased]`**, not on the next version heading.
+- When inserting new content into `[Unreleased]`, only add lines — do not replace lines that belong to a released version.
+
+## Verification step (mandatory)
+
+After editing `CHANGELOG.md`, re-read the file and confirm that:
+- Every version heading that existed before your edit still exists, with the same version number, date, and `---` separator above it.
+- The `[Unreleased]` section is still followed by the previously most-recent version heading (e.g. `## [Unreleased]` → `---` → `## [2.1.2] — 2026-04-13`).
+
+If either check fails, restore the missing heading/separator before reporting completion.

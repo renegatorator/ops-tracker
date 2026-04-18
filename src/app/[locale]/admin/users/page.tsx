@@ -24,13 +24,13 @@ export const generateMetadata = async ({ params }: AdminUsersPageProps) => {
 
 const AdminUsersPage = async ({ params }: AdminUsersPageProps) => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "admin" });
+  const t = await getTranslations({ locale });
   const ctx = await getUserAuthContext();
   const isSuperAdmin = ctx != null && isSuperAdminRole(ctx.role);
 
   return (
     <Stack gap="md" w="100%">
-      <Title order={3}>{t("users.title")}</Title>
+      <Title order={3}>{t("admin.users.title")}</Title>
       <AdminUsersPanel locale={locale} isSuperAdmin={isSuperAdmin} />
     </Stack>
   );

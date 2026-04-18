@@ -5,22 +5,53 @@
   align-items: center;
   justify-content: space-between;
 
-  > div {
+  > * {
     width: 100%;
   }
 }
 
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   padding: 16px 0 0;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    padding 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.headerScrolled {
+  padding: 10px 0;
+  background: var(--mantine-color-body);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-bottom-color: var(--mantine-color-default-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
+  }
 }
 
 .controls {
   gap: 12px;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .body {
   padding: 60px 0;
+}
+
+.bodyTop {
+  padding: 24px 0 60px;
+}
+
+.contentTop {
+  flex-grow: 0;
 }
 
 .footer {

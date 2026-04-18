@@ -8,19 +8,19 @@ import { updateIssue } from "@/features/issues/actions";
 import { projectQueryKeys } from "@/features/projects/keys";
 
 import { isIssuesQueryError, IssuesQueryError } from "../issues-query-error";
+import type { IssueType } from "../issueTypeUtils";
 import { issueQueryKeys } from "../keys";
 import type { IssueWithStatus } from "../types";
 
 export const useUpdateIssue = (locale: string, issueId: string) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("issues");
-  const tDetail = useTranslations("issues.detail");
+  const t = useTranslations();
 
   return useMutation({
     mutationFn: async (input: {
       title?: string;
       description?: string | null;
-      issue_type?: "bug" | "ticket";
+      issue_type?: IssueType;
     }) => {
       const result = await updateIssue(locale, {
         issueId,
@@ -61,8 +61,8 @@ export const useUpdateIssue = (locale: string, issueId: string) => {
         ? err.errorKey
         : "errors.updateFailed";
       notifications.show({
-        title: tDetail("saveFailedTitle"),
-        message: t(key),
+        title: t("issues.detail.saveFailedTitle"),
+        message: t(`issues.${key}` as Parameters<typeof t>[0]),
         color: "red",
       });
     },
@@ -73,8 +73,8 @@ export const useUpdateIssue = (locale: string, issueId: string) => {
       });
       await queryClient.invalidateQueries({ queryKey: projectQueryKeys.all });
       notifications.show({
-        title: tDetail("saveSuccessTitle"),
-        message: tDetail("saveSuccessMessage"),
+        title: t("issues.detail.saveSuccessTitle"),
+        message: t("issues.detail.saveSuccessMessage"),
         color: "green",
       });
     },

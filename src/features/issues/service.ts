@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
+import { IssueTypes } from "./issueTypeUtils";
 import { supabaseErrorKey } from "./map-errors";
 import type {
   AssignIssueInput,
@@ -105,7 +106,10 @@ export const listIssues = async (
   const sortDir = input.sortDir ?? "desc";
   const ascending = sortDir === "asc";
 
-  let q = supabase.from("issues").select(issueSelect).is("deleted_at", null);
+  let q = supabase.from("issues").select(issueSelect);
+  if (!input.includeClosed) {
+    q = q.is("deleted_at", null);
+  }
 
   if (sortBy === "status") {
     q = q.order("sort_order", {
@@ -231,7 +235,7 @@ export const createIssue = async (
       title: input.title,
       description: input.description?.length ? input.description : null,
       status_id: input.status_id,
-      issue_type: input.issue_type ?? "ticket",
+      issue_type: input.issue_type ?? IssueTypes.TASK,
       assignee_id: input.assignee_id ?? null,
       reporter_id: userId,
     })

@@ -13,12 +13,12 @@ interface UseAuditTranslationsResult {
  * is found.
  */
 export const useAuditTranslations = (): UseAuditTranslationsResult => {
-  const t = useTranslations("admin.audit");
+  const t = useTranslations();
 
   const translateAction = (action: string): string => {
     const key = auditActionKey(action);
     try {
-      return t(`actions.${key}` as Parameters<typeof t>[0]);
+      return t(`admin.audit.actions.${key}` as Parameters<typeof t>[0]);
     } catch {
       return action;
     }
@@ -26,7 +26,9 @@ export const useAuditTranslations = (): UseAuditTranslationsResult => {
 
   const translateEntityType = (entityType: string): string => {
     try {
-      return t(`filters.entity.${entityType}` as Parameters<typeof t>[0]);
+      return t(
+        `admin.audit.filters.entity.${entityType}` as Parameters<typeof t>[0],
+      );
     } catch {
       return entityType;
     }

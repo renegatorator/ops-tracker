@@ -11,7 +11,11 @@ interface HomeProps {
 
 export async function generateMetadata({ params }: HomeProps) {
   const { locale } = await params;
-  return getLocalizedSeoMetadata(locale, routes.home);
+  const metadata = await getLocalizedSeoMetadata(locale, routes.home);
+  return {
+    ...metadata,
+    title: { absolute: typeof metadata.title === "string" ? metadata.title : "Ops Tracker" },
+  };
 }
 
 const Home = async ({ params }: HomeProps) => {
@@ -22,7 +26,7 @@ const Home = async ({ params }: HomeProps) => {
   }
 
   return (
-    <PagesLayout>
+    <PagesLayout variant="top">
       <LandingPage />
     </PagesLayout>
   );

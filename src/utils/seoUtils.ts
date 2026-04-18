@@ -52,16 +52,15 @@ export const getLocalizedSeoMetadata = async (
 ): Promise<Metadata> => {
   const normalizedPath = stripLocaleFromPath(pathname);
   const seoKey = routeToSeoKey[normalizedPath as KnownRoute] ?? "default";
-  const t = await getTranslations({
-    locale,
-    namespace: `seo.routes.${seoKey}`,
-  });
+  const t = await getTranslations({ locale });
 
   const canonicalPath = getLocalizedPath(locale, normalizedPath);
 
   return {
-    title: t("title"),
-    description: t("description"),
+    title: t(`seo.routes.${seoKey}.title` as Parameters<typeof t>[0]),
+    description: t(
+      `seo.routes.${seoKey}.description` as Parameters<typeof t>[0],
+    ),
     alternates: {
       canonical: canonicalPath,
       languages: Object.fromEntries(
