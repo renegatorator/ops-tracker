@@ -153,6 +153,7 @@ const filterFields = {
   sortDir: z
     .enum(["asc", "desc"], { message: "validation.sortDirInvalid" })
     .optional(),
+  includeClosed: z.boolean().optional(),
 };
 
 export const listIssuesSchema = z.discriminatedUnion("mode", [

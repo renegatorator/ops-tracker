@@ -8,6 +8,7 @@ import {
   Select,
   SimpleGrid,
   Stack,
+  Switch,
   Text,
   TextInput,
 } from "@mantine/core";
@@ -96,9 +97,16 @@ const IssuesListPageClient = ({
     [forcedProjectId, pathname, router],
   );
 
+  const [showClosed, setShowClosed] = useState(false);
+
+  const queryParams = useMemo(
+    () => ({ ...listParams, includeClosed: showClosed }),
+    [listParams, showClosed],
+  );
+
   const { data, isPending, isError, error, isFetching } = useIssuesList(
     locale,
-    listParams,
+    queryParams,
   );
 
   const { data: statuses = [] } = useIssueStatuses(locale);
@@ -291,6 +299,12 @@ const IssuesListPageClient = ({
             ))}
           </Menu.Dropdown>
         </Menu>
+        <Switch
+          label={tTable("showClosed")}
+          checked={showClosed}
+          onChange={(e) => setShowClosed(e.currentTarget.checked)}
+          mt={{ base: 0, sm: 28 }}
+        />
       </SimpleGrid>
 
       {isPending ? (

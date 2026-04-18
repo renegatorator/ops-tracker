@@ -3,8 +3,10 @@
 import {
   ActionIcon,
   Button,
+  Divider,
   Group,
   Loader,
+  Modal,
   SegmentedControl,
   Select,
   SimpleGrid,
@@ -15,16 +17,20 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconBug, IconClipboardList, IconPencil } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
 import IssueAuditActivitySection from "@/features/audit/components/IssueAuditActivitySection";
+import { useRouter } from "@/i18n/navigation";
+import { projectIssuesPath } from "@/lib/routes";
 
 import { useAssigneeFilterOptions } from "../hooks/useAssigneeFilterOptions";
 import { useAssignIssue } from "../hooks/useAssignIssue";
 import { useIssueDetail } from "../hooks/useIssueDetail";
 import { useIssueStatuses } from "../hooks/useIssueStatuses";
+import { useSoftDeleteIssue } from "../hooks/useSoftDeleteIssue";
 import { useTransitionIssueStatus } from "../hooks/useTransitionIssueStatus";
 import { useUpdateIssue } from "../hooks/useUpdateIssue";
 import { isIssuesQueryError } from "../issues-query-error";
@@ -39,6 +45,7 @@ interface IssueDetailPanelProps {
   canAssignIssue: boolean;
   canEditDetails: boolean;
   canViewIssueAudit: boolean;
+  isAdmin: boolean;
 }
 
 const IssueDetailPanel = ({
@@ -48,9 +55,12 @@ const IssueDetailPanel = ({
   canAssignIssue,
   canEditDetails,
   canViewIssueAudit,
+  isAdmin,
 }: IssueDetailPanelProps) => {
   const t = useTranslations("issues");
   const tDetail = useTranslations("issues.detail");
+  const router = useRouter();
+
   const { data, isPending, isError, error } = useIssueDetail(locale, issueId);
   const {
     data: statuses = [],
@@ -65,10 +75,13 @@ const IssueDetailPanel = ({
   const transition = useTransitionIssueStatus(locale, issueId);
   const assignMutation = useAssignIssue(locale);
   const updateMutation = useUpdateIssue(locale, issueId);
+  const closeIssue = useSoftDeleteIssue(locale);
 
   const [isEditing, setIsEditing] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
   const [descDraft, setDescDraft] = useState("");
+  const [confirmOpened, { open: openConfirm, close: closeConfirm }] =
+    useDisclosure(false);
 
   useEffect(() => {
     if (data) {
@@ -116,6 +129,20 @@ const IssueDetailPanel = ({
       setDescDraft(data.description ?? "");
     }
     setIsEditing(false);
+  };
+
+  const onConfirmClose = () => {
+    closeConfirm();
+    closeIssue.mutate(issueId, {
+      onSuccess: () => {
+        const projectKey = data?.projects?.key;
+        if (projectKey) {
+          router.push(projectIssuesPath(projectKey));
+        } else {
+          router.push("/issues");
+        }
+      },
+    });
   };
 
   return (
@@ -356,8 +383,47 @@ const IssueDetailPanel = ({
           {canViewIssueAudit ? (
             <IssueAuditActivitySection locale={locale} issueId={issueId} />
           ) : null}
+
+          {isAdmin ? (
+            <>
+              <Divider />
+              <Group justify="flex-end">
+                <Button
+                  variant="subtle"
+                  color="red"
+                  onClick={openConfirm}
+                  loading={closeIssue.isPending}
+                >
+                  {tDetail("closeIssue")}
+                </Button>
+              </Group>
+            </>
+          ) : null}
         </>
       )}
+
+      <Modal
+        opened={confirmOpened}
+        onClose={closeConfirm}
+        title={tDetail("closeIssueConfirmTitle")}
+        centered
+      >
+        <Stack gap="md">
+          <Text size="sm">{tDetail("closeIssueConfirmBody")}</Text>
+          <Group justify="flex-end">
+            <Button variant="subtle" onClick={closeConfirm}>
+              {t("create.cancel")}
+            </Button>
+            <Button
+              color="red"
+              onClick={onConfirmClose}
+              loading={closeIssue.isPending}
+            >
+              {tDetail("closeIssueConfirmButton")}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Stack>
   );
 };

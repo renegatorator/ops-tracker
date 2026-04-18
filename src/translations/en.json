@@ -138,6 +138,12 @@
       "cancelEdit": "Cancel",
       "editTooltip": "Edit issue",
       "noDescription": "No description provided.",
+      "closeIssue": "Close issue",
+      "closeIssueConfirmTitle": "Close this issue?",
+      "closeIssueConfirmBody": "Closed issues are hidden from the board but remain visible in the issues table.",
+      "closeIssueConfirmButton": "Yes, close issue",
+      "closeSuccessTitle": "Issue closed",
+      "closeFailedTitle": "Could not close issue",
       "issueTypeLabel": "Issue type",
       "typeBug": "Bug",
       "typeTask": "Task",
@@ -209,6 +215,7 @@
         "updated_at": "Updated",
         "assignee": "Assignee"
       },
+      "showClosed": "Show closed",
       "refreshing": "Updating…",
       "pageSummary": "Page {page} · showing {count} issues",
       "prevPage": "Previous",
@@ -298,7 +305,13 @@
       "loading": "Loading board…",
       "loadFailed": "Could not load the board.",
       "moveFailedTitle": "Move failed",
-      "newIssue": "New issue"
+      "newIssue": "New issue",
+      "moveToNext": "Move to {name}",
+      "moveToPrev": "Move to {name}",
+      "closeIssue": "Close issue",
+      "closeIssueConfirmTitle": "Close this issue?",
+      "closeIssueConfirmBody": "Closed issues are hidden from the board but remain visible in the issues table.",
+      "closeIssueConfirmButton": "Yes, close issue"
     },
     "issues": {
       "title": "Issues · {name}",

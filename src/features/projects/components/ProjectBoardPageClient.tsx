@@ -9,25 +9,28 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
+import { Anchor, Button, Group, Modal, Stack, Text, Title, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconBug, IconClipboardList, IconPlus } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 
 import { transitionIssueStatus } from "@/features/issues/actions";
+import IssueCardMenu from "@/features/issues/components/IssueCardMenu";
 import CreateIssueModal from "@/features/issues/components/CreateIssueModal";
+import { useIssueMenu } from "@/features/issues/hooks/useIssueMenu";
 import { useIssuesList } from "@/features/issues/hooks/useIssuesList";
 import { useIssueStatuses } from "@/features/issues/hooks/useIssueStatuses";
+import { useSoftDeleteIssue } from "@/features/issues/hooks/useSoftDeleteIssue";
 import {
   isIssuesQueryError,
   IssuesQueryError,
 } from "@/features/issues/issues-query-error";
 import { isIssueBug } from "@/features/issues/issueTypeUtils";
 import { issueQueryKeys } from "@/features/issues/keys";
-import type { IssueWithStatus } from "@/features/issues/types";
+import type { IssueStatusRow, IssueWithStatus } from "@/features/issues/types";
 import { Link } from "@/i18n/navigation";
 import { projectIssueDetailPath } from "@/lib/routes";
 
@@ -41,15 +44,33 @@ interface ProjectBoardPageClientProps {
   isAdmin?: boolean;
 }
 
+interface IssueCardProps {
+  issue: IssueWithStatus;
+  projectKey: string;
+  statuses: IssueStatusRow[];
+  onTransition: (issueId: string, statusId: string) => void;
+  onRequestClose: (issueId: string) => void;
+  isAdmin: boolean;
+}
+
 const IssueCard = ({
   issue,
   projectKey,
-}: {
-  issue: IssueWithStatus;
-  projectKey: string;
-}) => {
+  statuses,
+  onTransition,
+  onRequestClose,
+  isAdmin,
+}: IssueCardProps) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: issue.id });
+
+  const menuItems = useIssueMenu({
+    issue,
+    statuses,
+    onTransition: (statusId) => onTransition(issue.id, statusId),
+    onClose: () => onRequestClose(issue.id),
+    isAdmin,
+  });
 
   const style = transform
     ? {
@@ -72,31 +93,34 @@ const IssueCard = ({
           cursor: "grab",
         }}
       >
-        <Group gap={4} align="center">
-          <Tooltip
-            label={isIssueBug(issue.issue_type) ? "Bug" : "Task"}
-            position="top"
-            withArrow
-          >
-            {isIssueBug(issue.issue_type) ? (
-              <IconBug size={14} color="var(--mantine-color-red-6)" />
-            ) : (
-              <IconClipboardList
-                size={14}
-                color="var(--mantine-color-blue-6)"
-              />
-            )}
-          </Tooltip>
-          <Anchor
-            component={Link}
-            href={href}
-            size="xs"
-            ff="monospace"
-            onClick={(e) => e.stopPropagation()}
-            data-testid="kanban-issue-link"
-          >
-            {issue.issue_key}
-          </Anchor>
+        <Group gap={4} align="center" justify="space-between" wrap="nowrap">
+          <Group gap={4} align="center" style={{ minWidth: 0 }}>
+            <Tooltip
+              label={isIssueBug(issue.issue_type) ? "Bug" : "Task"}
+              position="top"
+              withArrow
+            >
+              {isIssueBug(issue.issue_type) ? (
+                <IconBug size={14} color="var(--mantine-color-red-6)" />
+              ) : (
+                <IconClipboardList
+                  size={14}
+                  color="var(--mantine-color-blue-6)"
+                />
+              )}
+            </Tooltip>
+            <Anchor
+              component={Link}
+              href={href}
+              size="xs"
+              ff="monospace"
+              onClick={(e) => e.stopPropagation()}
+              data-testid="kanban-issue-link"
+            >
+              {issue.issue_key}
+            </Anchor>
+          </Group>
+          <IssueCardMenu items={menuItems} />
         </Group>
         <Text size="sm" fw={600} mt={4}>
           {issue.title}
@@ -118,7 +142,7 @@ const StatusColumn = ({
 }: {
   statusId: string;
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const { setNodeRef, isOver } = useDroppable({ id: statusId });
   return (
@@ -154,6 +178,8 @@ const ProjectBoardPageClient = ({
   const queryClient = useQueryClient();
   const [modalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
+  const [issueToClose, setIssueToClose] = useState<string | null>(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
@@ -171,9 +197,14 @@ const ProjectBoardPageClient = ({
   const { data, isPending, isError, error } = useIssuesList(locale, listParams);
   const { data: statuses = [] } = useIssueStatuses(locale);
 
+  const sortedStatuses = useMemo(
+    () => [...statuses].sort((a, b) => a.sort_order - b.sort_order),
+    [statuses],
+  );
+
   const issuesByStatus = useMemo(() => {
     const map = new Map<string, IssueWithStatus[]>();
-    for (const s of statuses) {
+    for (const s of sortedStatuses) {
       map.set(s.id, []);
     }
     for (const issue of data?.items ?? []) {
@@ -181,7 +212,7 @@ const ProjectBoardPageClient = ({
       if (list) list.push(issue);
     }
     return map;
-  }, [data?.items, statuses]);
+  }, [data?.items, sortedStatuses]);
 
   const transition = useMutation({
     mutationFn: async (input: { issueId: string; statusId: string }) => {
@@ -207,6 +238,8 @@ const ProjectBoardPageClient = ({
     },
   });
 
+  const closeIssue = useSoftDeleteIssue(locale);
+
   const onDragEnd = (event: DragEndEvent) => {
     const overId = event.over?.id;
     const activeId = String(event.active.id);
@@ -214,6 +247,16 @@ const ProjectBoardPageClient = ({
     const issue = data?.items.find((i) => i.id === activeId);
     if (!issue || issue.status_id === overId) return;
     transition.mutate({ issueId: activeId, statusId: overId });
+  };
+
+  const onTransition = (issueId: string, statusId: string) => {
+    transition.mutate({ issueId, statusId });
+  };
+
+  const onConfirmClose = () => {
+    if (!issueToClose) return;
+    closeIssue.mutate(issueToClose);
+    setIssueToClose(null);
   };
 
   if (isPending) {
@@ -249,19 +292,46 @@ const ProjectBoardPageClient = ({
             alignItems: "stretch",
           }}
         >
-          {statuses.map((s) => (
+          {sortedStatuses.map((s) => (
             <StatusColumn key={s.id} statusId={s.id} title={s.name}>
               {(issuesByStatus.get(s.id) ?? []).map((issue) => (
                 <IssueCard
                   key={issue.id}
                   issue={issue}
                   projectKey={projectKey}
+                  statuses={sortedStatuses}
+                  onTransition={onTransition}
+                  onRequestClose={setIssueToClose}
+                  isAdmin={isAdmin}
                 />
               ))}
             </StatusColumn>
           ))}
         </div>
       </DndContext>
+
+      <Modal
+        opened={issueToClose !== null}
+        onClose={() => setIssueToClose(null)}
+        title={t("closeIssueConfirmTitle")}
+        centered
+      >
+        <Stack gap="md">
+          <Text size="sm">{t("closeIssueConfirmBody")}</Text>
+          <Group justify="flex-end">
+            <Button variant="subtle" onClick={() => setIssueToClose(null)}>
+              {tIssues("create.cancel")}
+            </Button>
+            <Button
+              color="red"
+              onClick={onConfirmClose}
+              loading={closeIssue.isPending}
+            >
+              {t("closeIssueConfirmButton")}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
 
       {isAdmin && (
         <CreateIssueModal

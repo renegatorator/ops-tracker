@@ -345,6 +345,7 @@ const IssuesVirtualizedTable = ({
                   width: "100%",
                   transform: `translateY(${vr.start}px)`,
                   height: vr.size,
+                  ...(row.original.deleted_at ? { opacity: 0.5 } : {}),
                 }}
               >
                 {row.getVisibleCells().map((cell) => (
@@ -360,7 +361,10 @@ const IssuesVirtualizedTable = ({
           })
         ) : (
           rows.map((row) => (
-            <Table.Tr key={row.id}>
+            <Table.Tr
+              key={row.id}
+              style={row.original.deleted_at ? { opacity: 0.5 } : undefined}
+            >
               {row.getVisibleCells().map((cell) => (
                 <Table.Td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
