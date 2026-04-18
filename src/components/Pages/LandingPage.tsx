@@ -25,6 +25,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import Typography from "@/components/Typography/Typography";
 
+import DisabledCtaButton from "./DisabledCtaButton";
 import classes from "./LandingPage.module.scss";
 
 const PORTFOLIO_BASE_URL = "https://renekrajnc.com";
@@ -132,15 +133,13 @@ const LandingPage = async () => {
               position="top"
               withArrow
             >
-              <Button
+              <DisabledCtaButton
                 size="lg"
                 radius="md"
-                data-disabled
-                onClick={(event) => event.preventDefault()}
                 className={classes.ctaPrimary}
               >
                 {t("landing.cta.requestDemo")}
-              </Button>
+              </DisabledCtaButton>
             </Tooltip>
             <Button
               component="a"
@@ -219,28 +218,18 @@ const LandingPage = async () => {
                 position="top"
                 withArrow
               >
-                <Button
-                  size="lg"
-                  variant="filled"
-                  data-disabled
-                  onClick={(event) => event.preventDefault()}
-                >
+                <DisabledCtaButton size="lg" variant="filled">
                   {t("landing.demoUserButton")}
-                </Button>
+                </DisabledCtaButton>
               </Tooltip>
               <Tooltip
                 label={t("landing.demoComingSoon")}
                 position="top"
                 withArrow
               >
-                <Button
-                  size="lg"
-                  variant="light"
-                  data-disabled
-                  onClick={(event) => event.preventDefault()}
-                >
+                <DisabledCtaButton size="lg" variant="light">
                   {t("landing.demoAdminButton")}
-                </Button>
+                </DisabledCtaButton>
               </Tooltip>
             </Group>
             <Text size="xs" c="dimmed">

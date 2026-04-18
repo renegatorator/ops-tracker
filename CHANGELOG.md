@@ -7,6 +7,17 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 
 ## [Unreleased]
 
+## [2.1.4] — 2026-04-19
+
+### Changed
+
+- **Sign-in nav button restyled** — `SignInNavLink` now renders a Mantine `Button variant="subtle" size="sm"` (matching the sign-out button) instead of a Mantine `Anchor`, so the public header controls visually match across signed-in and signed-out states.
+
+### Fixed
+
+- **Landing page runtime error** — Extracted the three "looks-disabled-but-tooltip-still-works" CTAs on the landing page into a new `DisabledCtaButton` client component. The buttons previously inlined `onClick={(e) => e.preventDefault()}` inside the async server `LandingPage`, which Next.js 16's stricter RSC checks reject with `Event handlers cannot be passed to Client Component props`.
+- **Sign-in nav button hidden on `/login`** — The header sign-in button now uses `usePathname()` (via the new `SignInNavLinkButton` client child) and renders `null` when the user is already on the login route, removing the redundant control.
+
 ---
 
 ## [2.1.3] — 2026-04-18
