@@ -1,0 +1,10 @@
+@use "@/styles/mixins" as *;
+
+.paper {
+  width: 400px;
+  margin-inline: auto;
+
+  @include mq("xs") {
+    width: 280px;
+  }
+}

@@ -7,6 +7,34 @@ Dates follow the **YYYY-MM-DD** format. Versions follow [Semantic Versioning](ht
 
 ## [Unreleased]
 
+## [2.1.5] — 2026-05-01
+
+### Added
+
+- **Premium landing page redesign** — Full-width hero with brand logo lockup, framer-motion entrance animations, and a new product preview that mirrors the real Kanban board (issue keys, type icons, kebab menus, assignee emails).
+- **`variant="landing"` on `PagesLayout`** — New layout variant gives the landing page a frosted page background and surfaces the brand logo on the left of the shared `PagesHeader`.
+- **`framer-motion` dependency** — Added to power the hero copy and preview entrance animations; both motion wrappers respect `prefers-reduced-motion`.
+- **AI architecture docs** — New `docs/ai/` tree with `architecture/{repository-overview,frontend,backend,database}.md` and `standards/complex-plan.md` so coding agents get a single source of truth for the codebase.
+- **`landingFeatures` constants module** — Extracted the landing-page feature list (icons, translation keys, colors) out of `LandingPage.tsx` into a colocated `landingFeatures.ts` with an exported `LandingFeature` type.
+- **Leading icons on demo CTAs** — "Demo as User" and "Demo as Admin" buttons now show `IconUserCircle` / `IconUserShield` and use `radius="xl"` for a more modern silhouette.
+
+### Changed
+
+- **Responsive login form** — `LoginPage` paper now uses a CSS module instead of a hard-coded `miw={400}`, shrinking to 280px on extra-small screens so it never overflows the viewport.
+- **Mobile demo CTA layout** — The demo button group stacks vertically and stretches each button to full width below the 600px breakpoint.
+- **Centered feature cards on mobile** — Below the `sm` breakpoint, each feature card centers its icon, title, and description so the single-column grid feels balanced.
+- **Centered hero copy on mobile/tablet** — Hero headline, subheadline, badge, highlight checklist, and CTA group all align to center on `md` and below.
+- **Hero badge wraps on mobile** — Removed `white-space: nowrap` and capped the badge width so longer translated labels wrap onto multiple lines instead of overflowing.
+- **Translucent feature & demo cards in dark mode** — Dark surfaces now use `rgba(255,255,255,0.03)` over the page background, with a subtle violet accent border on hover.
+- **Hero trust signal simplified** — Replaced the previous "no credit card required" line and trusted-by row with the new product preview as the hero's primary trust cue.
+- **Updated en/de/si translations** — Added preview, demo, and hero highlight strings across all three locales for the new landing page surfaces.
+
+### Fixed
+
+- **Scroll-into-view flicker on feature & demo cards** — Removed `backdrop-filter: blur(8px)` from `.featureCard` and `.demoCard` in dark mode. With a solid page background behind them the blur was pure compositor cost, and dropping it eliminates the brief blank frame seen when scrolling these cards into view.
+
+---
+
 ## [2.1.4] — 2026-04-19
 
 ### Changed

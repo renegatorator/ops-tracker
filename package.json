@@ -1,6 +1,6 @@
 {
   "name": "ops-tracker",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -35,6 +35,7 @@
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.23",
     "classnames": "^2.5.1",
+    "framer-motion": "^12.38.0",
     "next": "16.2.3",
     "next-intl": "^4.8.3",
     "react": "19.2.3",
