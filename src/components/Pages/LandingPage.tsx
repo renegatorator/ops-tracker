@@ -18,15 +18,10 @@ import {
 } from "@mantine/core";
 import {
   IconArrowRight,
-  IconBrandTrello,
-  IconBug,
-  IconChartBar,
   IconCheck,
-  IconLayoutKanban,
-  IconShieldCheck,
-  IconUsers,
+  IconUserCircle,
+  IconUserShield,
 } from "@tabler/icons-react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 import Typography from "@/components/Typography/Typography";
@@ -34,6 +29,7 @@ import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
 
 import DisabledCtaButton from "./DisabledCtaButton";
+import { landingFeatures } from "./landingFeatures";
 import {
   LandingHeroCopyMotion,
   LandingHeroPreviewMotion,
@@ -42,45 +38,6 @@ import LandingHeroProductPreview, {
   type LandingHeroPreviewCopy,
 } from "./LandingHeroProductPreview";
 import classes from "./LandingPage.module.scss";
-
-const features = [
-  {
-    icon: IconLayoutKanban,
-    titleKey: "landing.features.kanban.title" as const,
-    descKey: "landing.features.kanban.description" as const,
-    color: "violet",
-  },
-  {
-    icon: IconBug,
-    titleKey: "landing.features.tracking.title" as const,
-    descKey: "landing.features.tracking.description" as const,
-    color: "blue",
-  },
-  {
-    icon: IconUsers,
-    titleKey: "landing.features.team.title" as const,
-    descKey: "landing.features.team.description" as const,
-    color: "teal",
-  },
-  {
-    icon: IconShieldCheck,
-    titleKey: "landing.features.audit.title" as const,
-    descKey: "landing.features.audit.description" as const,
-    color: "orange",
-  },
-  {
-    icon: IconChartBar,
-    titleKey: "landing.features.dashboard.title" as const,
-    descKey: "landing.features.dashboard.description" as const,
-    color: "pink",
-  },
-  {
-    icon: IconBrandTrello,
-    titleKey: "landing.features.projects.title" as const,
-    descKey: "landing.features.projects.description" as const,
-    color: "cyan",
-  },
-];
 
 const LandingPage = () => {
   const t = useTranslations();
@@ -116,29 +73,6 @@ const LandingPage = () => {
             <Grid.Col span={{ base: 12, md: 6 }}>
               <LandingHeroCopyMotion>
                 <Stack gap="xl" className={classes.heroCopy}>
-                  <Box className={classes.heroLogo} aria-hidden>
-                    <Image
-                      src="/logo-light.svg"
-                      alt="Ops Tracker"
-                      width={156}
-                      height={42}
-                      className="ops-logo-light"
-                      style={{ display: "none" }}
-                      unoptimized
-                      priority
-                    />
-                    <Image
-                      src="/logo-dark.svg"
-                      alt="Ops Tracker"
-                      width={156}
-                      height={42}
-                      className="ops-logo-dark"
-                      style={{ display: "none" }}
-                      unoptimized
-                      priority
-                    />
-                  </Box>
-
                   <Badge
                     variant="light"
                     color="violet"
@@ -160,13 +94,6 @@ const LandingPage = () => {
                       className={classes.heroSubheadline}
                     >
                       {t("landing.hero.subheadline")}
-                    </Text>
-                    <Text
-                      size="lg"
-                      lh={1.65}
-                      className={classes.heroSubheadlineSecondary}
-                    >
-                      {t("landing.hero.subheadlineLine2")}
                     </Text>
                   </Stack>
 
@@ -222,7 +149,6 @@ const LandingPage = () => {
                       {t("landing.cta.viewDemo")}
                     </Button>
                   </Group>
-
                 </Stack>
               </LandingHeroCopyMotion>
             </Grid.Col>
@@ -251,7 +177,7 @@ const LandingPage = () => {
           </Stack>
 
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
-            {features.map((f) => (
+            {landingFeatures.map((f) => (
               <div key={f.titleKey} className={classes.featureCard}>
                 <ThemeIcon
                   size={48}
@@ -298,14 +224,26 @@ const LandingPage = () => {
             maw={480}
             className={classes.demoCard}
           >
-            <Stack gap="md" align="center">
-              <Group justify="center" gap="sm" wrap="wrap">
+            <Stack gap="md" align="center" w="100%">
+              <Group
+                justify="center"
+                gap="sm"
+                wrap="wrap"
+                w="100%"
+                className={classes.demoButtonGroup}
+              >
                 <Tooltip
                   label={t("landing.demoComingSoon")}
                   position="top"
                   withArrow
                 >
-                  <DisabledCtaButton size="lg" variant="filled">
+                  <DisabledCtaButton
+                    size="lg"
+                    radius="xl"
+                    variant="filled"
+                    className={classes.demoCtaButton}
+                    leftSection={<IconUserCircle size={20} />}
+                  >
                     {t("landing.demoUserButton")}
                   </DisabledCtaButton>
                 </Tooltip>
@@ -314,7 +252,13 @@ const LandingPage = () => {
                   position="top"
                   withArrow
                 >
-                  <DisabledCtaButton size="lg" variant="light">
+                  <DisabledCtaButton
+                    size="lg"
+                    radius="xl"
+                    variant="light"
+                    className={classes.demoCtaButton}
+                    leftSection={<IconUserShield size={20} />}
+                  >
                     {t("landing.demoAdminButton")}
                   </DisabledCtaButton>
                 </Tooltip>
