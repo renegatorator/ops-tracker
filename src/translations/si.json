@@ -18,6 +18,25 @@
   },
   "landing": {
     "badge": "Sledenje zadevam & upravljanje projektov",
+    "hero": {
+      "headline": "Sledilnik zadev, ki ga vaša ekipa z veseljem uporablja.",
+      "subheadline": "Načrtujte, razvrščajte in dostavljajte projekte z vpogledom v realnem času in brez trenja.",
+      "subheadlineLine2": "Za ekipe, ki so prerasle preglednice in okorna orodja.",
+      "highlightSync": "Sinhronizacija v realnem času",
+      "highlightGithub": "GitHub integracija",
+      "highlightSearch": "Bliskovito hitro iskanje"
+    },
+    "preview": {
+      "kanbanTitle": "OPS · Ops Tracker",
+      "newIssueButton": "Nova zadeva",
+      "columnOpen": "Odprto",
+      "columnProgress": "V teku",
+      "columnDone": "Končano",
+      "issueTitleA": "Časovna omejitev ob zaključku na mobilnem Safariju",
+      "issueTitleB": "Preslikava stolpcev CSV izvoza",
+      "issueTitleC": "Odziven prijavni zaslon",
+      "issueTitleD": "Posodobi README in arhitekturo"
+    },
     "title": "Ops Tracker",
     "description": "Zmogljiva platforma za sledenje probleme in upravljanje operacij, zasnovana za pomoč ekipam pri organizaciji, vrednostenju in sledenju dela. Sodelujte brez težav, ostanite sproti z vašimi projekti in dosežite svoje cilje.",
     "loginButton": "Prijava",
@@ -26,6 +45,8 @@
     "demoComingSoon": "Kmalu na voljo",
     "demoDisclaimer": "Demo različice prihajajo kmalu. Registracija ni potrebna.",
     "cta": {
+      "getStartedFree": "Začni brezplačno",
+      "viewDemo": "Oglej si demo",
       "requestDemo": "Zahtevaj predstavitev",
       "learnMore": "Več informacij"
     },

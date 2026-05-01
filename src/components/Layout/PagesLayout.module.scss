@@ -10,13 +10,71 @@
   }
 }
 
+// Premium full-page background, used only on the landing route.
+// The hero already supplies its own gradient at the top; this paints a
+// cohesive surface for the sections below so dark mode stops feeling
+// disjointed once the hero ends.
+.layoutLanding {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  :global([data-mantine-color-scheme="dark"]) &::before {
+    background:
+      radial-gradient(
+        ellipse 80% 50% at 50% 0%,
+        rgba(99, 102, 241, 0.12),
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 100% 30%,
+        rgba(124, 58, 237, 0.08),
+        transparent 65%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 0% 60%,
+        rgba(59, 130, 246, 0.06),
+        transparent 65%
+      ),
+      #0b0f19;
+  }
+
+  :global([data-mantine-color-scheme="light"]) &::before {
+    background: linear-gradient(
+      180deg,
+      #f8fafc 0%,
+      #eef2ff 30%,
+      var(--mantine-color-body) 100%
+    );
+  }
+}
+
+.bodyLanding {
+  width: 100%;
+  flex: 1 1 auto;
+}
+
 .header {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 16px 0 0;
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  padding: 12px 0;
+  background: color-mix(
+    in srgb,
+    var(--mantine-color-body) 72%,
+    transparent
+  );
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--mantine-color-default-border) 60%, transparent);
   transition:
     padding 0.2s ease,
     background-color 0.2s ease,
@@ -25,9 +83,13 @@
 }
 
 .headerScrolled {
-  padding: 10px 0;
-  background: var(--mantine-color-body);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 8px 0;
+  background: color-mix(
+    in srgb,
+    var(--mantine-color-body) 92%,
+    transparent
+  );
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border-bottom-color: var(--mantine-color-default-border);
 }
 
@@ -40,6 +102,19 @@
 .controls {
   gap: 12px;
   align-items: center;
+}
+
+.headerLogo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
 .body {

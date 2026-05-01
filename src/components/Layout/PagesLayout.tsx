@@ -12,7 +12,7 @@ import SignInNavLink from "./SignInNavLink";
 
 interface PagesLayoutProps {
   children: ReactNode;
-  variant?: "centered" | "top";
+  variant?: "centered" | "top" | "landing";
 }
 
 const PagesLayout = async ({
@@ -21,9 +21,14 @@ const PagesLayout = async ({
 }: PagesLayoutProps) => {
   const t = await getTranslations();
   const isTop = variant === "top";
+  const isLanding = variant === "landing";
+
+  const layoutClassName = `${classes.layout} ${
+    isLanding ? classes.layoutLanding : ""
+  }`.trim();
 
   return (
-    <div className={classes.layout}>
+    <div className={layoutClassName}>
       <PagesHeader>
         <AdminNavLink />
         <SignInNavLink />
@@ -31,18 +36,22 @@ const PagesLayout = async ({
         <LanguageSwitcher />
         <ThemeToggle />
       </PagesHeader>
-      <Container
-        className={`${classes.body} ${isTop ? classes.bodyTop : ""}`.trim()}
-        size="lg"
-      >
-        <Stack
-          align="center"
-          justify={isTop ? "flex-start" : "center"}
-          className={`${classes.content} ${isTop ? classes.contentTop : ""}`.trim()}
+      {isLanding ? (
+        <div className={classes.bodyLanding}>{children}</div>
+      ) : (
+        <Container
+          className={`${classes.body} ${isTop ? classes.bodyTop : ""}`.trim()}
+          size="lg"
         >
-          {children}
-        </Stack>
-      </Container>
+          <Stack
+            align="center"
+            justify={isTop ? "flex-start" : "center"}
+            className={`${classes.content} ${isTop ? classes.contentTop : ""}`.trim()}
+          >
+            {children}
+          </Stack>
+        </Container>
+      )}
       <Container className={classes.footer} size="lg">
         {t("layout.footer")}
       </Container>

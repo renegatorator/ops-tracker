@@ -18,6 +18,25 @@
   },
   "landing": {
     "badge": "Issue-Tracking & Projektmanagement",
+    "hero": {
+      "headline": "Der Issue-Tracker, den dein Team wirklich gerne nutzt.",
+      "subheadline": "Plane, priorisiere und liefere Projekte mit Echtzeit-Transparenz und ohne Reibung.",
+      "subheadlineLine2": "Für Teams, die Tabellen und schwere Tools überwunden haben.",
+      "highlightSync": "Echtzeit-Sync",
+      "highlightGithub": "GitHub-Integration",
+      "highlightSearch": "Blitzschnelle Suche"
+    },
+    "preview": {
+      "kanbanTitle": "OPS · Ops Tracker",
+      "newIssueButton": "Neue Aufgabe",
+      "columnOpen": "Offen",
+      "columnProgress": "In Arbeit",
+      "columnDone": "Erledigt",
+      "issueTitleA": "Checkout-Zeitüberschreitung in Safari (mobil)",
+      "issueTitleB": "CSV-Export Spaltenzuordnung",
+      "issueTitleC": "Responsives Login-Layout",
+      "issueTitleD": "README und Architektur aktualisieren"
+    },
     "title": "Ops Tracker",
     "description": "Eine leistungsstarke Plattform zur Problemverfolgung und Betriebsverwaltung, die Teams dabei hilft, Arbeiten effizient zu organisieren, zu priorisieren und zu verfolgen. Arbeiten Sie nahtlos zusammen, bleiben Sie bei Ihren Projekten auf dem Laufenden und erreichen Sie Ihre Ziele.",
     "loginButton": "Anmelden",
@@ -26,6 +45,8 @@
     "demoComingSoon": "Demnächst verfügbar",
     "demoDisclaimer": "Live-Demos kommen bald. Keine Registrierung erforderlich.",
     "cta": {
+      "getStartedFree": "Kostenlos starten",
+      "viewDemo": "Demo ansehen",
       "requestDemo": "Demo anfragen",
       "learnMore": "Mehr erfahren"
     },

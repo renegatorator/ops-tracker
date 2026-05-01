@@ -26,7 +26,7 @@ const Home = async ({ params }: HomeProps) => {
   }
 
   return (
-    <PagesLayout variant="top">
+    <PagesLayout variant="landing">
       <LandingPage />
     </PagesLayout>
   );

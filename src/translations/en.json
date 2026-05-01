@@ -18,6 +18,25 @@
   },
   "landing": {
     "badge": "Issue Tracking & Project Management",
+    "hero": {
+      "headline": "The issue tracker your team actually enjoys using.",
+      "subheadline": "Plan, prioritize, and deliver projects with real-time visibility and zero friction.",
+      "subheadlineLine2": "Built for modern teams who outgrew spreadsheets and clunky tools.",
+      "highlightSync": "Real-time sync",
+      "highlightGithub": "GitHub integration",
+      "highlightSearch": "Lightning-fast search"
+    },
+    "preview": {
+      "kanbanTitle": "OPS · Ops Tracker",
+      "newIssueButton": "New issue",
+      "columnOpen": "Open",
+      "columnProgress": "In Progress",
+      "columnDone": "Done",
+      "issueTitleA": "Checkout timeout on mobile Safari",
+      "issueTitleB": "Export CSV column mapping",
+      "issueTitleC": "Responsive login layout",
+      "issueTitleD": "Update README and architecture"
+    },
     "title": "Ops Tracker",
     "description": "A powerful issue tracking and operations management platform designed to help teams organize, prioritize, and track work efficiently. Collaborate seamlessly, stay on top of your projects, and achieve your goals.",
     "loginButton": "Sign in",
@@ -26,6 +45,8 @@
     "demoComingSoon": "Coming soon",
     "demoDisclaimer": "Live demos are coming soon. No sign-up required.",
     "cta": {
+      "getStartedFree": "Get started free",
+      "viewDemo": "View demo",
       "requestDemo": "Request a demo",
       "learnMore": "Learn more"
     },

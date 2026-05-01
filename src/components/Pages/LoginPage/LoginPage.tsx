@@ -8,6 +8,7 @@ import { routes } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 import LoginForm from "./LoginForm";
+import classes from "./LoginPage.module.scss";
 
 export type LoginError = "invalid_credentials" | "generic";
 
@@ -51,11 +52,12 @@ const LoginPage = async ({ locale, error }: LoginPageProps) => {
   const t = await getTranslations({ locale });
   const signIn = signInAction.bind(null, locale);
 
-  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY?.trim() || undefined;
+  const siteKey =
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY?.trim() || undefined;
 
   return (
     <Container size="xs" py="xl">
-      <Paper withBorder p="lg" radius="md" miw={400}>
+      <Paper withBorder p="lg" radius="md" className={classes.paper}>
         <Stack gap="md">
           <Link
             href={routes.home}
@@ -97,7 +99,9 @@ const LoginPage = async ({ locale, error }: LoginPageProps) => {
               passwordLabel: t("auth.login.passwordLabel"),
               passwordPlaceholder: t("auth.login.passwordPlaceholder"),
               submit: t("auth.login.submit"),
-              errorInvalidCredentials: t("auth.login.errors.invalidCredentials"),
+              errorInvalidCredentials: t(
+                "auth.login.errors.invalidCredentials",
+              ),
               errorGeneric: t("auth.login.errors.generic"),
             }}
           />
